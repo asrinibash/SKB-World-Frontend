@@ -30,7 +30,7 @@ export const useAdminAuth = () => {
     });
   };
 
-  const validateToken = () => {
+  const validateTokenOfAdmin = () => {
     const token = localStorage.getItem("adminAuthState");
 
     if (token) {
@@ -48,5 +48,5 @@ export const useAdminAuth = () => {
       }
     }
   };
-  return { login, logout, validateToken };
+  return { login, logout, validateTokenOfAdmin };
 };

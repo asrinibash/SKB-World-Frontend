@@ -30,7 +30,7 @@ export const useUserAuth = () => {
     });
   };
 
-  const validateToken = () => {
+  const validateTokenOfUser = () => {
     const token = localStorage.getItem("userAuthState");
 
     if (token) {
@@ -48,5 +48,5 @@ export const useUserAuth = () => {
       }
     }
   };
-  return { login, logout, validateToken };
+  return { login, logout, validateTokenOfUser };
 };
