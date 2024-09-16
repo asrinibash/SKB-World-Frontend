@@ -1,6 +1,6 @@
 import React from 'react';
-import ContactForm from '../Components/ContactForm';
-import SocialLinks from '../Components/SocialLinks';
+import ContactForm from '../Components/Static/ContactForm';
+import SocialLinks from '../Components/Static/SocialLinks';
 import { motion } from "framer-motion";
 
 function Contact() {
@@ -11,8 +11,8 @@ function Contact() {
         transition={{ duration: 0.5 }}>
       <div className="space-y-6">
         <div className="space-y-2">
-          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">Get in Touch</h2>
-          <p className="text-muted-foreground">I'd love to hear from you! Feel free to reach out.</p>
+          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">Contact Us</h2>
+          <p className="text-muted-foreground">We'd love to hear from you! Feel free to reach out.</p>
         </div>
         <div className="grid gap-6 sm:grid-cols-2">
           <ContactForm />

@@ -7,14 +7,6 @@ function SocialLinks() {
       <div className="flex gap-4">
         <a
           className="text-muted-foreground hover:text-foreground"
-          href="https://github.com"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <FiGithub />
-        </a>
-        <a
-          className="text-muted-foreground hover:text-foreground"
           href="https://linkedin.com"
           target="_blank"
           rel="noopener noreferrer"

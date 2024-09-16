@@ -1,13 +1,15 @@
 import React, { useContext } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { ThemeProvider, ThemeContext } from "./Context/ThemeContext";
-import Header from "./Components/Header";
-import Footer from "./Components/Footer";
+import Header from "./Components/Static/Header";
+import Footer from "./Components/Static/Footer";
 import About from "./Pages/About";
 import Home from "./Pages/Home";
 import Courses from "./Pages/Courses"
 import Skills from "./Pages/Skills";
 import Contact from "./Pages/Contact";
+import Signup from "./Pages/Signup";
+import Login from "./Pages/Login";
 
 function App() {
   const { darkMode } = useContext(ThemeContext);
@@ -23,7 +25,8 @@ function App() {
               <Route path="/about" element={<About />} />
               <Route path="/courses" element={<Courses />} />
               <Route path="/skills" element={<Skills />} />
-              <Route path="/contact" element={<Contact />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/login" element={<Login />} />
             </Routes>
           </main>
           <Footer />
