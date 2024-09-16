@@ -5,11 +5,15 @@ import Header from "./Components/Static/Header";
 import Footer from "./Components/Static/Footer";
 import About from "./Pages/Static/About";
 import Home from "./Pages/Static/Home";
-import Courses from "./Pages/Static/Courses"
+import Courses from "./Pages/Static/Courses";
 import Skills from "./Pages/Static/Skills";
 import Contact from "./Pages/Static/Contact";
 import Signup from "./Pages/Static/Signup";
 import Login from "./Pages/Static/Login";
+import AdminProtectedRoute from "./utils/AdminProtectedRoute";
+import AdminDashboard from "./Pages/Admin/AdminDashboard";
+import UserProtectedRoute from "./utils/UserProtectedRoute";
+import UserDashboard from "./Pages/User/UserDashboard";
 
 function App() {
   const { darkMode } = useContext(ThemeContext);
@@ -30,6 +34,23 @@ function App() {
             </Routes>
           </main>
           <Footer />
+
+
+
+          // * Admin Routes
+          <Routes>
+            <Route element={AdminProtectedRoute}>
+              <Route path="/admin/dashboard" element={<AdminDashboard />} />
+            </Route>
+          </Routes>
+
+
+
+          // * User Routes
+          <Routes element={UserProtectedRoute}>
+            <Route path="/user/dashboard" element={UserDashboard}/>
+          </Routes>
+
         </div>
       </div>
     </Router>
