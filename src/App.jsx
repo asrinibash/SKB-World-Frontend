@@ -3,13 +3,13 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { ThemeProvider, ThemeContext } from "./Context/ThemeContext";
 import Header from "./Components/Static/Header";
 import Footer from "./Components/Static/Footer";
-import About from "./Pages/About";
-import Home from "./Pages/Home";
-import Courses from "./Pages/Courses"
-import Skills from "./Pages/Skills";
-import Contact from "./Pages/Contact";
-import Signup from "./Pages/Signup";
-import Login from "./Pages/Login";
+import About from "./Pages/Static/About";
+import Home from "./Pages/Static/Home";
+import Courses from "./Pages/Static/Courses"
+import Skills from "./Pages/Static/Skills";
+import Contact from "./Pages/Static/Contact";
+import Signup from "./Pages/Static/Signup";
+import Login from "./Pages/Static/Login";
 
 function App() {
   const { darkMode } = useContext(ThemeContext);

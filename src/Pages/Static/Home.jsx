@@ -1,6 +1,6 @@
 import React from "react";
-import skbcompany from "../assets/skbcompany2.png";
-import About from "../Components/Home/About";
+import skbcompany from "../../assets/skbcompany2.png";
+import About from "../../Components/Home/About";
 
 const AnimatedText = ({ text }) => {
   return (

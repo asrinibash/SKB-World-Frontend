@@ -1,6 +1,6 @@
 import React from 'react';
-import ContactForm from '../Components/Static/ContactForm';
-import SocialLinks from '../Components/Static/SocialLinks';
+import ContactForm from '../../Components/Static/ContactForm';
+import SocialLinks from '../../Components/Static/SocialLinks';
 import { motion } from "framer-motion";
 
 function Contact() {

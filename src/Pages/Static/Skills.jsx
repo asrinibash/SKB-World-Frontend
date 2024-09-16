@@ -1,5 +1,5 @@
 import React from "react";
-import SkillCard from "../Components/Static/SkillCard";
+import SkillCard from "../../Components/Static/SkillCard";
 import { motion } from "framer-motion";
 
 function Skills() {

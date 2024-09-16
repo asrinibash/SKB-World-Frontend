@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Button } from '../Components/Ui/Button';
-import { Input } from '../Components/Ui/Input';
-import { Label } from '../Components/Ui/Label';
+import { Button } from '../../Components/Ui/Button';
+import { Input } from '../../Components/Ui/Input';
+import { Label } from '../../Components/Ui/Label';
 
 function SignupForm() {
   return (

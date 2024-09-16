@@ -31,7 +31,7 @@ function Header() {
         </Link>
 
         <nav className="hidden md:flex flex-grow justify-center pr-24 space-x-6">
-          {["Home", "About", "All Courses", "Services", "Contact"].map(
+          {["Home", "About", "Courses", "Services", "Contact"].map(
             (item) => (
               <Link
                 key={item}
