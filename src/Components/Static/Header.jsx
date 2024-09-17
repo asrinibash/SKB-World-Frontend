@@ -31,21 +31,19 @@ function Header() {
         </Link>
 
         <nav className="hidden md:flex flex-grow justify-center pr-24 space-x-6">
-          {["Home", "About", "Courses", "Services", "Contact"].map(
-            (item) => (
-              <Link
-                key={item}
-                to={item === "Home" ? "/" : `/${item.toLowerCase()}`}
-                className={navLinkClasses}
-              >
-                {item}
-              </Link>
-            )
-          )}
+          {["Home", "About", "Courses", "Services", "Contact"].map((item) => (
+            <Link
+              key={item}
+              to={item === "Home" ? "/" : `/${item.toLowerCase()}`}
+              className={navLinkClasses}
+            >
+              {item}
+            </Link>
+          ))}
         </nav>
 
         <div className="flex items-center space-x-4">
-          <Link to="/signup">
+          <Link to="/user/login">
             <button className="inline-flex items-center justify-center rounded-md border border-input bg-accent text-accent-foreground px-4 py-2 text-sm font-medium shadow-sm transition-colors hover:bg-accent/80 hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
               Signup
             </button>

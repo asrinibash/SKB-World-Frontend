@@ -3,19 +3,35 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { ThemeContext } from "./Context/ThemeContext";
 import Header from "./Components/Static/Header";
 import Footer from "./Components/Static/Footer";
-import About from "./Pages/Static/About";
 import Home from "./Pages/Static/Home";
+import About from "./Pages/Static/About";
 import Courses from "./Pages/Static/Courses";
 import Contact from "./Pages/Static/Contact";
-import Signup from "./Pages/Static/Signup";
-import Login from "./Pages/Static/Login";
-import AdminProtectedRoute from "./utils/AdminProtectedRoute";
+import Services from "./Pages/Static/Services";
 import AdminDashboard from "./Pages/Admin/AdminDashboard";
-import UserProtectedRoute from "./utils/UserProtectedRoute";
+import AdminLogin from "./Pages/Admin/AdminLogin";
+import UserLogin from "./Pages/User/UserLogin";
 import UserDashboard from "./Pages/User/UserDashboard";
 import { useAdminAuth } from "./Recoil/Admin";
 import { useUserAuth } from "./Recoil/User";
-import Services from "./Pages/Static/Services";
+import AdminProtectedRoute from "./utils/AdminProtectedRoute";
+import UserProtectedRoute from "./utils/UserProtectedRoute";
+import { Outlet } from "react-router-dom";
+
+const StaticLayout = () => (
+  <>
+    <Header />
+    <main className="flex-1">
+      <Outlet />
+    </main>
+    <Footer />
+  </>
+);
+
+const AdminDashboardLayout=()=>{
+  <>
+  </>
+}
 
 function App() {
   const { darkMode } = useContext(ThemeContext);
@@ -26,7 +42,6 @@ function App() {
   }, [validateTokenOfAdmin]);
 
   const { validateTokenOfUser } = useUserAuth();
-
   useEffect(() => {
     validateTokenOfUser();
   }, [validateTokenOfUser]);
@@ -35,32 +50,31 @@ function App() {
     <Router>
       <div className={`flex min-h-[100dvh] flex-col ${darkMode ? "dark" : ""}`}>
         <div className="bg-background text-foreground">
-          <Header />
-          <main className="flex-1">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/courses" element={<Courses />} />
-              <Route path="/services" element={<Services />} />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/login" element={<Login />} />
-            </Routes>
-          </main>
-          <Footer />
-
-
-          // * Admin Routes
           <Routes>
-            <Route element={<AdminProtectedRoute />}>
-              <Route path="/admin/dashboard" element={<AdminDashboard />} />
+            {/* Static pages */}
+            <Route element={<StaticLayout />}>
+              <Route index element={<Home />} />
+              <Route path="about" element={<About />} />
+              <Route path="courses" element={<Courses />} />
+              <Route path="services" element={<Services />} />
+              <Route path="contact" element={<Contact />} />
             </Route>
-          </Routes>
 
+            {/* Admin Routes */}
+            <Route path='/admin'>
+              <Route path="secure/login" element={<AdminLogin />} />
+              <Route element={<AdminProtectedRoute />}>
+                <Route path="dashboard" element={<AdminDashboard />} />
+              </Route>
+            </Route>
 
-          // * User Routes
-          
-          <Routes element={UserProtectedRoute}>
-            <Route path="/user/dashboard" element={UserDashboard} />
+            {/* User Routes */}
+            <Route path="/user">
+            <Route path="login" element={<UserLogin/>}/>
+            <Route element={<UserProtectedRoute />}>
+              <Route path="/user/dashboard" element={<UserDashboard />} />
+            </Route>
+            </Route>
           </Routes>
         </div>
       </div>

@@ -14,3 +14,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     </RecoilRoot>
   </React.StrictMode>
 );
+
+
+export const server="http://localhost:8080/api/v1"
