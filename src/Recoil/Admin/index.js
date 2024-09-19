@@ -1,14 +1,14 @@
 import { useSetRecoilState } from "recoil";
 import { adminAuthState } from "./AdminAuthState";
-import { jwtDecode } from "jwt-decode";
+import {jwtDecode} from "jwt-decode";
 
 export const useAdminAuth = () => {
   const setAuth = useSetRecoilState(adminAuthState);
 
+  
   const login = (token) => {
     const decodedToken = jwtDecode(token);
-    const isExpired = decodedToken.exp * 1000 < Date.now();
-
+    const isExpired = decodedToken.exp * 1000 < Date.now(); 
     if (!isExpired) {
       localStorage.setItem("adminAuthState", token);
       setAuth({
@@ -21,14 +21,16 @@ export const useAdminAuth = () => {
     }
   };
 
+
   const logout = () => {
     localStorage.removeItem("adminAuthState");
     setAuth({
       token: null,
-      isAuthenticated: null,
+      isAuthenticated: false,
       user: null,
     });
   };
+
 
   const validateTokenOfAdmin = () => {
     const token = localStorage.getItem("adminAuthState");
@@ -48,5 +50,6 @@ export const useAdminAuth = () => {
       }
     }
   };
+
   return { login, logout, validateTokenOfAdmin };
 };

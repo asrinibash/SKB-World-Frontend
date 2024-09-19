@@ -24,7 +24,7 @@ const AdminLogin = () => {
         user: response.data.user,
       });
       console.log("Login Success", response.data);
-      navigate("/admin/dashboard");
+      navigate("/admin/secure/dashboard");
     } catch (error) {
       console.error("Login error:", error);
     }
