@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { ThemeContext } from "./Context/ThemeContext";
 
@@ -18,6 +18,8 @@ import UserProtectedRoute from "./utils/UserProtectedRoute";
 import StaticPagesLayout from "./Layouts/StaticPagesLayout";
 import AdminDashboardLayout from "./Layouts/AdminDashboardLayout";
 import ADUsers from "./Pages/Admin/ADUsers";
+import ManageCategories from "./Pages/Admin/ManageCategories";
+import ManageCourses from "./Pages/Admin/ManageCourse";
 
 function App() {
   const { darkMode } = useContext(ThemeContext);
@@ -53,6 +55,8 @@ function App() {
                 <Route element={<AdminDashboardLayout />}>
                   <Route path="dashboard" element={<AdminDashboard />} />
                   <Route path="users" element={<ADUsers />} />
+                  <Route path="Categories" element={<ManageCategories />} />
+                  <Route path="Courses" element={<ManageCourses />} />
                 </Route>
               </Route>
             </Route>
