@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { useSetRecoilState } from "recoil";
 import { adminAuthState } from "../../Recoil/Admin/AdminAuthState";
 import { useNavigate } from "react-router-dom";
 import { server } from "../../main";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
@@ -18,20 +20,50 @@ const AdminLogin = () => {
         email,
         password,
       });
+
+      // Store the token in local storage
+      localStorage.setItem("authToken", response.data.token);
+
       setAuth({
         isAuthenticated: true,
         token: response.data.token,
         user: response.data.user,
       });
+
+      toast.success("Login Successful!", {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        className: "rounded-lg shadow-lg bg-green-500 text-white",
+        bodyClassName: "h-12 text-center flex justify-center items-center",
+        style: { width: "250px" },
+      });
+
+      // Wait for 2 seconds before redirecting
+      setTimeout(() => {
+        navigate("/admin/secure/dashboard");
+      }, 2000);
+
       console.log("Login Success", response.data);
-      navigate("/admin/secure/dashboard");
     } catch (error) {
+      toast.error("Login failed. Please check your email and password", {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: true,
+        className: "rounded-lg shadow-lg bg-red-500 text-white",
+        bodyClassName: "h-12 text-center flex justify-center items-center",
+        style: { width: "250px" },
+      });
       console.error("Login error:", error);
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-6 md:p-12 lg:p-16">
+      <ToastContainer position="top-right" autoClose={3000} />
       <div className="max-w-md w-full space-y-8 bg-gray-100 shadow-lg rounded-lg p-8">
         <div className="text-center animate-fade-in">
           <h2 className="text-4xl md:text-5xl font-extrabold mb-4">

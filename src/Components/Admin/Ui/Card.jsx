@@ -1,7 +1,10 @@
-import React from 'react';
+/* eslint-disable react/prop-types */
 
 export const Card = ({ className, ...props }) => (
-  <div className={`rounded-xl border bg-card text-card-foreground shadow ${className}`} {...props} />
+  <div
+    className={`rounded-xl border bg-card text-card-foreground shadow ${className}`}
+    {...props}
+  />
 );
 
 export const CardHeader = ({ className, ...props }) => (
@@ -9,7 +12,10 @@ export const CardHeader = ({ className, ...props }) => (
 );
 
 export const CardTitle = ({ className, ...props }) => (
-  <h3 className={`font-semibold leading-none tracking-tight ${className}`} {...props} />
+  <h3
+    className={`font-semibold leading-none tracking-tight ${className}`}
+    {...props}
+  />
 );
 
 export const CardDescription = ({ className, ...props }) => (

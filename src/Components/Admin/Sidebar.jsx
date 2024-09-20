@@ -1,13 +1,29 @@
-import React from "react";
+/* eslint-disable no-undef */
 import { Link } from "react-router-dom";
-import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "./Ui/Tooltip";
-import { Home, Users, BarChart2, ShoppingCart, Settings, HelpCircle } from "lucide-react";
+import {
+  TooltipProvider,
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from "./Ui/Tooltip";
+import {
+  Home,
+  Users,
+  BarChart2,
+  ShoppingCart,
+  Settings,
+  HelpCircle,
+  Layers3,
+  Notebook,
+} from "lucide-react";
 import { AlignStartVertical } from "lucide-react";
 
 export default function Sidebar() {
   const navItems = [
     { icon: Home, label: "Dashboard", to: "dashboard" },
     { icon: Users, label: "Users", to: "users" },
+    { icon: Layers3, label: "Categories", to: "Categories" },
+    { icon: Notebook, label: "Courses", to: "Courses" },
     { icon: BarChart2, label: "Analytics", to: "analytics" },
     { icon: ShoppingCart, label: "Orders", to: "orders" },
   ];
@@ -49,7 +65,7 @@ export default function Sidebar() {
                 className="flex items-center gap-4 rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
               >
                 <Settings className="h-5 w-5" />
-              
+
                 <span className="hidden group-hover:inline-block text-base font-medium">
                   Settings
                 </span>
@@ -66,7 +82,7 @@ export default function Sidebar() {
                 className="flex items-center gap-4 rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
               >
                 <HelpCircle className="h-5 w-5" />
-               
+
                 <span className="hidden group-hover:inline-block text-base font-medium">
                   Help
                 </span>
