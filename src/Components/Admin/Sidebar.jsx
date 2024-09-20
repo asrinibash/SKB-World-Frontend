@@ -15,6 +15,7 @@ import {
   HelpCircle,
   Layers3,
   Notebook,
+  Group,
 } from "lucide-react";
 import { AlignStartVertical } from "lucide-react";
 
@@ -24,6 +25,7 @@ export default function Sidebar() {
     { icon: Users, label: "Users", to: "users" },
     { icon: Layers3, label: "Categories", to: "Categories" },
     { icon: Notebook, label: "Courses", to: "Courses" },
+    { icon: Group, label: "Group", to: "Group" },
     { icon: BarChart2, label: "Analytics", to: "analytics" },
     { icon: ShoppingCart, label: "Orders", to: "orders" },
   ];

@@ -22,7 +22,7 @@ const AddCourse = ({ onClose, onCourseAdded }) => {
   // Fetch categories from the server
   const fetchCategories = async () => {
     try {
-      const response = await axios.get(`${server}/category`);
+      const response = await axios.get(`${server}/category/getAll`);
       setCategories(response.data); // Assuming the response is an array of categories
     } catch (error) {
       console.error("Error fetching categories:", error);

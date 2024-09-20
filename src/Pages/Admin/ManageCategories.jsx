@@ -32,7 +32,7 @@ const ManageCategories = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get(`${server}/category`);
+      const response = await axios.get(`${server}/category/getAll`);
       setCategories(response.data);
     } catch (error) {
       console.error("Error fetching categories:", error);
@@ -94,6 +94,7 @@ const ManageCategories = () => {
                 <TableHead>Name</TableHead>
                 <TableHead>Description</TableHead>
                 <TableHead>Image</TableHead>
+                <TableHead>CreatedAt</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -102,6 +103,9 @@ const ManageCategories = () => {
                 <TableRow key={category.id}>
                   <TableCell>{category.name}</TableCell>
                   <TableCell>{category.description}</TableCell>
+                  <TableCell>
+                    {new Date(category.createdAt).toLocaleString()}
+                  </TableCell>
                   <TableCell>
                     <img src={category.image} alt={category.name} width="50" />
                   </TableCell>

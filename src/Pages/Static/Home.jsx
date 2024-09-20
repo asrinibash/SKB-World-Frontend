@@ -1,4 +1,4 @@
-import React from "react";
+/* eslint-disable react/prop-types */
 import skbcompany from "../../assets/skbcompany2.png";
 import About from "../../Components/Static/Home/About";
 

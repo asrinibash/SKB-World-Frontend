@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { useState } from "react";
 import axios from "axios";
 import { Button } from "@radix-ui/themes";
 import { server } from "../../../main";
@@ -9,36 +9,29 @@ import {
   CardHeader,
   CardTitle,
   CardContent,
-} from "../../../Components/Admin/Ui/Card";
+} from "../../../Components/Admin/Ui/Card"; // Adjust import paths as needed
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import * as Yup from "yup"; // For validation
 
 const AddUser = ({ onClose, onUserAdded }) => {
-  // Form validation schema using Yup
-  const validationSchema = Yup.object({
-    name: Yup.string().required("Name is required"),
-    email: Yup.string()
-      .email("Invalid email format")
-      .required("Email is required"),
-    password: Yup.string()
-      .min(6, "Password must be at least 6 characters")
-      .required("Password is required"),
-    image: Yup.string().url("Invalid URL"),
+  const [formData, setFormData] = useState({
+    email: "",
+    name: "",
+    password: "",
+    image: "",
   });
 
-  const handleSubmit = async (values, { setSubmitting, resetForm }) => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
-      await axios.post(`${server}/user/signup`, values);
+      await axios.post(`${server}/user/signup`, formData);
       toast.success("User Added successfully!");
       onUserAdded(); // Refresh users after addition
-      onClose(); // Close the form
-      resetForm();
+
+      onClose(); // Close the add form
     } catch (error) {
       console.error("Error adding user:", error);
-      toast.error("Failed to add user. Please try again.");
-    } finally {
-      setSubmitting(false);
+      toast.error("Failed to added user. Please try again.");
     }
   };
 
@@ -50,95 +43,70 @@ const AddUser = ({ onClose, onUserAdded }) => {
           <CardTitle>Add User</CardTitle>
         </CardHeader>
         <CardContent>
-          <Formik
-            initialValues={{
-              name: "",
-              email: "",
-              password: "",
-              image: "",
-            }}
-            validationSchema={validationSchema}
-            onSubmit={handleSubmit}
-          >
-            {({ isSubmitting }) => (
-              <Form>
-                <div className="mb-4">
-                  <label className="block text-sm font-medium">Name:</label>
-                  <Field
-                    type="text"
-                    name="name"
-                    className="border rounded-md w-full p-2 dark:bg-black"
-                  />
-                  <ErrorMessage
-                    name="name"
-                    component="div"
-                    className="text-red-500 text-sm mt-1"
-                  />
-                </div>
-
-                <div className="mb-4">
-                  <label className="block text-sm font-medium">Email:</label>
-                  <Field
-                    type="email"
-                    name="email"
-                    className="border rounded-md w-full p-2 dark:bg-black"
-                  />
-                  <ErrorMessage
-                    name="email"
-                    component="div"
-                    className="text-red-500 text-sm mt-1"
-                  />
-                </div>
-
-                <div className="mb-4">
-                  <label className="block text-sm font-medium">Password:</label>
-                  <Field
-                    type="password"
-                    name="password"
-                    className="border rounded-md w-full p-2 dark:bg-black"
-                  />
-                  <ErrorMessage
-                    name="password"
-                    component="div"
-                    className="text-red-500 text-sm mt-1"
-                  />
-                </div>
-
-                <div className="mb-4">
-                  <label className="block text-sm font-medium">
-                    Image URL:
-                  </label>
-                  <Field
-                    type="url"
-                    name="image"
-                    className="border rounded-md w-full p-2 dark:bg-black"
-                  />
-                  <ErrorMessage
-                    name="image"
-                    component="div"
-                    className="text-red-500 text-sm mt-1"
-                  />
-                </div>
-
-                <div className="flex justify-end space-x-2">
-                  <Button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="flex items-center bg-green-500 text-white px-4 py-2 rounded-lg border border-green-700 hover:bg-green-600 transition duration-200 ease-in-out"
-                  >
-                    <EditIcon className="mr-2" /> Add User
-                  </Button>
-                  <Button
-                    type="button"
-                    onClick={onClose}
-                    className="flex items-center bg-red-500 text-white px-4 py-2 rounded-lg border border-red-700 hover:bg-red-600 transition duration-200 ease-in-out"
-                  >
-                    <Trash2 className="mr-2" /> Cancel
-                  </Button>
-                </div>
-              </Form>
-            )}
-          </Formik>
+          <form onSubmit={handleSubmit}>
+            <div className="mb-4">
+              <label className="block text-sm font-medium">Name:</label>
+              <input
+                type="text"
+                value={formData.name}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
+                required
+                className="border rounded-md w-full p-2 dark:bg-black"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium">Email:</label>
+              <input
+                type="email"
+                value={formData.email}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
+                required
+                className="border rounded-md w-full p-2 dark:bg-black"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium">Password:</label>
+              <input
+                type="password"
+                value={formData.password}
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
+                required
+                className="border rounded-md w-full p-2 dark:bg-black"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium">Image URL:</label>
+              <input
+                type="url"
+                value={formData.image}
+                onChange={(e) =>
+                  setFormData({ ...formData, image: e.target.value })
+                }
+                className="border rounded-md w-full p-2 dark:bg-black"
+              />
+            </div>
+            <div className="flex justify-end space-x-2">
+              <Button
+                type="submit"
+                className="flex items-center bg-green-500 text-white px-4 py-2 rounded-lg border border-green-700 hover:bg-green-600 transition duration-200 ease-in-out"
+              >
+                <EditIcon className="mr-2" /> Add User
+              </Button>
+              <Button
+                type="button"
+                onClick={onClose}
+                className="flex items-center bg-red-500 text-white px-4 py-2 rounded-lg border border-red-700 hover:bg-red-600 transition duration-200 ease-in-out"
+              >
+                <Trash2 className="mr-2" /> Cancel
+              </Button>
+            </div>
+          </form>
         </CardContent>
       </Card>
     </div>

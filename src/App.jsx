@@ -20,6 +20,7 @@ import AdminDashboardLayout from "./Layouts/AdminDashboardLayout";
 import ADUsers from "./Pages/Admin/ADUsers";
 import ManageCategories from "./Pages/Admin/ManageCategories";
 import ManageCourses from "./Pages/Admin/ManageCourse";
+import ManageGroups from "./Pages/Admin/ManageGroup";
 
 function App() {
   const { darkMode } = useContext(ThemeContext);
@@ -57,6 +58,7 @@ function App() {
                   <Route path="users" element={<ADUsers />} />
                   <Route path="Categories" element={<ManageCategories />} />
                   <Route path="Courses" element={<ManageCourses />} />
+                  <Route path="Group" element={<ManageGroups />} />
                 </Route>
               </Route>
             </Route>

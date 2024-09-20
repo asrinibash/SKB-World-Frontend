@@ -17,74 +17,79 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { server } from "../../main";
 import { Trash2, EditIcon } from "lucide-react";
-import EditCourse from "./course/editCourse"; // Import the EditCourse component
-import AddCourse from "./course/addCourse"; // Import the AddCourse component
+import EditGroup from "./group/editGroup"; // Import the EditGroup component
+import AddGroup from "./group/addGroup"; // Import the AddGroup component
 import { Button } from "@radix-ui/themes";
 
-const ManageCourses = () => {
-  const [courses, setCourses] = useState([]);
-  const [editingCourse, setEditingCourse] = useState(null);
-  const [addingCourse, setAddingCourse] = useState(false); // Manage Add Course form visibility
+const ManageGroups = () => {
+  const [groups, setGroups] = useState([]);
+  const [editingGroup, setEditingGroup] = useState(null);
+  const [addingGroup, setAddingGroup] = useState(false); // Manage Add Group form visibility
 
   useEffect(() => {
-    fetchCourses();
+    fetchGroups();
   }, []);
 
-  const fetchCourses = async () => {
-    try {
-      const response = await axios.get(`${server}/course`);
-      setCourses(response.data);
-    } catch (error) {
-      console.error("Error fetching courses:", error);
-    }
-  };
-
-  const handleEditCourse = (course) => {
-    setEditingCourse(course); // Set the course to edit
-  };
-
-  const handleDeleteCourse = async (courseId) => {
+  const fetchGroups = async () => {
     const token = localStorage.getItem("authToken"); // Retrieve the token
     try {
-      await axios.delete(`${server}/course/${courseId}`, {
+      const response = await axios.get(`${server}/group`, {
         headers: {
           Authorization: `Bearer ${token}`, // Add token to headers
         },
       });
-      console.log(`Course with ID ${courseId} deleted successfully.`);
-      fetchCourses(); // Refresh the course list after deletion
+      setGroups(response.data);
     } catch (error) {
-      console.error(`Error deleting course with ID ${courseId}:`, error);
+      console.error("Error fetching groups:", error);
+    }
+  };
+
+  const handleEditGroup = (group) => {
+    setEditingGroup(group); // Set the group to edit
+  };
+
+  const handleDeleteGroup = async (groupId) => {
+    const token = localStorage.getItem("authToken"); // Retrieve the token
+    try {
+      await axios.delete(`${server}/group/${groupId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Add token to headers
+        },
+      });
+      console.log(`Group with ID ${groupId} deleted successfully.`);
+      fetchGroups(); // Refresh the group list after deletion
+    } catch (error) {
+      console.error(`Error deleting group with ID ${groupId}:`, error);
     }
   };
 
   const closeEditForm = () => {
-    setEditingCourse(null); // Close the edit form
+    setEditingGroup(null); // Close the edit form
   };
 
   const closeAddForm = () => {
-    setAddingCourse(false); // Close the add course form
+    setAddingGroup(false); // Close the add group form
   };
 
-  const refreshCourses = () => {
-    fetchCourses(); // Refresh courses after update
+  const refreshGroups = () => {
+    fetchGroups(); // Refresh groups after update
   };
 
   return (
     <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
       <Card>
         <CardHeader className="pb-3">
-          <CardTitle>Manage Courses</CardTitle>
+          <CardTitle>Manage Groups</CardTitle>
           <CardDescription className="max-w-lg text-balance leading-relaxed">
-            View and manage the list of courses.
+            View and manage the list of groups.
           </CardDescription>
         </CardHeader>
       </Card>
       <Button
-        onClick={() => setAddingCourse(true)} // Open Add Course form
+        onClick={() => setAddingGroup(true)} // Open Add Group form
         className="flex items-center bg-green-500 text-white px-4 py-2 rounded-lg"
       >
-        <EditIcon className="mr-2" /> Add Course
+        <EditIcon className="mr-2" /> Add Group
       </Button>
       <Card>
         <CardContent>
@@ -93,31 +98,28 @@ const ManageCourses = () => {
               <TableRow>
                 <TableHead>Name</TableHead>
                 <TableHead>Description</TableHead>
-                <TableHead>Price</TableHead>
-                <TableHead>createdAt</TableHead>
+                <TableHead>CreatedAt</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {courses.map((course) => (
-                <TableRow key={course.id}>
-                  <TableCell>{course.name}</TableCell>
-                  <TableCell>{course.description}</TableCell>
-                  <TableCell>{course.price}</TableCell>
+              {groups.map((group) => (
+                <TableRow key={group.id}>
+                  <TableCell>{group.name}</TableCell>
+                  <TableCell>{group.description}</TableCell>
                   <TableCell>
                     {" "}
-                    {new Date(course.createdAt).toLocaleString()}
+                    {new Date(group.createdAt).toLocaleString()}
                   </TableCell>
-
                   <TableCell className="flex space-x-2">
                     <Button
-                      onClick={() => handleEditCourse(course)}
+                      onClick={() => handleEditGroup(group)}
                       className="p-1"
                     >
                       <EditIcon />
                     </Button>
                     <Button
-                      onClick={() => handleDeleteCourse(course.id)}
+                      onClick={() => handleDeleteGroup(group.id)}
                       className="p-1"
                     >
                       <Trash2 />
@@ -129,18 +131,18 @@ const ManageCourses = () => {
           </Table>
         </CardContent>
       </Card>
-      {editingCourse && (
-        <EditCourse
-          course={editingCourse}
+      {editingGroup && (
+        <EditGroup
+          group={editingGroup}
           onClose={closeEditForm}
-          onUpdate={refreshCourses}
+          onUpdate={refreshGroups}
         />
       )}
-      {addingCourse && (
-        <AddCourse onClose={closeAddForm} onCourseAdded={refreshCourses} />
+      {addingGroup && (
+        <AddGroup onClose={closeAddForm} onGroupAdded={refreshGroups} />
       )}
     </div>
   );
 };
 
-export default ManageCourses;
+export default ManageGroups;
