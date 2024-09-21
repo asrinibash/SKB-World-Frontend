@@ -32,7 +32,7 @@ const ManageCourses = () => {
 
   const fetchCourses = async () => {
     try {
-      const response = await axios.get(`${server}/course`);
+      const response = await axios.get(`${server}/course/getAll`);
       setCourses(response.data);
     } catch (error) {
       console.error("Error fetching courses:", error);

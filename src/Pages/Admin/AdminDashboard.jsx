@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   Card,
   CardHeader,
@@ -7,7 +7,12 @@ import {
   CardFooter,
   CardContent,
 } from "../../Components/Admin/Ui/Card";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "../../Components/Admin/Ui/Tabs";
+import {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "../../Components/Admin/Ui/Tabs";
 import {
   Table,
   TableHeader,
@@ -33,11 +38,16 @@ export default function AdminDashboard() {
       setIsLoading(true);
       setError(null);
       try {
-        const [usersResponse, groupsResponse, coursesResponse, categoriesResponse] = await Promise.all([
+        const [
+          usersResponse,
+          groupsResponse,
+          coursesResponse,
+          categoriesResponse,
+        ] = await Promise.all([
           axios.get(`${server}/user/getAll`),
           axios.get(`${server}/group/getAll`),
           axios.get(`${server}/course/getAll`),
-          axios.get(`${server}/category/getAll`)
+          axios.get(`${server}/category/getAll`),
         ]);
 
         setUsers(usersResponse.data);
@@ -46,7 +56,9 @@ export default function AdminDashboard() {
         setCategories(categoriesResponse.data);
       } catch (err) {
         console.error("Error fetching data:", err);
-        setError("An error occurred while fetching data. Please try again later.");
+        setError(
+          "An error occurred while fetching data. Please try again later."
+        );
       } finally {
         setIsLoading(false);
       }
@@ -56,7 +68,11 @@ export default function AdminDashboard() {
   }, []);
 
   if (isLoading) {
-    return <div className="flex min-h-screen justify-center items-center text-2xl font-bold">Loading...</div>;
+    return (
+      <div className="flex min-h-screen justify-center items-center text-2xl font-bold">
+        Loading...
+      </div>
+    );
   }
 
   if (error) {
@@ -96,7 +112,9 @@ export default function AdminDashboard() {
         <Card>
           <CardHeader>
             <CardTitle>Categories</CardTitle>
-            <CardDescription>{categories.length} total categories</CardDescription>
+            <CardDescription>
+              {categories.length} total categories
+            </CardDescription>
           </CardHeader>
           <CardFooter>
             <Button>Add Category</Button>
@@ -130,7 +148,9 @@ export default function AdminDashboard() {
                     <TableRow key={user.id}>
                       <TableCell>{user.name}</TableCell>
                       <TableCell>{user.email}</TableCell>
-                      <TableCell>{new Date(user.createdAt).toLocaleDateString()}</TableCell>
+                      <TableCell>
+                        {new Date(user.createdAt).toLocaleDateString()}
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -139,33 +159,33 @@ export default function AdminDashboard() {
           </Card>
         </TabsContent>
         <TabsContent value="groups">
-        <Card>
-          <CardHeader>
-            <CardTitle>Groups</CardTitle>
-            <CardDescription>Manage your groups</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Description</TableHead>
-                  <TableHead>Created By</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {groups.map((group) => (
-                  <TableRow key={group.id}>
-                    <TableCell>{group.name}</TableCell>
-                    <TableCell>{group.description}</TableCell>
-                    <TableCell>{group.createdBy?.name || 'N/A'}</TableCell>
+          <Card>
+            <CardHeader>
+              <CardTitle>Groups</CardTitle>
+              <CardDescription>Manage your groups</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Name</TableHead>
+                    <TableHead>Description</TableHead>
+                    <TableHead>Created By</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
-      </TabsContent>
+                </TableHeader>
+                <TableBody>
+                  {groups.map((group) => (
+                    <TableRow key={group.id}>
+                      <TableCell>{group.name}</TableCell>
+                      <TableCell>{group.description}</TableCell>
+                      <TableCell>{group.createdBy?.name || "N/A"}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </TabsContent>
         <TabsContent value="courses">
           <Card>
             <CardHeader>
@@ -216,7 +236,11 @@ export default function AdminDashboard() {
                     <TableRow key={category.id}>
                       <TableCell>{category.name}</TableCell>
                       <TableCell>{category.description}</TableCell>
-                      <TableCell>{(category.courses.length) ? category.courses.length:"NULL"}</TableCell>
+                      <TableCell>
+                        {category.courses.length
+                          ? category.courses.length
+                          : "NULL"}
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

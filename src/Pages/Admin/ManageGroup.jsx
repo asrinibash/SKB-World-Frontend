@@ -16,26 +16,28 @@ import {
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { server } from "../../main";
-import { Trash2, EditIcon } from "lucide-react";
-import EditGroup from "./group/editGroup"; // Import the EditGroup component
-import AddGroup from "./group/addGroup"; // Import the AddGroup component
+import { Trash2, EditIcon, UserPlus } from "lucide-react";
+import EditGroup from "./group/editGroup";
+import AddGroup from "./group/addGroup";
+import AddUserGroup from "./group/addUserGroup"; // Import AddUserGroup component
 import { Button } from "@radix-ui/themes";
 
 const ManageGroups = () => {
   const [groups, setGroups] = useState([]);
   const [editingGroup, setEditingGroup] = useState(null);
-  const [addingGroup, setAddingGroup] = useState(false); // Manage Add Group form visibility
+  const [addingGroup, setAddingGroup] = useState(false);
+  const [addingUserToGroup, setAddingUserToGroup] = useState(null); // Track adding user state
 
   useEffect(() => {
     fetchGroups();
   }, []);
 
   const fetchGroups = async () => {
-    const token = localStorage.getItem("authToken"); // Retrieve the token
+    const token = localStorage.getItem("authToken");
     try {
-      const response = await axios.get(`${server}/group`, {
+      const response = await axios.get(`${server}/group/getAll`, {
         headers: {
-          Authorization: `Bearer ${token}`, // Add token to headers
+          Authorization: `Bearer ${token}`,
         },
       });
       setGroups(response.data);
@@ -45,34 +47,41 @@ const ManageGroups = () => {
   };
 
   const handleEditGroup = (group) => {
-    setEditingGroup(group); // Set the group to edit
+    setEditingGroup(group);
   };
 
   const handleDeleteGroup = async (groupId) => {
-    const token = localStorage.getItem("authToken"); // Retrieve the token
+    const token = localStorage.getItem("authToken");
     try {
       await axios.delete(`${server}/group/${groupId}`, {
         headers: {
-          Authorization: `Bearer ${token}`, // Add token to headers
+          Authorization: `Bearer ${token}`,
         },
       });
-      console.log(`Group with ID ${groupId} deleted successfully.`);
-      fetchGroups(); // Refresh the group list after deletion
+      fetchGroups();
     } catch (error) {
       console.error(`Error deleting group with ID ${groupId}:`, error);
     }
   };
 
+  const handleAddMember = (groupId) => {
+    setAddingUserToGroup(groupId); // Set group ID for adding user
+  };
+
   const closeEditForm = () => {
-    setEditingGroup(null); // Close the edit form
+    setEditingGroup(null);
   };
 
   const closeAddForm = () => {
-    setAddingGroup(false); // Close the add group form
+    setAddingGroup(false);
+  };
+
+  const closeAddUserForm = () => {
+    setAddingUserToGroup(null);
   };
 
   const refreshGroups = () => {
-    fetchGroups(); // Refresh groups after update
+    fetchGroups();
   };
 
   return (
@@ -86,7 +95,7 @@ const ManageGroups = () => {
         </CardHeader>
       </Card>
       <Button
-        onClick={() => setAddingGroup(true)} // Open Add Group form
+        onClick={() => setAddingGroup(true)}
         className="flex items-center bg-green-500 text-white px-4 py-2 rounded-lg"
       >
         <EditIcon className="mr-2" /> Add Group
@@ -108,7 +117,6 @@ const ManageGroups = () => {
                   <TableCell>{group.name}</TableCell>
                   <TableCell>{group.description}</TableCell>
                   <TableCell>
-                    {" "}
                     {new Date(group.createdAt).toLocaleString()}
                   </TableCell>
                   <TableCell className="flex space-x-2">
@@ -117,6 +125,12 @@ const ManageGroups = () => {
                       className="p-1"
                     >
                       <EditIcon />
+                    </Button>
+                    <Button
+                      onClick={() => handleAddMember(group.id)}
+                      className="p-1"
+                    >
+                      <UserPlus />
                     </Button>
                     <Button
                       onClick={() => handleDeleteGroup(group.id)}
@@ -140,6 +154,13 @@ const ManageGroups = () => {
       )}
       {addingGroup && (
         <AddGroup onClose={closeAddForm} onGroupAdded={refreshGroups} />
+      )}
+      {addingUserToGroup && (
+        <AddUserGroup
+          groupId={addingUserToGroup}
+          onClose={closeAddUserForm}
+          onUserAdded={refreshGroups}
+        />
       )}
     </div>
   );
