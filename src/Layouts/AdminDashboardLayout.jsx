@@ -1,4 +1,3 @@
-import React from "react";
 import Sidebar from "../Components/Admin/Sidebar";
 import Header from "../Components/Admin/Header";
 import { Outlet } from "react-router-dom";

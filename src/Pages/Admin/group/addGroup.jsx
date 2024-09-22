@@ -4,6 +4,7 @@ import axios from "axios";
 import { Button } from "@radix-ui/themes";
 import { server } from "../../../main";
 import { EditIcon, Trash2 } from "lucide-react";
+import { jwtDecode } from "jwt-decode";
 import {
   Card,
   CardHeader,
@@ -23,11 +24,28 @@ const AddGroup = ({ onClose, onGroupAdded }) => {
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     const token = localStorage.getItem("authToken");
-    const adminId = localStorage.getItem("adminId"); // Assuming adminId is stored in localStorage
 
     // Check if the token is available
     if (!token) {
       toast.error("Authorization token is missing. Please log in again.");
+      setSubmitting(false);
+      return;
+    }
+
+    // Decode the token to get the adminId
+    let adminId;
+    try {
+      const decodedToken = jwtDecode(token);
+      adminId = decodedToken?.adminId; // Assuming adminId is stored in the token
+    } catch (error) {
+      toast.error("Invalid token. Please log in again.");
+      setSubmitting(false);
+      return;
+    }
+
+    // Check if adminId is present in the token
+    if (!adminId) {
+      toast.error("Admin ID is missing in the token. Please log in again.");
       setSubmitting(false);
       return;
     }

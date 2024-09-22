@@ -78,7 +78,10 @@ export default function Header({ user }) {
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <div variant="ghost" className="relative h-8 w-8 rounded-full cursor-pointer">
+            <div
+              variant="ghost"
+              className="relative h-8 w-8 rounded-full cursor-pointer"
+            >
               <img
                 src={user?.profileImage || defaultAvatar}
                 alt="User Avatar"

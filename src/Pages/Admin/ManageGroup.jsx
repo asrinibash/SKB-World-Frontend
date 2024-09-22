@@ -16,17 +16,19 @@ import {
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { server } from "../../main";
-import { Trash2, EditIcon, UserPlus } from "lucide-react";
+import { Trash2, EditIcon, UserPlus, Eye } from "lucide-react";
 import EditGroup from "./group/editGroup";
 import AddGroup from "./group/addGroup";
-import AddUserGroup from "./group/addUserGroup"; // Import AddUserGroup component
+import AddUserGroup from "./group/addUserGroup";
+import ViewUserGroup from "./group/ViewUserGroup"; // Import ViewUserGroup
 import { Button } from "@radix-ui/themes";
 
 const ManageGroups = () => {
   const [groups, setGroups] = useState([]);
   const [editingGroup, setEditingGroup] = useState(null);
   const [addingGroup, setAddingGroup] = useState(false);
-  const [addingUserToGroup, setAddingUserToGroup] = useState(null); // Track adding user state
+  const [addingUserToGroup, setAddingUserToGroup] = useState(null);
+  const [viewingGroupUsers, setViewingGroupUsers] = useState(null); // New state for viewing group users
 
   useEffect(() => {
     fetchGroups();
@@ -64,8 +66,12 @@ const ManageGroups = () => {
     }
   };
 
+  const handleViewUsers = (groupId) => {
+    setViewingGroupUsers(groupId); // Set group ID for viewing users
+  };
+
   const handleAddMember = (groupId) => {
-    setAddingUserToGroup(groupId); // Set group ID for adding user
+    setAddingUserToGroup(groupId);
   };
 
   const closeEditForm = () => {
@@ -78,6 +84,10 @@ const ManageGroups = () => {
 
   const closeAddUserForm = () => {
     setAddingUserToGroup(null);
+  };
+
+  const closeViewUsers = () => {
+    setViewingGroupUsers(null); // Close user view modal
   };
 
   const refreshGroups = () => {
@@ -138,6 +148,12 @@ const ManageGroups = () => {
                     >
                       <Trash2 />
                     </Button>
+                    <Button
+                      onClick={() => handleViewUsers(group.id)}
+                      className="p-1"
+                    >
+                      <Eye />
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
@@ -161,6 +177,9 @@ const ManageGroups = () => {
           onClose={closeAddUserForm}
           onUserAdded={refreshGroups}
         />
+      )}
+      {viewingGroupUsers && (
+        <ViewUserGroup groupId={viewingGroupUsers} onClose={closeViewUsers} />
       )}
     </div>
   );
