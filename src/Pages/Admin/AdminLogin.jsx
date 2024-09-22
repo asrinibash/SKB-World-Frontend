@@ -21,9 +21,8 @@ const AdminLogin = () => {
         password,
       });
 
-      // Store the token in local storage
+      // Store the token and user info in local storage and state
       localStorage.setItem("authToken", response.data.token);
-
       setAuth({
         isAuthenticated: true,
         token: response.data.token,
@@ -35,27 +34,17 @@ const AdminLogin = () => {
         autoClose: 2000,
         hideProgressBar: true,
         closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        className: "rounded-lg shadow-lg bg-green-500 text-white",
-        bodyClassName: "h-12 text-center flex justify-center items-center",
-        style: { width: "250px" },
       });
 
       // Wait for 2 seconds before redirecting
       setTimeout(() => {
         navigate("/admin/secure/dashboard");
       }, 2000);
-
-      console.log("Login Success", response.data);
     } catch (error) {
       toast.error("Login failed. Please check your email and password", {
         position: "top-center",
         autoClose: 2000,
         hideProgressBar: true,
-        className: "rounded-lg shadow-lg bg-red-500 text-white",
-        bodyClassName: "h-12 text-center flex justify-center items-center",
-        style: { width: "250px" },
       });
       console.error("Login error:", error);
     }
@@ -65,9 +54,9 @@ const AdminLogin = () => {
     <div className="min-h-screen flex items-center justify-center bg-background p-6 md:p-12 lg:p-16">
       <ToastContainer position="top-right" autoClose={3000} />
       <div className="max-w-md w-full space-y-8 bg-gray-100 shadow-lg rounded-lg p-8">
-        <div className="text-center animate-fade-in">
-          <h2 className="text-4xl md:text-5xl font-extrabold mb-4">
-            <span className="text-accent">Admin</span> Login
+        <div className="text-center">
+          <h2 className="text-4xl md:text-5xl font-extrabold mb-4 dark:text-green-900">
+            Admin Login
           </h2>
           <p className="text-lg text-muted-foreground">
             Secure access to your admin dashboard
@@ -86,7 +75,7 @@ const AdminLogin = () => {
                 type="email"
                 autoComplete="email"
                 required
-                className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-accent focus:border-accent focus:z-10 sm:text-sm"
+                className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-500 text-gray-900"
                 placeholder="Email address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -102,7 +91,7 @@ const AdminLogin = () => {
                 type="password"
                 autoComplete="current-password"
                 required
-                className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-accent focus:border-accent focus:z-10 sm:text-sm"
+                className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-500 text-gray-900"
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -113,7 +102,7 @@ const AdminLogin = () => {
           <div>
             <button
               type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-accent hover:bg-accent/80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent"
+              className="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-accent hover:bg-accent/80"
             >
               Login
             </button>

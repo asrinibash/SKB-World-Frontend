@@ -104,10 +104,10 @@ const ManageCategories = () => {
                   <TableCell>{category.name}</TableCell>
                   <TableCell>{category.description}</TableCell>
                   <TableCell>
-                    {new Date(category.createdAt).toLocaleString()}
+                    <img src={category.image} alt={category.name} width="50" />
                   </TableCell>
                   <TableCell>
-                    <img src={category.image} alt={category.name} width="50" />
+                    {new Date(category.createdAt).toLocaleString()}
                   </TableCell>
                   <TableCell className="flex space-x-2">
                     <Button

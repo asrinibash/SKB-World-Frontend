@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "../../Components/Static/Ui/Button";
 import { motion } from "framer-motion";
 import { server } from "../../main.jsx";
-import { FaSearch, FaDownload, FaTag } from 'react-icons/fa';
+import { FaSearch, FaDownload, FaTag } from "react-icons/fa";
 import axios from "axios";
 
 export default function Courses() {
   const [courses, setCourses] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -20,14 +20,16 @@ export default function Courses() {
       try {
         const [coursesResponse, categoriesResponse] = await Promise.all([
           axios.get(`${server}/course/getAll`),
-          axios.get(`${server}/category/getAll`)
+          axios.get(`${server}/category/getAll`),
         ]);
 
         setCourses(coursesResponse.data);
         setCategories(categoriesResponse.data);
       } catch (err) {
         console.error("Error fetching data:", err);
-        setError("An error occurred while fetching data. Please try again later.");
+        setError(
+          "An error occurred while fetching data. Please try again later."
+        );
       } finally {
         setIsLoading(false);
       }
@@ -36,10 +38,15 @@ export default function Courses() {
     fetchData();
   }, []);
 
-  const filteredCourses = courses.filter(course => {
-    const categoryMatch = selectedCategory === 'all' || course.category.id === selectedCategory;
-    const tagMatch = !searchQuery || (course.tags && course.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase())));
-    return categoryMatch && tagMatch;
+  const filteredCourses = courses.filter((course) => {
+    const categoryMatch =
+      selectedCategory === "all" || course.category.id === selectedCategory;
+
+    const nameMatch =
+      !searchQuery ||
+      course.name.toLowerCase().includes(searchQuery.toLowerCase());
+
+    return categoryMatch && nameMatch;
   });
 
   if (isLoading) {
@@ -51,7 +58,11 @@ export default function Courses() {
   }
 
   if (error) {
-    return <div className="flex min-h-screen justify-center items-center text-xl text-red-500">{error}</div>;
+    return (
+      <div className="flex min-h-screen justify-center items-center text-xl text-red-500">
+        {error}
+      </div>
+    );
   }
 
   return (
@@ -68,18 +79,27 @@ export default function Courses() {
       <div className="mb-8 flex flex-col sm:flex-row justify-between items-center bg-secondary p-4 rounded-lg shadow-md">
         <div className="relative w-full sm:w-64 mb-4 sm:mb-0">
           <select
-            className="w-full p-2 pl-3 pr-10 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-2 focus:ring-accent"
+            className="w-full p-2 pl-3 pr-10 border border-gray-300 dark:bg-green-800 rounded-md appearance-none focus:outline-none focus:ring-2 focus:ring-accent"
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
           >
             <option value="all">All Categories</option>
-            {categories.map(category => (
-              <option key={category.id} value={category.id}>{category.name}</option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
             ))}
           </select>
           <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-            <svg className="w-4 h-4 fill-current text-gray-400" viewBox="0 0 20 20">
-              <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" fillRule="evenodd"></path>
+            <svg
+              className="w-4 h-4 fill-current text-gray-400"
+              viewBox="0 0 20 20"
+            >
+              <path
+                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                clipRule="evenodd"
+                fillRule="evenodd"
+              ></path>
             </svg>
           </div>
         </div>
@@ -87,7 +107,7 @@ export default function Courses() {
           <input
             type="text"
             placeholder="Search by tags..."
-            className="w-full p-2 pl-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-accent"
+            className="w-full p-2 pl-10 border border-gray-300 dark:bg-green-800 rounded-md focus:outline-none focus:ring-2 focus:ring-accent"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -105,15 +125,22 @@ export default function Courses() {
               transition={{ type: "spring", stiffness: 300 }}
             >
               <div className="p-6">
-                <h2 className="text-xl font-bold mb-3 text-primary">{course.name}</h2>
+                <h2 className="text-xl font-bold mb-3 text-primary">
+                  {course.name}
+                </h2>
                 <p className=" text-sm mb-4">{course.description}</p>
                 <div className="flex items-center mb-3">
                   <FaTag className="text-accent mr-2" />
-                  <span className="text-sm font-semibold ">Category: {course.category.name}</span>
+                  <span className="text-sm font-semibold ">
+                    Category: {course.category.name}
+                  </span>
                 </div>
                 <div className="flex flex-wrap gap-2 mb-4">
                   {course.tags.map((tag, index) => (
-                    <span key={index} className="bg-accent text-white text-xs px-2 py-1 rounded-full">
+                    <span
+                      key={index}
+                      className="bg-accent text-white text-xs px-2 py-1 rounded-full"
+                    >
                       {tag}
                     </span>
                   ))}
@@ -124,7 +151,9 @@ export default function Courses() {
                   </span>
                   <div className="flex items-center ">
                     <FaDownload className="mr-1" />
-                    <span className="text-sm">{course.downloads} downloads</span>
+                    <span className="text-sm">
+                      {course.downloads} downloads
+                    </span>
                   </div>
                 </div>
                 <Button className="w-full justify-center">Buy Now</Button>
@@ -132,7 +161,9 @@ export default function Courses() {
             </motion.div>
           ))
         ) : (
-          <p className="col-span-full text-center text-gray-500 text-lg">No courses found. Please try a different search or category.</p>
+          <p className="col-span-full text-center text-gray-500 text-lg">
+            No courses found. Please try a different search or category.
+          </p>
         )}
       </div>
     </motion.div>

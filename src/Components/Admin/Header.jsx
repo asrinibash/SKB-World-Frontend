@@ -1,16 +1,19 @@
 /* eslint-disable react/no-unknown-property */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import React, { useContext } from "react";
+import { useEffect, useState, useContext } from "react";
+import axios from "axios";
+import { useRecoilValue } from "recoil";
+import { adminAuthState } from "../../Recoil/Admin/AdminAuthState";
+import { server } from "../../main";
 import { Sheet, SheetTrigger, SheetContent } from "./Ui/Sheet";
 import { Button } from "./Ui/Button";
+import { jwtDecode } from "jwt-decode";
 import {
   Breadcrumb,
   BreadcrumbList,
   BreadcrumbItem,
   BreadcrumbLink,
-  BreadcrumbSeparator,
-  BreadcrumbPage,
 } from "./Ui/Breadcrumb";
 import { Input } from "./Ui/Input";
 import {
@@ -25,9 +28,68 @@ import { Bell, Search } from "lucide-react";
 import { FiSun, FiMoon } from "react-icons/fi";
 import defaultAvatar from "../../assets/skbcompany2.png";
 import { ThemeContext } from "../../Context/ThemeContext";
+import { useNavigate } from "react-router-dom";
 
-export default function Header({ user }) {
+const Header = ({ user }) => {
   const { darkMode, toggleDarkMode } = useContext(ThemeContext);
+  const [adminData, setAdminData] = useState(null);
+  const auth = useRecoilValue(adminAuthState);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchAdminData = async () => {
+      const token = localStorage.getItem("authToken");
+
+      if (token) {
+        try {
+          const decodedToken = jwtDecode(token);
+          const adminId = decodedToken.adminId;
+
+          if (!adminId) {
+            console.error("Admin ID is undefined");
+            return;
+          }
+
+          const response = await axios.get(`${server}/admin/${adminId}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          });
+          setAdminData(response.data);
+        } catch (error) {
+          console.error("Error fetching admin data:", error);
+        }
+      } else {
+        console.log("No token found.");
+      }
+    };
+
+    fetchAdminData(); // Initial fetch
+
+    const intervalId = setInterval(fetchAdminData, 60000); // Fetch data every 60 seconds
+
+    return () => clearInterval(intervalId); // Clear interval on unmount
+  }, [auth]);
+
+  const handleProfileClick = () => {
+    navigate("/admin/secure/profile");
+  };
+
+  const handleLogoutClick = () => {
+    // Clear local storage and cookies
+    localStorage.clear(); // Clear all local storage
+    // Optionally clear cookies if needed (this depends on how your cookies are set)
+    document.cookie.split(";").forEach((c) => {
+      document.cookie = c
+        .replace(/^ +/, "")
+        .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+    });
+
+    // Redirect to login or home page (adjust the path as needed)
+    navigate("/admin/secure/login"); // or navigate("/"); for home page
+  };
+
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center justify-between gap-4 border-b bg-background px-4 shadow-sm sm:px-6">
       <div className="flex items-center gap-4">
@@ -75,13 +137,9 @@ export default function Header({ user }) {
             className="w-full min-w-[200px] rounded-full bg-muted pl-8 md:w-[300px]"
           />
         </div>
-
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <div
-              variant="ghost"
-              className="relative h-8 w-8 rounded-full cursor-pointer"
-            >
+            <div className="relative h-8 w-8 rounded-full cursor-pointer">
               <img
                 src={user?.profileImage || defaultAvatar}
                 alt="User Avatar"
@@ -93,19 +151,24 @@ export default function Header({ user }) {
             <DropdownMenuLabel className="font-normal">
               <div className="flex flex-col space-y-1">
                 <p className="text-sm font-medium leading-none">
-                  {user?.name || "Guest User"}
+                  {adminData?.name || "Guest User"}
                 </p>
                 <p className="text-xs leading-none text-muted-foreground">
-                  {user?.email || "guest@example.com"}
+                  {adminData?.email || "guest@example.com"}
                 </p>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Profile</DropdownMenuItem>
+            <DropdownMenuItem onClick={handleProfileClick}>
+              Profile
+            </DropdownMenuItem>
             <DropdownMenuItem>Settings</DropdownMenuItem>
             <DropdownMenuItem>Support</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-red-600">
+            <DropdownMenuItem
+              className="text-red-600"
+              onClick={handleLogoutClick}
+            >
               Log out
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -127,4 +190,6 @@ export default function Header({ user }) {
       </div>
     </header>
   );
-}
+};
+
+export default Header;

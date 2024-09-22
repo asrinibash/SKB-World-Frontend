@@ -1,11 +1,7 @@
-import React from "react";
-
-const DynamicText = ({ text }) => {
+const DynamicText = () => {
   return (
     <span className="inline-block overflow-hidden">
-      <span className="inline-block animate-text-reveal text-primary">
-        {text}
-      </span>
+      <span className="inline-block animate-text-reveal text-primary"></span>
     </span>
   );
 };

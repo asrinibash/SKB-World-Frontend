@@ -1,9 +1,7 @@
-import React from "react";
-
-const AnimatedText = ({ text }) => {
+const AnimatedText = () => {
   return (
     <span className="inline-block overflow-hidden">
-      <span className="inline-block animate-text-reveal">{text}</span>
+      <span className="inline-block animate-text-reveal">{}</span>
     </span>
   );
 };

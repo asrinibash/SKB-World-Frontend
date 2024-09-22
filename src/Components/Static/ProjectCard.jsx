@@ -1,4 +1,6 @@
-import React from 'react';
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
+import React from "react";
 
 function ProjectCard({ title, description, image, technologies }) {
   return (
@@ -9,10 +11,12 @@ function ProjectCard({ title, description, image, technologies }) {
         height="300"
         alt={title}
         className="rounded-t-lg object-cover"
-        style={{ aspectRatio: '400 / 300', objectFit: 'cover' }}
+        style={{ aspectRatio: "400 / 300", objectFit: "cover" }}
       />
       <div className="space-y-2 p-4">
-        <h3 className="whitespace-nowrap text-2xl font-semibold leading-none tracking-tight">{title}</h3>
+        <h3 className="whitespace-nowrap text-2xl font-semibold leading-none tracking-tight">
+          {title}
+        </h3>
         <p className="text-sm text-muted-foreground">{description}</p>
         <div className="flex gap-2">
           {technologies.map((tech, index) => (

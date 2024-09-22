@@ -21,6 +21,10 @@ import ADUsers from "./Pages/Admin/ADUsers";
 import ManageCategories from "./Pages/Admin/ManageCategories";
 import ManageCourses from "./Pages/Admin/ManageCourse";
 import ManageGroups from "./Pages/Admin/ManageGroup";
+import Profile from "./Pages/Admin/profile/Profile";
+import PrivacyPolicy from "./Pages/Static/privacy-policy";
+import TermsOfService from "./Pages/Static/terms-of-services";
+import CookiePolicy from "./Pages/Static/CookiePolicy";
 
 function App() {
   const { darkMode } = useContext(ThemeContext);
@@ -47,6 +51,9 @@ function App() {
               <Route path="courses" element={<Courses />} />
               <Route path="services" element={<Services />} />
               <Route path="contact" element={<Contact />} />
+              <Route path="privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="terms-of-service" element={<TermsOfService />} />
+              <Route path="cookie-policy" element={<CookiePolicy />} />
             </Route>
 
             {/* Admin Routes */}
@@ -55,6 +62,7 @@ function App() {
               <Route element={<AdminProtectedRoute />}>
                 <Route element={<AdminDashboardLayout />}>
                   <Route path="dashboard" element={<AdminDashboard />} />
+                  <Route path="profile" element={<Profile />} />
                   <Route path="users" element={<ADUsers />} />
                   <Route path="Categories" element={<ManageCategories />} />
                   <Route path="Courses" element={<ManageCourses />} />

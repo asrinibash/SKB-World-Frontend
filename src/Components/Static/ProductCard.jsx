@@ -1,4 +1,6 @@
-import React from 'react';
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
+import React from "react";
 
 function SkillCard({ title, description, icon }) {
   return (
@@ -6,7 +8,9 @@ function SkillCard({ title, description, icon }) {
       <div className="flex flex-col items-center justify-center gap-4 p-6">
         {icon}
         <div className="space-y-1 text-center">
-          <h3 className="whitespace-nowrap text-2xl font-semibold leading-none tracking-tight">{title}</h3>
+          <h3 className="whitespace-nowrap text-2xl font-semibold leading-none tracking-tight">
+            {title}
+          </h3>
           <p className="text-sm text-muted-foreground">{description}</p>
         </div>
       </div>
