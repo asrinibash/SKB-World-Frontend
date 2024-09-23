@@ -38,7 +38,7 @@ const Header = ({ user }) => {
 
   useEffect(() => {
     const fetchAdminData = async () => {
-      const token = localStorage.getItem("authToken");
+      const token = localStorage.getItem("adminAuthState");
 
       if (token) {
         try {

@@ -3,8 +3,10 @@ import { atom } from "recoil";
 export const adminAuthState = atom({
   key: "adminAuthState",
   default: {
-    isAuthenticated: false,
-    token: null,
+    isAuthenticated: localStorage.getItem("adminAuthToken") ? true : false,
+    token: localStorage.getItem("adminAuthToken")
+      ? localStorage.getItem("adminAuthToken")
+      : null,
     user: null,
   },
 });

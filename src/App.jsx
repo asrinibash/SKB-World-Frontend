@@ -11,7 +11,7 @@ import AdminDashboard from "./Pages/Admin/AdminDashboard";
 import AdminLogin from "./Pages/Admin/AdminLogin";
 import UserLogin from "./Pages/User/UserLogin";
 import UserDashboard from "./Pages/User/UserDashboard";
-import { useAdminAuth } from "./Recoil/Admin";
+import { useAuthentication } from "./Recoil/Admin/useAdminAuth";
 import { useUserAuth } from "./Recoil/User";
 import AdminProtectedRoute from "./utils/AdminProtectedRoute";
 import UserProtectedRoute from "./utils/UserProtectedRoute";
@@ -21,22 +21,18 @@ import ADUsers from "./Pages/Admin/ADUsers";
 import ManageCategories from "./Pages/Admin/ManageCategories";
 import ManageCourses from "./Pages/Admin/ManageCourse";
 import ManageGroups from "./Pages/Admin/ManageGroup";
-import Profile from "./Pages/Admin/profile/Profile";
-import PrivacyPolicy from "./Pages/Static/privacy-policy";
-import TermsOfService from "./Pages/Static/terms-of-services";
-import CookiePolicy from "./Pages/Static/CookiePolicy";
 
 function App() {
   const { darkMode } = useContext(ThemeContext);
 
-  const { validateTokenOfAdmin } = useAdminAuth();
+  const { validateTokenOfAdmin } = useAuthentication();
   useEffect(() => {
-    validateTokenOfAdmin(); // Revalidate admin token on page load/refresh
+    validateTokenOfAdmin(); 
   }, [validateTokenOfAdmin]);
 
   const { validateTokenOfUser } = useUserAuth();
   useEffect(() => {
-    validateTokenOfUser(); // Revalidate user token on page load/refresh
+    validateTokenOfUser(); 
   }, [validateTokenOfUser]);
 
   return (
@@ -51,9 +47,6 @@ function App() {
               <Route path="courses" element={<Courses />} />
               <Route path="services" element={<Services />} />
               <Route path="contact" element={<Contact />} />
-              <Route path="privacy-policy" element={<PrivacyPolicy />} />
-              <Route path="terms-of-service" element={<TermsOfService />} />
-              <Route path="cookie-policy" element={<CookiePolicy />} />
             </Route>
 
             {/* Admin Routes */}
@@ -62,7 +55,6 @@ function App() {
               <Route element={<AdminProtectedRoute />}>
                 <Route element={<AdminDashboardLayout />}>
                   <Route path="dashboard" element={<AdminDashboard />} />
-                  <Route path="profile" element={<Profile />} />
                   <Route path="users" element={<ADUsers />} />
                   <Route path="Categories" element={<ManageCategories />} />
                   <Route path="Courses" element={<ManageCourses />} />
