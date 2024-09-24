@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/no-unescaped-entities */
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -22,26 +23,46 @@ const Profile = () => {
 
   useEffect(() => {
     const fetchAdminData = async () => {
-      const token = localStorage.getItem("authToken");
-      if (token) {
-        try {
-          const decodedToken = jwtDecode(token);
-          const adminId = decodedToken.adminId;
-          const response = await axios.get(`${server}/admin/${adminId}`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          });
-          setAdminData(response.data);
-        } catch (error) {
-          console.error("Error fetching admin data:", error);
+      const token = localStorage.getItem("adminAuthToken"); // Ensure you use the correct key
+
+      if (!token) {
+        console.error("Token not found in localStorage");
+        return;
+      }
+
+      try {
+        // Decode token to extract adminId
+        const decodedToken = jwtDecode(token);
+        console.log("Decoded token:", decodedToken);
+
+        const adminId = decodedToken.adminId;
+
+        if (!adminId) {
+          console.error("Admin ID is undefined");
+          return;
         }
+
+        // Fetch admin data from server using the admin ID
+        const response = await axios.get(`${server}/admin/${adminId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        setAdminData(response.data);
+      } catch (error) {
+        console.error("Error fetching admin data:", error);
       }
     };
 
     fetchAdminData();
-  }, [auth]);
+
+    // Optional: Fetch data every 60 seconds to keep it up to date
+    const intervalId = setInterval(fetchAdminData, 60000);
+
+    return () => clearInterval(intervalId); // Cleanup interval on component unmount
+  }, []);
 
   const handleUpdate = (updatedData) => {
     setAdminData((prevData) => ({
