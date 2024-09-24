@@ -31,7 +31,7 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="group inset-y-0 left-0 z-20 hidden w-16 flex-col border-r bg-background transition-all duration-300 ease-in-out hover:w-64 sm:flex h-full">
+    <aside className="group inset-y-0 left-0 z-20 hidden w-16 flex-col border-r bg-background transition-all duration-600 ease-in-out hover:w-64 sm:flex h-full">
       <div className="flex h-16 shrink-0 items-center justify-start pl-6 border-b">
         <AlignStartVertical />
       </div>
