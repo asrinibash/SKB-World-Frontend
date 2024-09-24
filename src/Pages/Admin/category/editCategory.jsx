@@ -11,6 +11,7 @@ import {
 } from "../../../Components/Admin/Ui/Card";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup"; // For validation
+import { toast } from "react-toastify"; // Assuming you're using react-toastify for notifications
 
 const EditCategory = ({ category, onClose, onUpdate }) => {
   const validationSchema = Yup.object({
@@ -33,18 +34,35 @@ const EditCategory = ({ category, onClose, onUpdate }) => {
               image: category?.image || "",
             }}
             validationSchema={validationSchema}
-            onSubmit={async (values, { setSubmitting }) => {
-              const token = localStorage.getItem("authToken"); // Retrieve the token
+            onSubmit={async (values, { setSubmitting, resetForm }) => {
+              const token = localStorage.getItem("adminAuthToken"); // Ensure you're using the correct key
+
+              // Log the token for debugging
+              console.log("Retrieved token:", token);
+
+              // Check if the token is available
+              if (!token) {
+                toast.error(
+                  "Authorization token is missing. Please log in again."
+                );
+                setSubmitting(false);
+                return;
+              }
+
               try {
                 await axios.put(`${server}/category/${category.id}`, values, {
                   headers: {
-                    Authorization: `Bearer ${token}`, // Add token to headers
+                    Authorization: `Bearer ${token}`, // Add authorization header
                   },
                 });
+
+                toast.success("Category updated successfully!");
                 onUpdate(); // Refresh categories after update
                 onClose(); // Close the edit form
+                resetForm(); // Reset form fields
               } catch (error) {
                 console.error("Error updating category:", error);
+                toast.error("Failed to update category. Please try again.");
               } finally {
                 setSubmitting(false);
               }

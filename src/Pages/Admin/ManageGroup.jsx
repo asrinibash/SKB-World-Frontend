@@ -53,8 +53,9 @@ const ManageGroups = () => {
   };
 
   const handleDeleteGroup = async (groupId) => {
-    const token = localStorage.getItem("authToken");
+    const token = localStorage.getItem("adminAuthToken");
     try {
+      alert("If group is empty then delete else delete all the groupmember ");
       await axios.delete(`${server}/group/${groupId}`, {
         headers: {
           Authorization: `Bearer ${token}`,

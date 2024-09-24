@@ -36,7 +36,7 @@ const EditCourse = ({ course, onClose, onUpdate }) => {
             }}
             validationSchema={validationSchema}
             onSubmit={async (values, { setSubmitting }) => {
-              const token = localStorage.getItem("authToken"); // Retrieve the token
+              const token = localStorage.getItem("adminAuthToken"); // Retrieve the token
               try {
                 await axios.put(`${server}/course/${course.id}`, values, {
                   headers: {
@@ -95,6 +95,7 @@ const EditCourse = ({ course, onClose, onUpdate }) => {
                     className="text-red-500 text-sm mt-1"
                   />
                 </div>
+
                 <div className="flex justify-end space-x-2">
                   <Button
                     type="submit"

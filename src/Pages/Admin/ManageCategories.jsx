@@ -44,7 +44,12 @@ const ManageCategories = () => {
   };
 
   const handleDeleteCategory = async (categoryId) => {
-    const token = localStorage.getItem("authToken"); // Retrieve the token
+    const token = localStorage.getItem("adminAuthToken"); // Use the correct key for admin token
+    if (!token) {
+      console.error("Authorization token is missing. Please log in again.");
+      return; // Exit if no token is found
+    }
+
     try {
       await axios.delete(`${server}/category/${categoryId}`, {
         headers: {

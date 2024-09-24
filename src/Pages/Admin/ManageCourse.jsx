@@ -16,15 +16,19 @@ import {
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { server } from "../../main";
-import { Trash2, EditIcon } from "lucide-react";
+import { Trash2, EditIcon, Tags, Paperclip } from "lucide-react";
 import EditCourse from "./course/editCourse"; // Import the EditCourse component
 import AddCourse from "./course/addCourse"; // Import the AddCourse component
 import { Button } from "@radix-ui/themes";
+import EditTags from "./course/EditTags";
+import EditFile from "./course/EditFile"; // Import the EditFile component
 
 const ManageCourses = () => {
   const [courses, setCourses] = useState([]);
   const [editingCourse, setEditingCourse] = useState(null);
   const [addingCourse, setAddingCourse] = useState(false); // Manage Add Course form visibility
+  const [editingTagsCourse, setEditingTagsCourse] = useState(null); // Manage Edit Tags form visibility
+  const [editingFileCourse, setEditingFileCourse] = useState(null); // Manage Edit File form visibility
 
   useEffect(() => {
     fetchCourses();
@@ -44,7 +48,7 @@ const ManageCourses = () => {
   };
 
   const handleDeleteCourse = async (courseId) => {
-    const token = localStorage.getItem("authToken"); // Retrieve the token
+    const token = localStorage.getItem("adminAuthToken"); // Retrieve the token
     try {
       await axios.delete(`${server}/course/${courseId}`, {
         headers: {
@@ -64,6 +68,14 @@ const ManageCourses = () => {
 
   const closeAddForm = () => {
     setAddingCourse(false); // Close the add course form
+  };
+
+  const closeEditTagsForm = () => {
+    setEditingTagsCourse(null); // Close the edit tags form
+  };
+
+  const closeEditFileForm = () => {
+    setEditingFileCourse(null); // Close the edit file form
   };
 
   const refreshCourses = () => {
@@ -94,7 +106,10 @@ const ManageCourses = () => {
                 <TableHead>Name</TableHead>
                 <TableHead>Description</TableHead>
                 <TableHead>Price</TableHead>
-                <TableHead>createdAt</TableHead>
+                <TableHead>Tags</TableHead>
+                <TableHead>Downloads</TableHead>
+                <TableHead>File</TableHead>
+                <TableHead>Created At</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -104,23 +119,40 @@ const ManageCourses = () => {
                   <TableCell>{course.name}</TableCell>
                   <TableCell>{course.description}</TableCell>
                   <TableCell>{course.price}</TableCell>
+                  <TableCell>{course.tags.join(", ")}</TableCell>
+                  <TableCell>{course.downloads}</TableCell>
+                  <TableCell>{course.file.length}</TableCell>
                   <TableCell>
-                    {" "}
                     {new Date(course.createdAt).toLocaleString()}
                   </TableCell>
-
                   <TableCell className="flex space-x-2">
                     <Button
-                      onClick={() => handleEditCourse(course)}
+                      onClick={() => handleDeleteCourse(course.id)} // Delete course
+                      className="p-1"
+                    >
+                      <Trash2 />
+                    </Button>
+                    <Button
+                      onClick={() => handleEditCourse(course)} // Edit course
                       className="p-1"
                     >
                       <EditIcon />
                     </Button>
                     <Button
-                      onClick={() => handleDeleteCourse(course.id)}
+                      onClick={() => {
+                        setEditingTagsCourse(course); // Open Edit Tags form
+                      }} // Edit course tags
                       className="p-1"
                     >
-                      <Trash2 />
+                      <Tags />
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        setEditingFileCourse(course); // Open Edit File form
+                      }} // Edit course file
+                      className="p-1"
+                    >
+                      <Paperclip />
                     </Button>
                   </TableCell>
                 </TableRow>
@@ -137,7 +169,24 @@ const ManageCourses = () => {
         />
       )}
       {addingCourse && (
-        <AddCourse onClose={closeAddForm} onCourseAdded={refreshCourses} />
+        <AddCourse
+          onClose={closeAddForm}
+          onAdd={refreshCourses} // Refresh courses after adding a new one
+        />
+      )}
+      {editingTagsCourse && (
+        <EditTags
+          course={editingTagsCourse}
+          onClose={closeEditTagsForm}
+          onUpdate={refreshCourses} // Refresh courses after updating tags
+        />
+      )}
+      {editingFileCourse && (
+        <EditFile
+          course={editingFileCourse}
+          onClose={closeEditFileForm}
+          onUpdate={refreshCourses} // Refresh courses after updating the file
+        />
       )}
     </div>
   );

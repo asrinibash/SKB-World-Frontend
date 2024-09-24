@@ -21,7 +21,7 @@ const UpdateProfileForm = ({ open, onClose, adminData, onUpdate }) => {
     event.preventDefault();
     setIsSubmitting(true);
 
-    const token = localStorage.getItem("authToken");
+    const token = localStorage.getItem("adminAuthToken");
     try {
       const response = await axios.put(
         `${server}/admin/${adminData.id}`,
