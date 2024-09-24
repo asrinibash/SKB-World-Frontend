@@ -1,5 +1,4 @@
 import { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { useAuthentication } from "../../Recoil/Admin/useAdminAuth";
@@ -13,9 +12,9 @@ const AdminLogin = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    
-    try{
-       await loginAdmin(email, password);
+
+    try {
+      await loginAdmin(email, password);
 
       toast.success("Login Successful!", {
         position: "bottom-right",

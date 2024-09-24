@@ -32,7 +32,7 @@ const EditGroup = ({ group, onClose, onUpdate }) => {
             }}
             validationSchema={validationSchema}
             onSubmit={async (values, { setSubmitting }) => {
-              const token = localStorage.getItem("authToken"); // Retrieve the token
+              const token = localStorage.getItem("adminAuthToken"); // Retrieve the token
               try {
                 await axios.put(`${server}/group/${group.id}`, values, {
                   headers: {

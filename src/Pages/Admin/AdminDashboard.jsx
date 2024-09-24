@@ -178,7 +178,7 @@ export default function AdminDashboard() {
                     <TableRow key={group.id}>
                       <TableCell>{group.name}</TableCell>
                       <TableCell>{group.description}</TableCell>
-                      <TableCell>{group.createdBy?.name || "N/A"}</TableCell>
+                      <TableCell>{group.createdById || "N/A"}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

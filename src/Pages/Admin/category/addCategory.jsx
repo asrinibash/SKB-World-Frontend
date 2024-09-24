@@ -21,11 +21,19 @@ const AddCategory = ({ onClose, onCategoryAdded }) => {
     description: Yup.string().required("Description is required"),
     image: Yup.string().url("Invalid URL"),
   });
-  const token = localStorage.getItem("authToken");
-  console.log("Token:", token); // Check if the token exists
+
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
-    const token = localStorage.getItem("authToken");
-    console.log("Token:", token); // Check if the token exists
+    const token = localStorage.getItem("adminAuthToken"); // Ensure you're using the correct key
+
+    // Log the token for debugging
+    console.log("Retrieved token:", token);
+
+    // Check if the token is available
+    if (!token) {
+      toast.error("Authorization token is missing. Please log in again.");
+      setSubmitting(false);
+      return;
+    }
 
     try {
       await axios.post(`${server}/category/create`, values, {
@@ -33,6 +41,7 @@ const AddCategory = ({ onClose, onCategoryAdded }) => {
           Authorization: `Bearer ${token}`, // Add authorization header
         },
       });
+
       toast.success("Category added successfully!");
       onCategoryAdded(); // Refresh categories after addition
       onClose(); // Close the form

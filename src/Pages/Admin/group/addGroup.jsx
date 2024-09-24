@@ -23,7 +23,7 @@ const AddGroup = ({ onClose, onGroupAdded }) => {
   });
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
-    const token = localStorage.getItem("authToken");
+    const token = localStorage.getItem("adminAuthToken");
 
     // Check if the token is available
     if (!token) {
