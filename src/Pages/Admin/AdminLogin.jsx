@@ -14,19 +14,21 @@ const AdminLogin = () => {
     e.preventDefault();
 
     try {
-      await loginAdmin(email, password);
-
-      toast.success("Login Successful!", {
-        position: "bottom-right",
-        autoClose: 2000,
-        hideProgressBar: true,
-        className: "rounded-lg shadow-lg bg-green-500 text-white",
-        bodyClassName: "h-12 text-center flex justify-center items-center",
-        style: { width: "250px" },
-      });
-      setTimeout(() => {
-        navigate("/admin/secure/dashboard");
-      }, 2000);
+      const response = await loginAdmin(email, password);
+      console.log(response);
+      if (response) {
+        toast.success("Login Successful!", {
+          position: "bottom-right",
+          autoClose: 2000,
+          hideProgressBar: true,
+          className: "rounded-lg shadow-lg bg-green-500 text-white",
+          bodyClassName: "h-12 text-center flex justify-center items-center",
+          style: { width: "250px" },
+        });
+        setTimeout(() => {
+          navigate("/admin/secure/dashboard");
+        }, 2000);
+      }
     } catch (error) {
       toast.error("Login failed. Please check your email and password", {
         position: "top-center",

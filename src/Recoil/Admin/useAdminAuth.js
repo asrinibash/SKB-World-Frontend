@@ -33,6 +33,7 @@ export const useAuthentication = () => {
       localStorage.setItem("tokenExpiration", expirationTime);
 
       console.log("Login Successfully");
+      return true;
     } catch (error) {
       setAuthState((prevState) => ({
         ...prevState,
@@ -41,6 +42,7 @@ export const useAuthentication = () => {
         user: null,
       }));
       console.log("Login Failed");
+      return false;
     }
   };
 
