@@ -5,7 +5,6 @@ import axios from "axios";
 import { useRecoilValue } from "recoil";
 import { server } from "../../../main";
 import { jwtDecode } from "jwt-decode";
-import { adminAuthState } from "../../../Recoil/Admin/AdminAuthState";
 import { Card, CardContent, Typography, Button } from "@mui/material";
 import {
   Table,
@@ -15,6 +14,7 @@ import {
 } from "../../../Components/Admin/Ui/Table";
 import UpdateProfileForm from "./UpdateProfileForm";
 import { EditIcon } from "lucide-react";
+import { adminAuthState } from "../../../Recoil/Admin/AdminAuthState";
 
 const Profile = () => {
   const [adminData, setAdminData] = useState(null);

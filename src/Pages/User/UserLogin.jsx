@@ -2,8 +2,8 @@ import { useState } from "react";
 import axios from "axios";
 import { useSetRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
-import { userAuthState } from "../../Recoil/User/UserAuthState";
 import { server } from "../../main";
+import { userAuthState } from "../../Recoil/User/UserAuthState";
 
 const UserLogin = () => {
   const [email, setEmail] = useState("");
