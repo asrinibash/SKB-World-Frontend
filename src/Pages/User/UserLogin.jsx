@@ -8,11 +8,13 @@ import { server } from "../../main";
 const UserLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState(""); // State for error messages
   const setAuth = useSetRecoilState(userAuthState);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setErrorMessage(""); // Reset error message before login attempt
     try {
       const response = await axios.post(`${server}/user/login`, {
         email,
@@ -26,6 +28,12 @@ const UserLogin = () => {
       console.log("Login Success", response.data);
       navigate("/user/dashboard");
     } catch (error) {
+      // Check if the error response contains a message
+      if (error.response && error.response.data) {
+        setErrorMessage(error.response.data.message); // Set error message from response
+      } else {
+        setErrorMessage("An unexpected error occurred. Please try again."); // Fallback error message
+      }
       console.error("Login error:", error);
     }
   };
@@ -41,6 +49,13 @@ const UserLogin = () => {
             Secure access to your User dashboard
           </p>
         </div>
+
+        {/* Display error message */}
+        {errorMessage && (
+          <div className="bg-red-100 text-red-700 p-4 rounded-md mb-4">
+            {errorMessage}
+          </div>
+        )}
 
         <form className="mt-8 space-y-6" onSubmit={handleLogin}>
           <div className="space-y-4">
