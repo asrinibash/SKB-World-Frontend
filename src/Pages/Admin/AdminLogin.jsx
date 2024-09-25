@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
-import { useAuthentication } from "../../Recoil/Admin/useAdminAuth";
+import { useAdminAuthentication } from "../../Recoil/Admin/useAdminAuthentication";
 import "react-toastify/dist/ReactToastify.css";
 
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { loginAdmin } = useAuthentication();
+  const { loginAdmin } = useAdminAuthentication();
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {

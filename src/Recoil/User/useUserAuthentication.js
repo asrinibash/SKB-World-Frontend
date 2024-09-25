@@ -1,12 +1,12 @@
-import { useRecoilState, useSetRecoilState } from "recoil";
-import { adminAuthState } from "./AdminAuthState";
+import { useRecoilState } from "recoil";
+import { userAuthState } from "./UserAuthState";
 import { jwtDecode } from "jwt-decode";
 
 import axios from "axios";
 import { server } from "../../main";
 
-export const useAuthentication = () => {
-  const [authState, setAuthState] = useRecoilState(adminAuthState);
+export const useUserAuthentication = () => {
+  const [authState, setAuthState] = useRecoilState(userAuthState);
 
   const loginAdmin = async (email, password) => {
     setAuthState((prevState) => ({
@@ -15,7 +15,7 @@ export const useAuthentication = () => {
 
     try {
       const response = await axios.post(
-        `${server}/admin/login`,
+        `${server}/user/login`,
         {
           email,
           password,
@@ -29,8 +29,8 @@ export const useAuthentication = () => {
       }));
 
       const expirationTime = new Date().getTime() + 24 * 60 * 60 * 1000;
-      localStorage.setItem("adminAuthToken", response.data.token);
-      localStorage.setItem("tokenExpiration", expirationTime);
+      localStorage.setItem("userAuthState", response.data.token);
+      localStorage.setItem("tokenExpirationUser", expirationTime);
 
       console.log("Login Successfully");
       return true;
@@ -46,9 +46,9 @@ export const useAuthentication = () => {
     }
   };
 
-  const validateTokenOfAdmin = () => {
-    const token = localStorage.getItem("adminAuthToken");
-    const expirationTime = localStorage.getItem("tokenExpiration");
+  const validateTokenOfUser = () => {
+    const token = localStorage.getItem("userAuthState");
+    const expirationTime = localStorage.getItem("tokenExpirationUser");
 
     if (!token || !expirationTime) {
       return false;
@@ -64,8 +64,8 @@ export const useAuthentication = () => {
   };
 
   const logout = () => {
-    localStorage.removeItem("adminAuthToken");
-    localStorage.removeItem("tokenExpiration");
+    localStorage.removeItem("userAuthState");
+    localStorage.removeItem("tokenExpirationUser");
     setAuthState((prevState) => ({
       ...prevState,
       isAuthenticated: false,
@@ -74,5 +74,5 @@ export const useAuthentication = () => {
     }));
   };
 
-  return { loginAdmin, logout, validateTokenOfAdmin };
+  return { loginAdmin, logout, validateTokenOfUser };
 };
