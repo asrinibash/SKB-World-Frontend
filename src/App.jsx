@@ -11,8 +11,8 @@ import AdminDashboard from "./Pages/Admin/AdminDashboard";
 import AdminLogin from "./Pages/Admin/AdminLogin";
 import UserLogin from "./Pages/User/UserLogin";
 import UserDashboard from "./Pages/User/UserDashboard";
-import { useAuthentication } from "./Recoil/Admin/useAdminAuth";
-import { useUserAuth } from "./Recoil/User";
+import { useAdminAuthentication } from "./Recoil/Admin/useAdminAuthentication";
+import { useUserAuthentication } from "./Recoil/User/useUserAuthentication";
 import AdminProtectedRoute from "./utils/AdminProtectedRoute";
 import UserProtectedRoute from "./utils/UserProtectedRoute";
 import StaticPagesLayout from "./Layouts/StaticPagesLayout";
@@ -30,12 +30,12 @@ import Help from "./Pages/Static/Help";
 function App() {
   const { darkMode } = useContext(ThemeContext);
 
-  const { validateTokenOfAdmin } = useAuthentication();
+  const { validateTokenOfAdmin } = useAdminAuthentication();
   useEffect(() => {
     validateTokenOfAdmin();
   }, [validateTokenOfAdmin]);
 
-  const { validateTokenOfUser } = useUserAuth();
+  const { validateTokenOfUser } = useUserAuthentication();
   useEffect(() => {
     validateTokenOfUser();
   }, [validateTokenOfUser]);
