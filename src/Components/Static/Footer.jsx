@@ -124,17 +124,20 @@ function Footer() {
               &copy; {new Date().getFullYear()} SKB World. All rights reserved.
             </p>
             <div className="flex space-x-4">
-              {["Privacy Policy", "Terms of Service", "Cookie Policy"].map(
-                (item) => (
-                  <Link
-                    key={item}
-                    to={`/${item.toLowerCase().replace(/\s+/g, "-")}`}
-                    className={footerLinkClasses}
-                  >
-                    {item}
-                  </Link>
-                )
-              )}
+              {[
+                "Help",
+                "Privacy Policy",
+                "Terms of Service",
+                "Cookie Policy",
+              ].map((item) => (
+                <Link
+                  key={item}
+                  to={`/${item.toLowerCase().replace(/\s+/g, "-")}`}
+                  className={footerLinkClasses}
+                >
+                  {item}
+                </Link>
+              ))}
             </div>
           </div>
 

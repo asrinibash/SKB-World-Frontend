@@ -17,14 +17,14 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { server } from "../../main";
 import { Trash2, EditIcon } from "lucide-react";
-import EditUser from "./user/editUser"; // Import the EditUser component
-import AddUser from "./user/addUser"; // Import the AddUser component
+import EditUser from "./user/editUser";
+import AddUser from "./user/addUser";
 import { Button } from "@radix-ui/themes";
 
 const ADUsers = () => {
   const [users, setUsers] = useState([]);
   const [editingUser, setEditingUser] = useState(null);
-  const [addingUser, setAddingUser] = useState(false); // Manage Add User form visibility
+  const [addingUser, setAddingUser] = useState(false);
 
   useEffect(() => {
     fetchUsers();
@@ -40,32 +40,41 @@ const ADUsers = () => {
   };
 
   const handleEditUser = (user) => {
-    setEditingUser(user); // Set the user to edit
+    setEditingUser(user);
   };
 
   const handleDeleteUser = async (userId) => {
     try {
-      // Send DELETE request to the server
       await axios.delete(`${server}/user/${userId}`);
-
-      // Optionally, refresh the user list after deletion
+      fetchUsers();
       console.log(`User with ID ${userId} deleted successfully.`);
-      // You can call a function like `onUserDeleted()` here to refresh the list of users.
     } catch (error) {
       console.error(`Error deleting user with ID ${userId}:`, error);
     }
   };
 
+  const handleStatusChange = async (userId, newStatus) => {
+    try {
+      await axios.put(`${server}/user/${userId}/status`, {
+        userStatus: newStatus,
+      });
+      fetchUsers(); // Refresh user list after status update
+      console.log(`User with ID ${userId} status updated to ${newStatus}.`);
+    } catch (error) {
+      console.error(`Error updating status for user ID ${userId}:`, error);
+    }
+  };
+
   const closeEditForm = () => {
-    setEditingUser(null); // Close the edit form
+    setEditingUser(null);
   };
 
   const closeAddForm = () => {
-    setAddingUser(false); // Close the add user form
+    setAddingUser(false);
   };
 
   const refreshUsers = () => {
-    fetchUsers(); // Refresh users after update
+    fetchUsers();
   };
 
   return (
@@ -79,7 +88,7 @@ const ADUsers = () => {
         </CardHeader>
       </Card>
       <Button
-        onClick={() => setAddingUser(true)} // Open Add User form
+        onClick={() => setAddingUser(true)}
         className="flex items-center bg-green-500 text-white px-4 py-2 rounded-lg"
       >
         <EditIcon className="mr-2" /> Add User
@@ -92,7 +101,7 @@ const ADUsers = () => {
                 <TableHead>Name</TableHead>
                 <TableHead>Email</TableHead>
                 <TableHead>CreatedAt</TableHead>
-                <TableHead>Status</TableHead>
+                <TableHead>User Status</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -104,7 +113,18 @@ const ADUsers = () => {
                   <TableCell>
                     {new Date(user.createdAt).toLocaleString()}
                   </TableCell>
-                  <TableCell>Active</TableCell>
+                  <TableCell>
+                    <select
+                      value={user.userStatus}
+                      onChange={(e) =>
+                        handleStatusChange(user.id, e.target.value)
+                      }
+                    >
+                      <option value="ACTIVE">Active</option>
+                      <option value="PENDING">Pending</option>
+                      <option value="BLOCKED">Blocked</option>
+                    </select>
+                  </TableCell>
                   <TableCell className="flex space-x-2">
                     <Button
                       onClick={() => handleEditUser(user)}

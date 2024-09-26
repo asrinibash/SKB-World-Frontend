@@ -48,7 +48,7 @@ const AddCategory = ({ onClose, onCategoryAdded }) => {
       resetForm();
     } catch (error) {
       console.error("Error adding category:", error);
-      toast.error("Failed to add category. Please try again.");
+      toast.error("Category already added category. Please create newOne.");
     } finally {
       setSubmitting(false);
     }

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useRecoilState } from "recoil";
 import { userAuthState } from "./UserAuthState";
 import { jwtDecode } from "jwt-decode";
@@ -14,13 +15,10 @@ export const useUserAuthentication = () => {
     }));
 
     try {
-      const response = await axios.post(
-        `${server}/user/login`,
-        {
-          email,
-          password,
-        }
-      );
+      const response = await axios.post(`${server}/user/login`, {
+        email,
+        password,
+      });
 
       setAuthState((prevState) => ({
         ...prevState,

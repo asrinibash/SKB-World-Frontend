@@ -52,25 +52,9 @@ const AddCourse = ({ onClose, onCourseAdded }) => {
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     const token = localStorage.getItem("adminAuthToken");
 
-    // Check if course already exists
-    try {
-      const response = await axios.get(
-        `${server}/course/getAll?name=${values.name}`
-      );
-      if (response.data.exists) {
-        toast.error(
-          "Course already exists. Please enter a different course name."
-        );
-        setSubmitting(false);
-        return;
-      }
-    } catch (error) {
-      console.error("Error checking course existence:", error);
-      toast.error("Failed to check course existence.");
-      setSubmitting(false);
-      return;
-    }
+    // Check if the course name already exists
 
+    // Create FormData for the new course
     const formData = new FormData();
     formData.append("name", values.name);
     formData.append("description", values.description);
@@ -80,12 +64,13 @@ const AddCourse = ({ onClose, onCourseAdded }) => {
       "tags",
       JSON.stringify(values.tags.split(",").map((tag) => tag.trim()))
     );
-    values.files.forEach((file) => {
-      formData.append("files", file); // Append each file to FormData
-    });
 
-    // Log FormData
-    console.log("FormData to be sent:", [...formData]);
+    // Check if files array exists
+    if (values.files && values.files.length) {
+      values.files.forEach((file) => {
+        formData.append("files", file);
+      });
+    }
 
     try {
       await axios.post(`${server}/course/create`, formData, {
@@ -95,15 +80,14 @@ const AddCourse = ({ onClose, onCourseAdded }) => {
         },
       });
 
+      // Show success message
       toast.success("Course added successfully.");
-      onCourseAdded(); // Call parent function to refresh the course list or do any other actions
+      if (onCourseAdded) onCourseAdded(); // Check if onCourseAdded exists
       resetForm(); // Reset the form
     } catch (error) {
-      console.error("Error adding course:", error.response);
-      toast.error("Error adding course.");
-    } finally {
-      setSubmitting(false);
+      toast.error("Course Name already added.");
     }
+    setSubmitting(false); // Move setSubmitting(false) outside the try-catch
   };
 
   const addFileInput = () => {

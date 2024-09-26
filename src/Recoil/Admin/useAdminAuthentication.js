@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { adminAuthState } from "./AdminAuthState";
 import { jwtDecode } from "jwt-decode";
@@ -14,13 +15,10 @@ export const useAdminAuthentication = () => {
     }));
 
     try {
-      const response = await axios.post(
-        `${server}/admin/login`,
-        {
-          email,
-          password,
-        }
-      );
+      const response = await axios.post(`${server}/admin/login`, {
+        email,
+        password,
+      });
 
       setAuthState((prevState) => ({
         ...prevState,

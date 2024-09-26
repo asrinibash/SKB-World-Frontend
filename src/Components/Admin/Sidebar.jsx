@@ -16,6 +16,7 @@ import {
   Layers3,
   Notebook,
   Group,
+  BadgeDollarSign,
 } from "lucide-react";
 import { AlignStartVertical } from "lucide-react";
 
@@ -26,6 +27,7 @@ export default function Sidebar() {
     { icon: Layers3, label: "Categories", to: "Categories" },
     { icon: Notebook, label: "Courses", to: "Courses" },
     { icon: Group, label: "Group", to: "Group" },
+    { icon: BadgeDollarSign, label: "Order", to: "Order" },
     { icon: BarChart2, label: "Analytics", to: "analytics" },
     { icon: ShoppingCart, label: "Orders", to: "orders" },
   ];

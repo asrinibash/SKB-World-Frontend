@@ -25,6 +25,8 @@ import Profile from "./Pages/Admin/profile/Profile";
 import CookiePolicy from "./Pages/Static/CookiePolicy";
 import TermsOfService from "./Pages/Static/terms-of-services";
 import PrivacyPolicy from "./Pages/Static/privacy-policy";
+import Help from "./Pages/Static/Help";
+import ManageOrder from "./Pages/Admin/ManageOrder";
 
 function App() {
   const { darkMode } = useContext(ThemeContext);
@@ -54,6 +56,7 @@ function App() {
               <Route path="cookie-policy" element={<CookiePolicy />} />
               <Route path="terms-of-service" element={<TermsOfService />} />
               <Route path="privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="help" element={<Help />} />
             </Route>
 
             {/* Admin Routes */}
@@ -67,6 +70,7 @@ function App() {
                   <Route path="Courses" element={<ManageCourses />} />
                   <Route path="Group" element={<ManageGroups />} />
                   <Route path="profile" element={<Profile />} />
+                  <Route path="Order" element={<ManageOrder />} />
                 </Route>
               </Route>
             </Route>
