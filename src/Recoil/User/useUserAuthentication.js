@@ -8,7 +8,7 @@ import { server } from "../../main";
 export const useUserAuthentication = () => {
   const [authState, setAuthState] = useRecoilState(userAuthState);
 
-  const loginAdmin = async (email, password) => {
+  const loginUser = async (email, password) => {
     setAuthState((prevState) => ({
       ...prevState,
     }));
@@ -74,5 +74,5 @@ export const useUserAuthentication = () => {
     }));
   };
 
-  return { loginAdmin, logout, validateTokenOfUser };
+  return { loginUser, logout, validateTokenOfUser };
 };

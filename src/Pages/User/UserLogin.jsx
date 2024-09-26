@@ -1,37 +1,50 @@
 import { useState } from "react";
-import axios from "axios";
-import { useSetRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
-import { userAuthState } from "../../Recoil/User/UserAuthState";
-import { server } from "../../main";
+import { toast, ToastContainer } from "react-toastify";
+import { useUserAuthentication } from "../../Recoil/User/useUserAuthentication";
+import "react-toastify/dist/ReactToastify.css";
 
 const UserLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const setAuth = useSetRecoilState(userAuthState);
+  const { loginUser } = useUserAuthentication();
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
     try {
-      const response = await axios.post(`${server}/user/login`, {
-        email,
-        password,
-      });
-      setAuth({
-        isAuthenticated: true,
-        token: response.data.token,
-        user: response.data.user,
-      });
-      console.log("Login Success", response.data);
-      navigate("/user/dashboard");
+      const response = await loginUser(email, password);
+      console.log(response);
+      if (response) {
+        toast.success("Login Successful!", {
+          position: "bottom-right",
+          autoClose: 2000,
+          hideProgressBar: true,
+          className: "rounded-lg shadow-lg bg-green-500 text-white",
+          bodyClassName: "h-12 text-center flex justify-center items-center",
+          style: { width: "250px" },
+        });
+        setTimeout(() => {
+          navigate("/admin/secure/dashboard");
+        }, 2000);
+      }
     } catch (error) {
-      console.error("Login error:", error);
+      toast.error("Login failed. Please check your email and password", {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: true,
+        className: "rounded-lg shadow-lg bg-red-500 text-white",
+        bodyClassName: "h-12 text-center flex justify-center items-center",
+        style: { width: "250px" },
+      });
+      console.log("Login error:", error);
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-6 md:p-12 lg:p-16">
+      <ToastContainer position="top-right" autoClose={3000} />
       <div className="max-w-md w-full space-y-8 bg-gray-100 shadow-lg rounded-lg p-8">
         <div className="text-center animate-fade-in">
           <h2 className="text-4xl md:text-5xl font-extrabold mb-4">
