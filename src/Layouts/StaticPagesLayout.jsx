@@ -15,11 +15,7 @@ const StaticPagesLayout = () => (
     <main className="flex-1">
       <Outlet />
     </main>
-    <Courses />
-    <Services />
-    <Contact />
     <Footer />
-    
   </>
 );
 

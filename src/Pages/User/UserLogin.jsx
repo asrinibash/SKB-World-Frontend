@@ -1,32 +1,18 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-<<<<<<< HEAD
 import { toast, ToastContainer } from "react-toastify";
 import { useUserAuthentication } from "../../Recoil/User/useUserAuthentication";
 import "react-toastify/dist/ReactToastify.css";
-=======
-import { server } from "../../main";
-import { userAuthState } from "../../Recoil/User/UserAuthState";
->>>>>>> 323b20972d998252552073b6d87481d48353dd24
 
 const UserLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-<<<<<<< HEAD
   const { loginUser } = useUserAuthentication();
-=======
-  const [errorMessage, setErrorMessage] = useState(""); // State for error messages
-  const setAuth = useSetRecoilState(userAuthState);
->>>>>>> 323b20972d998252552073b6d87481d48353dd24
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-<<<<<<< HEAD
 
-=======
-    setErrorMessage(""); // Reset error message before login attempt
->>>>>>> 323b20972d998252552073b6d87481d48353dd24
     try {
       const response = await loginUser(email, password);
       console.log(response);
@@ -44,7 +30,6 @@ const UserLogin = () => {
         }, 2000);
       }
     } catch (error) {
-<<<<<<< HEAD
       toast.error("Login failed. Please check your email and password", {
         position: "top-center",
         autoClose: 2000,
@@ -54,15 +39,6 @@ const UserLogin = () => {
         style: { width: "250px" },
       });
       console.log("Login error:", error);
-=======
-      // Check if the error response contains a message
-      if (error.response && error.response.data) {
-        setErrorMessage(error.response.data.message); // Set error message from response
-      } else {
-        setErrorMessage("An unexpected error occurred. Please try again."); // Fallback error message
-      }
-      console.error("Login error:", error);
->>>>>>> 323b20972d998252552073b6d87481d48353dd24
     }
   };
 
@@ -78,13 +54,6 @@ const UserLogin = () => {
             Secure access to your User dashboard
           </p>
         </div>
-
-        {/* Display error message */}
-        {errorMessage && (
-          <div className="bg-red-100 text-red-700 p-4 rounded-md mb-4">
-            {errorMessage}
-          </div>
-        )}
 
         <form className="mt-8 space-y-6" onSubmit={handleLogin}>
           <div className="space-y-4">

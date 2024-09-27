@@ -27,6 +27,7 @@ import TermsOfService from "./Pages/Static/terms-of-services";
 import PrivacyPolicy from "./Pages/Static/privacy-policy";
 import Help from "./Pages/Static/Help";
 import ManageOrder from "./Pages/Admin/ManageOrder";
+import UserProfile from "./Pages/User/UserProfile";
 
 function App() {
   const { darkMode } = useContext(ThemeContext);
@@ -79,7 +80,7 @@ function App() {
             <Route path="/user">
               <Route path="login" element={<UserLogin />} />
               <Route element={<UserProtectedRoute />}>
-                <Route path="/user/dashboard" element={<UserDashboard />} />
+                <Route path="profile" element={<UserProfile />} />
               </Route>
             </Route>
           </Routes>
