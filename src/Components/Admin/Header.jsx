@@ -1,8 +1,8 @@
 import { useEffect, useState, useContext } from "react";
 import axios from "axios";
-import { jwtDecode } from "jwt-decode"; // Correct import
-import { useNavigate } from "react-router-dom";
-import { server } from "../../main"; // Make sure to import the correct server URL
+import { jwtDecode } from "jwt-decode";
+import { useNavigate, Link } from "react-router-dom";
+import { server } from "../../main";
 import { ThemeContext } from "../../Context/ThemeContext";
 import {
   DropdownMenu,
@@ -13,11 +13,21 @@ import {
   DropdownMenuSeparator,
 } from "./Ui/DropdownMenu";
 import defaultAvatar from "../../assets/skbcompany2.png";
-import { FiSun, FiMoon } from "react-icons/fi";
+import logo from "../../assets/skbcompany.png";
+import {
+  FiSun,
+  FiMoon,
+  FiUser,
+  FiBell,
+  FiSettings,
+  FiHelpCircle,
+} from "react-icons/fi";
+import { Badge } from "./Ui/Badge";
 
 const Header = () => {
   const { darkMode, toggleDarkMode } = useContext(ThemeContext);
   const [adminData, setAdminData] = useState(null);
+  const [notifications, setNotifications] = useState([]);
   const navigate = useNavigate();
 
   const handleProfileClick = () => {
@@ -26,7 +36,7 @@ const Header = () => {
 
   useEffect(() => {
     const fetchAdminData = async () => {
-      const token = localStorage.getItem("adminAuthToken"); // Ensure you use the correct key
+      const token = localStorage.getItem("adminAuthToken");
 
       if (!token) {
         console.error("Token not found in localStorage");
@@ -34,7 +44,6 @@ const Header = () => {
       }
 
       try {
-        // Decode token to extract adminId
         const decodedToken = jwtDecode(token);
         console.log("Decoded token:", decodedToken);
 
@@ -45,7 +54,6 @@ const Header = () => {
           return;
         }
 
-        // Fetch admin data from server using the admin ID
         const response = await axios.get(`${server}/admin/${adminId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -61,14 +69,12 @@ const Header = () => {
 
     fetchAdminData();
 
-    // Optional: Fetch data every 60 seconds to keep it up to date
     const intervalId = setInterval(fetchAdminData, 60000);
 
-    return () => clearInterval(intervalId); // Cleanup interval on component unmount
+    return () => clearInterval(intervalId);
   }, []);
 
   const handleLogoutClick = () => {
-    // Clear local storage and cookies on logout
     localStorage.clear();
     document.cookie.split(";").forEach((c) => {
       document.cookie = c
@@ -79,51 +85,73 @@ const Header = () => {
   };
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center justify-between gap-4 border-b bg-background px-4 shadow-sm sm:px-6">
-      <div className="flex items-center gap-4">
-        {/* Admin Data Display */}
-        <p className="font-medium">Welcome, {adminData?.name || "Admin"}!</p>
-      </div>
-      <div className="flex items-center gap-4">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <div className="relative h-8 w-8 rounded-full cursor-pointer">
-              <img
-                src={adminData?.profileImage || defaultAvatar}
-                alt="Admin Avatar"
-                className="h-8 w-8 rounded-full object-cover"
-              />
-            </div>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56">
-            <DropdownMenuLabel className="font-normal">
-              <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium leading-none">
-                  {adminData?.name || "Guest User"}
-                </p>
-                <p className="text-xs leading-none text-muted-foreground">
-                  {adminData?.email || "guest@example.com"}
-                </p>
-              </div>
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleProfileClick}>
-              Profile
-            </DropdownMenuItem>
-            <DropdownMenuItem>Settings</DropdownMenuItem>
-            <DropdownMenuItem>Support</DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              className="text-red-600"
-              onClick={handleLogoutClick}
-            >
-              Log out
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-        <button onClick={toggleDarkMode} className="p-2.5 rounded-full">
-          {darkMode ? <FiSun /> : <FiMoon />}
-        </button>
+    <header className="sticky top-0 z-30 w-full bg-background border-b border-border/40 shadow-sm">
+      <div className="container mx-auto px-4 sm:px-6">
+        <div className="flex h-16 items-center justify-between">
+          <div className="flex items-center">
+            <Link to="/admin/dashboard" className="flex items-center space-x-2">
+              <img src={logo} alt="Logo" className="h-12 w-42" />
+            </Link>
+          </div>
+
+          <span className="text-lg font-bold text-primary">
+            Admin Dashboard
+          </span>
+          <div className="flex items-center space-x-4">
+            <DropdownMenu>
+              <span className="text-sm font-medium hidden md:inline-block">
+                {adminData?.name || "Admin"}
+              </span>
+              <DropdownMenuTrigger asChild>
+                <button
+                  onClick={toggleDarkMode}
+                  className="p-2.5 rounded-full inline-flex items-center justify-center border border-input bg-background text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                >
+                 <FiUser/>
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel className="font-normal">
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-medium leading-none">
+                      {adminData?.name || "Admin"}
+                    </p>
+                    <p className="text-xs leading-none text-muted-foreground">
+                      {adminData?.email || "admin@example.com"}
+                    </p>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => navigate("/admin/profile")}>
+                  <FiUser className="mr-2 h-4 w-4" />
+                  <span>Profile</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate("/admin/settings")}>
+                  <FiSettings className="mr-2 h-4 w-4" />
+                  <span>Settings</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate("/admin/help")}>
+                  <FiHelpCircle className="mr-2 h-4 w-4" />
+                  <span>Help</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={handleLogoutClick}
+                  className="text-red-600"
+                >
+                  Log out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <button
+            onClick={toggleDarkMode}
+            className="p-2.5 rounded-full inline-flex items-center justify-center border border-input bg-background text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+          >
+            {darkMode ? <FiSun /> : <FiMoon />}
+          </button>
+          </div>
+        </div>
       </div>
     </header>
   );
