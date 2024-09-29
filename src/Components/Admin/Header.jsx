@@ -12,17 +12,16 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "./Ui/DropdownMenu";
-import defaultAvatar from "../../assets/skbcompany2.png";
+// import defaultAvatar from "../../assets/skbcompany2.png";
 import logo from "../../assets/skbcompany.png";
 import {
   FiSun,
   FiMoon,
   FiUser,
-  FiBell,
   FiSettings,
   FiHelpCircle,
 } from "react-icons/fi";
-import { Badge } from "./Ui/Badge";
+// import { Badge } from "./Ui/Badge";
 
 const Header = () => {
   const { darkMode, toggleDarkMode } = useContext(ThemeContext);
@@ -30,9 +29,9 @@ const Header = () => {
   const [notifications, setNotifications] = useState([]);
   const navigate = useNavigate();
 
-  const handleProfileClick = () => {
-    navigate("/admin/secure/profile");
-  };
+  // const handleProfileClick = () => {
+  //   navigate("/admin/secure/profile");
+  // };
 
   useEffect(() => {
     const fetchAdminData = async () => {
@@ -107,7 +106,7 @@ const Header = () => {
                   onClick={toggleDarkMode}
                   className="p-2.5 rounded-full inline-flex items-center justify-center border border-input bg-background text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                 >
-                 <FiUser/>
+                  <FiUser />
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
@@ -122,7 +121,9 @@ const Header = () => {
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => navigate("/admin/profile")}>
+                <DropdownMenuItem
+                  onClick={() => navigate("/admin/secure/profile")}
+                >
                   <FiUser className="mr-2 h-4 w-4" />
                   <span>Profile</span>
                 </DropdownMenuItem>
@@ -145,11 +146,11 @@ const Header = () => {
             </DropdownMenu>
 
             <button
-            onClick={toggleDarkMode}
-            className="p-2.5 rounded-full inline-flex items-center justify-center border border-input bg-background text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-          >
-            {darkMode ? <FiSun /> : <FiMoon />}
-          </button>
+              onClick={toggleDarkMode}
+              className="p-2.5 rounded-full inline-flex items-center justify-center border border-input bg-background text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+            >
+              {darkMode ? <FiSun /> : <FiMoon />}
+            </button>
           </div>
         </div>
       </div>

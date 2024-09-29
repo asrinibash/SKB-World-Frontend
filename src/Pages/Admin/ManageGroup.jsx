@@ -52,19 +52,58 @@ const ManageGroups = () => {
     setEditingGroup(group);
   };
 
-  const handleDeleteGroup = async (groupId) => {
-    const token = localStorage.getItem("adminAuthToken");
-    try {
-      alert("If group is empty then delete else delete all the groupmember ");
-      await axios.delete(`${server}/group/${groupId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      fetchGroups();
-    } catch (error) {
-      console.error(`Error deleting group with ID ${groupId}:`, error);
-    }
+  const handleDeleteGroup = (groupId) => {
+    // Show confirmation dialog first
+    const confirmationBox = document.createElement("div");
+    confirmationBox.innerHTML = `
+      <div class="bg-white p-6 rounded-lg shadow-lg text-center fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+        <h2 class="text-lg font-bold mb-4">Are you sure?</h2>
+        <p class="mb-6">If the group is empty, it will be deleted. Otherwise, all group members will be removed before deletion.</p>
+        <div class="flex justify-center space-x-4">
+          <button id="okButton" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">OK</button>
+          <button id="cancelButton" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Cancel</button>
+        </div>
+      </div>
+    `;
+
+    // Append the confirmation box to the body
+    document.body.appendChild(confirmationBox);
+
+    // Handle OK button click
+    document.getElementById("okButton").onclick = async () => {
+      const token = localStorage.getItem("adminAuthToken"); // Retrieve token
+      if (!token) {
+        console.error("Authorization token is missing. Please log in again.");
+        document.body.removeChild(confirmationBox); // Remove the confirmation box
+        return;
+      }
+
+      setTimeout(async () => {
+        try {
+          // Show alert before deletion
+          alert(
+            "If the group is empty, it will be deleted. Otherwise, all group members will be removed before deletion."
+          );
+
+          // Perform delete request with token in headers
+          await axios.delete(`${server}/group/${groupId}`, {
+            headers: {
+              Authorization: `Bearer ${token}`, // Add token to headers
+            },
+          });
+          console.log(`Group with ID ${groupId} deleted successfully.`);
+          fetchGroups(); // Refresh the group list after deletion
+        } catch (error) {
+          console.error(`Error deleting group with ID ${groupId}:`, error);
+        }
+        document.body.removeChild(confirmationBox); // Remove the confirmation box after the action
+      }, 1000); // Delay the delete request by 1 second
+    };
+
+    // Handle Cancel button click
+    document.getElementById("cancelButton").onclick = () => {
+      document.body.removeChild(confirmationBox); // Just remove the confirmation box on cancel
+    };
   };
 
   const handleViewUsers = (groupId) => {

@@ -20,6 +20,7 @@ import { Trash2, EditIcon } from "lucide-react";
 import EditUser from "./user/editUser";
 import AddUser from "./user/addUser";
 import { Button } from "@radix-ui/themes";
+import { toast } from "react-toastify";
 
 const ADUsers = () => {
   const [users, setUsers] = useState([]);
@@ -43,14 +44,45 @@ const ADUsers = () => {
     setEditingUser(user);
   };
 
-  const handleDeleteUser = async (userId) => {
-    try {
-      await axios.delete(`${server}/user/${userId}`);
-      fetchUsers();
-      console.log(`User with ID ${userId} deleted successfully.`);
-    } catch (error) {
-      console.error(`Error deleting user with ID ${userId}:`, error);
-    }
+  const handleDeleteUser = (userId) => {
+    // Show confirmation dialog first
+    const confirmationBox = document.createElement("div");
+    confirmationBox.innerHTML = `
+      <div class="bg-white p-6 rounded-lg shadow-lg text-center fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+        <h2 class="text-lg font-bold mb-4">Are you sure?</h2>
+        <p class="mb-6">Do you want to proceed with this action?</p>
+        <div class="flex justify-center space-x-4">
+          <button id="okButton" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">OK</button>
+          <button id="cancelButton" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Cancel</button>
+        </div>
+      </div>
+    `;
+
+    // Append the confirmation box to the body
+    document.body.appendChild(confirmationBox);
+
+    // Handle OK button click
+    document.getElementById("okButton").onclick = async () => {
+      setTimeout(async () => {
+        try {
+          toast.success(`User with ID ${userId} deleted successfully.`);
+
+          await axios.delete(`${server}/user/${userId}`);
+          fetchUsers(); // Fetch updated user list
+
+          console.log(`User with ID ${userId} deleted successfully.`);
+        } catch (error) {
+          toast.error(`Error deleting user with ID ${userId}:`, error);
+          console.error(`Error deleting user with ID ${userId}:`, error);
+        }
+        document.body.removeChild(confirmationBox); // Remove the confirmation box after action
+      }, 1000); // Delay deletion by 1 second (1000ms)
+    };
+
+    // Handle Cancel button click
+    document.getElementById("cancelButton").onclick = () => {
+      document.body.removeChild(confirmationBox); // Just remove the confirmation box on cancel
+    };
   };
 
   const handleStatusChange = async (userId, newStatus) => {
@@ -115,14 +147,19 @@ const ADUsers = () => {
                   </TableCell>
                   <TableCell>
                     <select
+                      className="dark:bg-green-900 "
                       value={user.userStatus}
                       onChange={(e) =>
                         handleStatusChange(user.id, e.target.value)
                       }
                     >
                       <option value="ACTIVE">Active</option>
-                      <option value="PENDING">Pending</option>
-                      <option value="BLOCKED">Blocked</option>
+                      <option value="PENDING" className="bg-yellow-500">
+                        Pending
+                      </option>
+                      <option value="BLOCKED" className="bg-red-900">
+                        Blocked
+                      </option>
                     </select>
                   </TableCell>
                   <TableCell className="flex space-x-2">

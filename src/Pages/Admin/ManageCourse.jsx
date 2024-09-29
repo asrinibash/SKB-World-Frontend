@@ -47,19 +47,53 @@ const ManageCourses = () => {
     setEditingCourse(course); // Set the course to edit
   };
 
-  const handleDeleteCourse = async (courseId) => {
-    const token = localStorage.getItem("adminAuthToken"); // Retrieve the token
-    try {
-      await axios.delete(`${server}/course/${courseId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`, // Add token to headers
-        },
-      });
-      console.log(`Course with ID ${courseId} deleted successfully.`);
-      fetchCourses(); // Refresh the course list after deletion
-    } catch (error) {
-      console.error(`Error deleting course with ID ${courseId}:`, error);
-    }
+  const handleDeleteCourse = (courseId) => {
+    // Show confirmation dialog first
+    const confirmationBox = document.createElement("div");
+    confirmationBox.innerHTML = `
+      <div class="bg-white p-6 rounded-lg shadow-lg text-center fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+        <h2 class="text-lg font-bold mb-4">Are you sure?</h2>
+        <p class="mb-6">Do you want to delete this course?</p>
+        <div class="flex justify-center space-x-4">
+          <button id="okButton" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">OK</button>
+          <button id="cancelButton" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Cancel</button>
+        </div>
+      </div>
+    `;
+
+    // Append the confirmation box to the body
+    document.body.appendChild(confirmationBox);
+
+    // Handle OK button click
+    document.getElementById("okButton").onclick = async () => {
+      const token = localStorage.getItem("adminAuthToken"); // Retrieve the token
+      if (!token) {
+        console.error("Authorization token is missing. Please log in again.");
+        document.body.removeChild(confirmationBox); // Remove the confirmation box
+        return;
+      }
+
+      setTimeout(async () => {
+        try {
+          // Perform delete request with authorization token
+          await axios.delete(`${server}/course/${courseId}`, {
+            headers: {
+              Authorization: `Bearer ${token}`, // Add token to headers
+            },
+          });
+          console.log(`Course with ID ${courseId} deleted successfully.`);
+          fetchCourses(); // Refresh the course list after deletion
+        } catch (error) {
+          console.error(`Error deleting course with ID ${courseId}:`, error);
+        }
+        document.body.removeChild(confirmationBox); // Remove the confirmation box after the action
+      }, 1000); // Delay deletion by 1 second (1000ms)
+    };
+
+    // Handle Cancel button click
+    document.getElementById("cancelButton").onclick = () => {
+      document.body.removeChild(confirmationBox); // Just remove the confirmation box on cancel
+    };
   };
 
   const closeEditForm = () => {

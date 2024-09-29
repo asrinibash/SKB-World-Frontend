@@ -43,24 +43,56 @@ const ManageCategories = () => {
     setEditingCategory(category); // Set the category to edit
   };
 
-  const handleDeleteCategory = async (categoryId) => {
-    const token = localStorage.getItem("adminAuthToken"); // Use the correct key for admin token
-    if (!token) {
-      console.error("Authorization token is missing. Please log in again.");
-      return; // Exit if no token is found
-    }
+  const handleDeleteCategory = (categoryId) => {
+    // Show confirmation dialog first
+    const confirmationBox = document.createElement("div");
+    confirmationBox.innerHTML = `
+      <div class="bg-white p-6 rounded-lg shadow-lg text-center fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+        <h2 class="text-lg font-bold mb-4">Are you sure?</h2>
+        <p class="mb-6">Do you want to delete this category?</p>
+        <div class="flex justify-center space-x-4">
+          <button id="okButton" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">OK</button>
+          <button id="cancelButton" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Cancel</button>
+        </div>
+      </div>
+    `;
 
-    try {
-      await axios.delete(`${server}/category/${categoryId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`, // Add token to headers
-        },
-      });
-      console.log(`Category with ID ${categoryId} deleted successfully.`);
-      fetchCategories(); // Refresh the category list after deletion
-    } catch (error) {
-      console.error(`Error deleting category with ID ${categoryId}:`, error);
-    }
+    // Append the confirmation box to the body
+    document.body.appendChild(confirmationBox);
+
+    // Handle OK button click
+    document.getElementById("okButton").onclick = async () => {
+      // Delete category with authorization token
+      const token = localStorage.getItem("adminAuthToken"); // Use the correct key for admin token
+      if (!token) {
+        console.error("Authorization token is missing. Please log in again.");
+        document.body.removeChild(confirmationBox); // Remove the confirmation box
+        return; // Exit if no token is found
+      }
+
+      setTimeout(async () => {
+        try {
+          await axios.delete(`${server}/category/${categoryId}`, {
+            headers: {
+              Authorization: `Bearer ${token}`, // Add token to headers
+            },
+          });
+          console.log(`Category with ID ${categoryId} deleted successfully.`);
+          fetchCategories(); // Refresh the category list after deletion
+        } catch (error) {
+          console.error(
+            `Error deleting category with ID ${categoryId}:`,
+            error
+          );
+        }
+        document.body.removeChild(confirmationBox); // Remove the confirmation box after the action is done
+      }, 1000); // Delay deletion by 1 second (1000ms)
+    };
+
+    // Handle Cancel button click
+    document.getElementById("cancelButton").onclick = () => {
+      document.body.removeChild(confirmationBox); // Just remove the confirmation box on cancel
+    };
   };
 
   const closeEditForm = () => {
