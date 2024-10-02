@@ -4,8 +4,10 @@ import { motion } from "framer-motion";
 import { server } from "../../main.jsx";
 import { FaSearch, FaDownload, FaTag } from "react-icons/fa";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function Courses() {
+  const navigate = useNavigate();
   const [courses, setCourses] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -64,6 +66,10 @@ export default function Courses() {
       </div>
     );
   }
+
+  const handleBuyNow = (courseId) => {
+    navigate(`/user/payment/${courseId}`);
+  };
 
   return (
     <motion.div
@@ -162,7 +168,12 @@ export default function Courses() {
                         <span>{course.downloads} downloads</span>
                       </div>
                     </div>
-                    <Button className="w-full justify-center text-sm">Buy Now</Button>
+                    <Button 
+                      className="w-full justify-center text-sm" 
+                      onClick={() => handleBuyNow(course.id)}
+                    >
+                      Buy Now
+                    </Button>
                   </div>
                 </motion.div>
               ))

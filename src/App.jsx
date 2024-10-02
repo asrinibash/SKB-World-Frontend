@@ -28,6 +28,7 @@ import PrivacyPolicy from "./Pages/Static/privacy-policy";
 import Help from "./Pages/Static/Help";
 import ManageOrder from "./Pages/Admin/ManageOrder";
 import UserProfile from "./Pages/User/UserProfile";
+import PaymentPage from "./Pages/Static/PaymentPage"; // Add this import
 
 function App() {
   const { darkMode } = useContext(ThemeContext);
@@ -81,6 +82,7 @@ function App() {
               <Route path="login" element={<UserLogin />} />
               <Route element={<UserProtectedRoute />}>
                 <Route path="profile" element={<UserProfile />} />
+                <Route path="payment/:courseId" element={<PaymentPage />} /> {/* Add this new route */}
               </Route>
             </Route>
           </Routes>
