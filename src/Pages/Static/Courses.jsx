@@ -5,6 +5,7 @@ import { server } from "../../main.jsx";
 import { FaSearch, FaDownload, FaTag } from "react-icons/fa";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { format } from "date-fns"; // Install date-fns for date formatting
 
 export default function Courses() {
   const navigate = useNavigate();
@@ -14,6 +15,10 @@ export default function Courses() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const coursesPerPage = 9; // Show 9 courses per page
 
   useEffect(() => {
     const fetchData = async () => {
@@ -40,6 +45,7 @@ export default function Courses() {
     fetchData();
   }, []);
 
+  // Filter and paginate courses
   const filteredCourses = courses.filter((course) => {
     const categoryMatch =
       selectedCategory === "all" || course.category.id === selectedCategory;
@@ -50,6 +56,15 @@ export default function Courses() {
 
     return categoryMatch && nameMatch;
   });
+
+  const indexOfLastCourse = currentPage * coursesPerPage;
+  const indexOfFirstCourse = indexOfLastCourse - coursesPerPage;
+  const currentCourses = filteredCourses.slice(
+    indexOfFirstCourse,
+    indexOfLastCourse
+  );
+
+  const totalPages = Math.ceil(filteredCourses.length / coursesPerPage);
 
   if (isLoading) {
     return (
@@ -71,6 +86,14 @@ export default function Courses() {
     navigate(`/user/payment/${courseId}`);
   };
 
+  const handleNextPage = () => {
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
+  };
+
   return (
     <motion.div
       className="container mx-auto px-4 py-8"
@@ -81,7 +104,10 @@ export default function Courses() {
       <h1 className="text-4xl font-bold mb-8 text-center ">
         Explore <span className="text-accent">Our Courses</span>
       </h1>
-      <p className="text-md md:text-lg text-center text-muted-foreground max-w-3xl mx-auto mb-8">We offer a wide range of courses to help you learn new skills and advance your career.</p>
+      <p className="text-md md:text-lg text-center text-muted-foreground max-w-3xl mx-auto mb-8">
+        We offer a wide range of courses to help you learn new skills and
+        advance your career.
+      </p>
 
       <div className="flex flex-col md:flex-row gap-8">
         {/* Sidebar */}
@@ -101,17 +127,32 @@ export default function Courses() {
                   All Categories
                 </button>
               </li>
+
               {categories.map((category) => (
-                <li key={category.id}>
+                <li key={category.id} className="mb-4">
                   <button
-                    className={`w-full text-left p-2 rounded transition-colors ${
-                      selectedCategory === category.id
-                        ? "bg-accent text-white"
-                        : "hover:bg-accent/10"
-                    }`}
+                    className={`w-full text-left p-4 rounded-lg shadow-md transition-colors
+        ${
+          selectedCategory === category.id
+            ? "bg-accent text-white"
+            : "bg-white hover:bg-accent/10 dark:bg-gray-800 dark:hover:bg-gray-700"
+        }`}
                     onClick={() => setSelectedCategory(category.id)}
                   >
-                    {category.name}
+                    <div className="flex justify-between items-center">
+                      <span className="font-bold text-lg dark:text-gray-300">
+                        {category.name}
+                      </span>
+                      <span className="text-sm text-gray-500 dark:text-gray-400">
+                        {format(new Date(category.createdAt), "dd MMM yyyy")}
+                        <br />
+                        <pre>By Admin</pre>
+                      </span>
+                    </div>
+                    <p className="text-sm mt-2 text-gray-700 dark:text-gray-400">
+                      {category.description}
+                    </p>
+                    <hr className="my-2 border-gray-300 dark:border-gray-600" />
                   </button>
                 </li>
               ))}
@@ -122,11 +163,11 @@ export default function Courses() {
         {/* Main content */}
         <div className="md:w-3/4">
           <div className="mb-6 flex items-center justify-end">
-            <div className="relative ">
+            <div className="relative">
               <input
                 type="text"
                 placeholder="Search courses..."
-                className="w-72  p-3 pl-10 border border-gray-300 dark:bg-green-800 rounded-md focus:outline-none focus:ring-2 focus:ring-accent"
+                className="w-72 p-3 pl-10 border border-gray-300 dark:bg-green-800 rounded-md focus:outline-none focus:ring-2 focus:ring-accent"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -134,47 +175,50 @@ export default function Courses() {
             </div>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredCourses.length > 0 ? (
-              filteredCourses.map((course) => (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {currentCourses.length > 0 ? (
+              currentCourses.map((course) => (
                 <motion.div
                   key={course.id}
-                  className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden transition-shadow duration-300 hover:shadow-xl"
+                  className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden transition-shadow duration-300 hover:shadow-xl p-4"
                   whileHover={{ scale: 1.03 }}
                   transition={{ type: "spring", stiffness: 300 }}
                 >
                   <img
-                    src={course.image || "https://img.freepik.com/free-vector/software-development-programming-coding-learning-information-technology-courses-it-courses-all-levels-computing-hi-tech-course-concept_335657-191.jpg"}
+                    src={
+                      course.image ||
+                      "https://img.freepik.com/free-vector/software-development-programming-coding-learning-information-technology-courses-it-courses-all-levels-computing-hi-tech-course-concept_335657-191.jpg"
+                    }
                     alt={course.name}
-                    className="w-full h-48 object-cover"
+                    className="w-full h-36 object-cover"
                   />
-                  <div className="p-4">
-                    <h2 className="text-xl font-bold mb-2 text-primary">
-                      {course.name}
-                    </h2>
-                    <p className="text-sm mb-3 line-clamp-3">{course.description}</p>
-                    <div className="flex items-center mb-3">
-                      <FaTag className="text-accent mr-2" />
-                      <span className="text-sm font-semibold">
-                        {course.category.name}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center mb-3">
-                      <span className="text-2xl font-bold text-accent">
-                        ${course.price.toFixed(2)}
-                      </span>
-                      <div className="flex items-center text-sm bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
-                        <FaDownload className="mr-1" />
-                        <span>{course.downloads} downloads</span>
-                      </div>
-                    </div>
-                    <Button 
-                      className="w-full justify-center text-sm" 
-                      onClick={() => handleBuyNow(course.id)}
-                    >
-                      Buy Now
-                    </Button>
+                  <h2 className="text-lg font-bold my-2 text-primary">
+                    {course.name}
+                  </h2>
+                  <p className="text-sm mb-3 line-clamp-3">
+                    {course.description}
+                  </p>
+                  <div className="flex items-center mb-3">
+                    <FaTag className="text-accent mr-2" />
+                    <span className="text-sm font-semibold">
+                      {course.category.name}
+                    </span>
                   </div>
+                  <div className="flex justify-between items-center mb-3">
+                    <span className="text-xl font-bold text-accent">
+                      ${course.price.toFixed(2)}
+                    </span>
+                    <div className="flex items-center text-sm bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
+                      <FaDownload className="mr-1" />
+                      <span>{course.downloads} downloads</span>
+                    </div>
+                  </div>
+                  <Button
+                    className="w-full justify-center text-sm"
+                    onClick={() => handleBuyNow(course.id)}
+                  >
+                    Buy Now
+                  </Button>
                 </motion.div>
               ))
             ) : (
@@ -182,6 +226,33 @@ export default function Courses() {
                 No courses found. Please try a different search or category.
               </p>
             )}
+          </div>
+
+          {/* Pagination controls */}
+          <div className="flex justify-center mt-8">
+            <button
+              onClick={handlePrevPage}
+              className={`px-4 py-2 mr-2 rounded-md bg-gray-200 text-gray-700 ${
+                currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+              disabled={currentPage === 1}
+            >
+              Previous
+            </button>
+            <span className="text-gray-700">
+              Page {currentPage} of {totalPages}
+            </span>
+            <button
+              onClick={handleNextPage}
+              className={`px-4 py-2 ml-2 rounded-md bg-gray-200 text-gray-700 ${
+                currentPage === totalPages
+                  ? "opacity-50 cursor-not-allowed"
+                  : ""
+              }`}
+              disabled={currentPage === totalPages}
+            >
+              Next
+            </button>
           </div>
         </div>
       </div>

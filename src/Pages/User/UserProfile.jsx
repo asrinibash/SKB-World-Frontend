@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { server } from "../../main";
@@ -132,15 +133,15 @@ export default function UserProfile() {
                 <strong>Member Since:</strong>{" "}
                 {new Date(user.createdAt).toLocaleDateString()}
               </div>
-            
-            <div className=" flex items-end justify-end">
-              <Button
-                onClick={() => navigate("/user/update-profile")}
-                className="p-2.5 rounded-full inline-flex items-center justify-center border border-input bg-background text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-              >
-                Update Profile
-              </Button>
-            </div>
+
+              <div className=" flex items-end justify-end">
+                <Button
+                  onClick={() => navigate("/user/update-profile")}
+                  className="p-2.5 rounded-full inline-flex items-center justify-center border border-input bg-background text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                >
+                  Update Profile
+                </Button>
+              </div>
             </div>
           </CardContent>
         </Card>

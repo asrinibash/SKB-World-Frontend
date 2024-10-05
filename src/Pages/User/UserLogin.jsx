@@ -26,7 +26,7 @@ const UserLogin = () => {
           style: { width: "250px" },
         });
         setTimeout(() => {
-          navigate("/admin/secure/dashboard");
+          navigate("/");
         }, 2000);
       }
     } catch (error) {

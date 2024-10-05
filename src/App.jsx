@@ -10,7 +10,6 @@ import Services from "./Pages/Static/Services";
 import AdminDashboard from "./Pages/Admin/AdminDashboard";
 import AdminLogin from "./Pages/Admin/AdminLogin";
 import UserLogin from "./Pages/User/UserLogin";
-import UserDashboard from "./Pages/User/UserDashboard";
 import { useAdminAuthentication } from "./Recoil/Admin/useAdminAuthentication";
 import { useUserAuthentication } from "./Recoil/User/useUserAuthentication";
 import AdminProtectedRoute from "./utils/AdminProtectedRoute";
@@ -82,7 +81,11 @@ function App() {
               <Route path="login" element={<UserLogin />} />
               <Route element={<UserProtectedRoute />}>
                 <Route path="profile" element={<UserProfile />} />
-                <Route path="payment/:courseId" element={<PaymentPage />} /> {/* Add this new route */}
+                <Route
+                  path="payment/:courseId"
+                  element={<PaymentPage />}
+                />{" "}
+                {/* Add this new route */}
               </Route>
             </Route>
           </Routes>
