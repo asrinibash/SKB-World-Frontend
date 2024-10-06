@@ -81,7 +81,7 @@ const ManageOrder = () => {
                         <TableRow key={order.id}>
                           <TableCell>{userIndex + 1}</TableCell>
                           <TableCell>{user.name || "N/A"}</TableCell>
-                          <TableCell>{order.courseId || "N/A"}</TableCell>
+                          <TableCell>{order.course?.name || "N/A"}</TableCell>
                           <TableCell>
                             {new Date(order.createdAt).toLocaleString()}
                           </TableCell>
