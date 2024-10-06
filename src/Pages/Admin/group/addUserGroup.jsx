@@ -59,7 +59,7 @@ const AddUserGroup = ({ groupId, onClose, onUserAdded }) => {
         setShowToast(true);
       } else {
         console.error("Error adding user to group:", err);
-        setError("Failed to add user to group.");
+        setError("User already added in this group");
       }
     }
   };
@@ -77,13 +77,28 @@ const AddUserGroup = ({ groupId, onClose, onUserAdded }) => {
             {/* Dropdown menu to select users */}
             <DropdownMenu>
               <DropdownMenuTrigger>
-                <Button variant="outline">Select User</Button>
+                <Button className="flex items-center justify-between border border-gray-300 px-4 py-2 w-60 rounded-md text-gray-700 bg-white hover:bg-gray-100">
+                  <span>Select User</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5 text-gray-600"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M5.292 7.292a1 1 0 011.416 0L10 10.586l3.292-3.294a1 1 0 111.416 1.416l-4 4a1 1 0 01-1.416 0l-4-4a1 1 0 010-1.416z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent>
+              <DropdownMenuContent className="bg-white border border-gray-300 shadow-lg rounded-md mt-2 w-60">
                 {users.map((user) => (
                   <DropdownMenuItem
                     key={user.id}
                     onSelect={() => setSelectedUser(user.name)}
+                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-gray-700"
                   >
                     {user.name}
                   </DropdownMenuItem>
@@ -93,8 +108,9 @@ const AddUserGroup = ({ groupId, onClose, onUserAdded }) => {
 
             {/* Show selected user */}
             {selectedUser && (
-              <p className="selected-user mt-2">
-                Selected User: {selectedUser}
+              <p className="mt-2 text-gray-600">
+                Selected User:{" "}
+                <span className="font-medium">{selectedUser}</span>
               </p>
             )}
 
