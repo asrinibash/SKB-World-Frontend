@@ -1,6 +1,7 @@
-import { motion } from 'framer-motion';
-import { FaLightbulb, FaUsers, FaRocket, FaChartLine } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
+/* eslint-disable react/prop-types */
+import { motion } from "framer-motion";
+import { FaLightbulb, FaUsers, FaRocket, FaChartLine } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 const AnimatedText = ({ text }) => {
   return (
     <motion.span
@@ -19,7 +20,7 @@ const FeatureCard = ({ icon: Icon, title, description }) => {
     <motion.div
       className="bg-secondary rounded-lg p-6 shadow-md"
       whileHover={{ scale: 1.05 }}
-      transition={{ type: 'spring', stiffness: 300 }}
+      transition={{ type: "spring", stiffness: 300 }}
     >
       <Icon className="text-4xl text-accent mb-4" />
       <h3 className="text-xl font-semibold mb-2">{title}</h3>
@@ -29,11 +30,12 @@ const FeatureCard = ({ icon: Icon, title, description }) => {
 };
 
 const About = () => {
-
   const navigate = useNavigate();
   const companyInfo = {
-    mission: "Our mission is to empower businesses and individuals with cutting-edge software solutions that drive growth and innovation.",
-    vision: "We envision a world where technology seamlessly integrates with human creativity, fostering a more efficient and connected global community.",
+    mission:
+      "Our mission is to empower businesses and individuals with cutting-edge software solutions that drive growth and innovation.",
+    vision:
+      "We envision a world where technology seamlessly integrates with human creativity, fostering a more efficient and connected global community.",
     values: [
       "Innovation: Constantly pushing the boundaries of what's possible",
       "Quality: Delivering excellence in every line of code",
@@ -55,7 +57,8 @@ const About = () => {
             <AnimatedText text="About Our Company" />
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            We are a team of passionate developers and designers dedicated to creating innovative software solutions that make a difference.
+            We are a team of passionate developers and designers dedicated to
+            creating innovative software solutions that make a difference.
           </p>
         </motion.div>
 
@@ -115,15 +118,19 @@ const About = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.6 }}
         >
-          <h3 className="text-3xl font-semibold mb-4">Ready to Transform Your Ideas into Reality?</h3>
+          <h3 className="text-3xl font-semibold mb-4">
+            Ready to Transform Your Ideas into Reality?
+          </h3>
           <p className="text-xl text-muted-foreground mb-8">
-            Let's collaborate to create innovative software solutions that drive your business forward.
+            Lets collaborate to create innovative software solutions that drive
+            your business forward.
           </p>
-          <button 
-          onClick={() => {
-           navigate('/contact');
-          }}
-          className="bg-accent text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-accent/90 transition-colors">
+          <button
+            onClick={() => {
+              navigate("/contact");
+            }}
+            className="bg-accent text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-accent/90 transition-colors"
+          >
             Get in Touch
           </button>
         </motion.div>

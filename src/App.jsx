@@ -28,6 +28,7 @@ import Help from "./Pages/Static/Help";
 import ManageOrder from "./Pages/Admin/ManageOrder";
 import UserProfile from "./Pages/User/UserProfile";
 import PaymentPage from "./Pages/Static/PaymentPage"; // Add this import
+import Subscriptions from "./Components/Static/Subscription";
 
 function App() {
   const { darkMode } = useContext(ThemeContext);
@@ -58,6 +59,7 @@ function App() {
               <Route path="terms-of-service" element={<TermsOfService />} />
               <Route path="privacy-policy" element={<PrivacyPolicy />} />
               <Route path="help" element={<Help />} />
+              <Route path="subscriptions" element={<Subscriptions />} />
             </Route>
 
             {/* Admin Routes */}

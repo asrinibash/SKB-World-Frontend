@@ -100,6 +100,16 @@ const UserLogin = () => {
             </button>
           </div>
         </form>
+
+        <p className="text-center text-sm text-gray-600">
+          No account?{" "}
+          <button
+            className="text-accent hover:underline focus:outline-none"
+            onClick={() => navigate("/signup")} // Adjust the path to your signup page
+          >
+            Sign up
+          </button>
+        </p>
       </div>
     </div>
   );

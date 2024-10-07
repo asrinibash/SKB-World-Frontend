@@ -112,9 +112,7 @@ function Header() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <div className="relative ">
-                  <button
-                    className="p-2.5 rounded-full inline-flex items-center justify-center border border-input bg-background text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-                  >
+                  <button className="p-2.5 rounded-full inline-flex items-center justify-center border border-input bg-background text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
                     <FiUser />
                   </button>
                 </div>
@@ -156,12 +154,16 @@ function Header() {
             </DropdownMenu>
           ) : (
             <Link to="/user/login">
-              <button className="inline-flex items-center justify-center rounded-md border border-input bg-accent text-accent-foreground px-4 py-2 text-sm font-medium shadow-sm transition-colors hover:bg-accent/80 hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
-                Signup
+              <button className="inline-flex items-center justify-center rounded-full border border-input bg-accent text-accent-foreground px-4 py-2 text-sm font-medium shadow-sm transition-colors hover:bg-accent/80 hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
+                Login
               </button>
             </Link>
           )}
-
+          <Link to="/subscriptions">
+            <button className="inline-flex items-center justify-center rounded-full border border-input bg-accent text-accent-foreground px-4 py-2 text-sm font-medium shadow-sm transition-colors hover:bg-accent/80 hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
+              Choose Plan
+            </button>
+          </Link>
           <button
             onClick={toggleDarkMode}
             className="p-2.5 rounded-full inline-flex items-center justify-center border border-input bg-background text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
