@@ -1,43 +1,111 @@
-/* eslint-disable react/no-unescaped-entities */
-import ContactForm from "../../Components/Static/ContactForm";
-import SocialLinks from "../../Components/Static/SocialLinks";
-import { motion } from "framer-motion";
+import { useState } from "react";
+import emailjs from "emailjs-com";
 
-function Contact() {
+function ContactForm() {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    mobile: "", // Mobile field
+    message: "",
+  });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // Constructing the email data with dynamic fields
+    const emailData = {
+      to_name: "Mir Ziauddin", // Your name or the recipient's name
+      from_name: formData.name,
+      from_email: formData.email,
+      from_phone: formData.mobile, // Mobile number from the form
+      message: formData.message,
+    };
+
+    emailjs
+      .send(
+        "service_fmm1925", // Replace with your EmailJS service ID
+        "template_j2jinew", // Replace with your EmailJS template ID
+        emailData, // Use constructed email data
+        "AdpGS7Q9Tk28Rlrsw" // Replace with your EmailJS user ID
+      )
+      .then(
+        (response) => {
+          console.log("SUCCESS!", response.status, response.text);
+          alert("Message sent successfully!");
+          setFormData({ name: "", email: "", mobile: "", message: "" }); // Reset form
+        },
+        (error) => {
+          console.log("FAILED...", error);
+          alert("Failed to send message.");
+        }
+      );
+  };
+
   return (
-    <motion.section
-      id="contact"
-      className="container mx-auto py-12 px-4 md:py-16 md:px-12"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      <div className="space-y-6">
-        <div className="space-y-2 animate-fade-in">
-          <h2 className="text-3xl font-bold tracking-tighter  sm:text-4xl">
-            <span className="text-accent">Contact</span> Us
-          </h2>
-          <p className="text-muted-foreground">
-            We'd love to hear from you! Feel free to reach out.
-          </p>
-        </div>
-        <div className="grid gap-6 sm:grid-cols-2">
-          <ContactForm />
-          <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
-            <div className="space-y-4 p-6">
-              <SocialLinks />
-              <div className="space-y-2">
-                <h3 className="text-lg font-semibold">Location</h3>
-                <p className="text-muted-foreground">
-                  123 Main Street, Anytown USA
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+    <form onSubmit={handleSubmit} className="space-y-4 m-14">
+      <div>
+        <label htmlFor="name" className="block text-sm font-medium ">
+          Name
+        </label>
+        <input
+          type="text"
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
+          className="w-full rounded border p-2"
+          required
+        />
       </div>
-    </motion.section>
+      <div>
+        <label htmlFor="email" className="block text-sm font-medium">
+          Email
+        </label>
+        <input
+          type="email"
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
+          className="w-full rounded border p-2"
+          required
+        />
+      </div>
+      <div>
+        <label htmlFor="mobile" className="block text-sm font-medium">
+          Mobile Number
+        </label>
+        <input
+          type="tel"
+          name="mobile"
+          value={formData.mobile}
+          onChange={handleChange}
+          className="w-full rounded border p-2"
+          required
+        />
+      </div>
+      <div>
+        <label htmlFor="message" className="block text-sm font-medium">
+          Message
+        </label>
+        <textarea
+          name="message"
+          value={formData.message}
+          onChange={handleChange}
+          className="w-full rounded border p-2"
+          required
+        />
+      </div>
+      <button
+        type="submit"
+        className="px-4 py-2 font-bold text-white bg-accent rounded"
+      >
+        Send Message
+      </button>
+    </form>
   );
 }
 
-export default Contact;
+export default ContactForm;
