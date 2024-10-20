@@ -131,7 +131,8 @@ const ManageCategories = () => {
                 <TableHead>Name</TableHead>
                 <TableHead>Description</TableHead>
                 <TableHead>Image</TableHead>
-                <TableHead>CreatedAt</TableHead>
+                <TableHead>Total Courses</TableHead>
+                <TableHead>Created At</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -143,6 +144,8 @@ const ManageCategories = () => {
                   <TableCell>
                     <img src={category.image} alt={category.name} width="50" />
                   </TableCell>
+                  <TableCell>{category.courses.length}</TableCell>{" "}
+                  {/* Count of courses */}
                   <TableCell>
                     {new Date(category.createdAt).toLocaleString()}
                   </TableCell>
@@ -166,6 +169,7 @@ const ManageCategories = () => {
           </Table>
         </CardContent>
       </Card>
+
       {editingCategory && (
         <EditCategory
           category={editingCategory}

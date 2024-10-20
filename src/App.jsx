@@ -4,7 +4,7 @@ import { ThemeContext } from "./Context/ThemeContext";
 
 import Home from "./Pages/Static/Home";
 import About from "./Pages/Static/About";
-import Courses from "./Pages/Static/Courses";
+// import Courses from "./Pages/Static/Courses";
 import Contact from "./Pages/Static/Contact";
 import Services from "./Pages/Static/Services";
 import AdminDashboard from "./Pages/Admin/AdminDashboard";
@@ -29,6 +29,9 @@ import ManageOrder from "./Pages/Admin/ManageOrder";
 import UserProfile from "./Pages/User/UserProfile";
 import PaymentPage from "./Pages/Static/PaymentPage"; // Add this import
 import Subscriptions from "./Components/Static/Subscription";
+import CoursesList from "./Pages/Static/CoursesList";
+import CategoryList from "./Pages/Static/CategoryList";
+import BuyCourse from "./Pages/Static/BuyCourse";
 
 function App() {
   const { darkMode } = useContext(ThemeContext);
@@ -52,7 +55,12 @@ function App() {
             <Route element={<StaticPagesLayout />}>
               <Route index element={<Home />} />
               <Route path="about" element={<About />} />
-              <Route path="courses" element={<Courses />} />
+              {/* <Route path="courses" element={<Courses />} /> */}
+              <Route path="categoryList" element={<CategoryList />} />
+              <Route path="coursesList" element={<CoursesList />} />
+              <Route path="/buyCourse/:id" element={<BuyCourse />} />
+              <Route path="/buyCourse" element={<BuyCourse />} />
+
               <Route path="services" element={<Services />} />
               <Route path="contact" element={<Contact />} />
               <Route path="cookie-policy" element={<CookiePolicy />} />

@@ -1,7 +1,8 @@
+/* eslint-disable react/prop-types */
 import React from "react";
 
 // Simple cn function implementation
-const cn = (...classes) => classes.filter(Boolean).join(' ');
+const cn = (...classes) => classes.filter(Boolean).join(" ");
 
 const Avatar = React.forwardRef(({ className, ...props }, ref) => (
   <span

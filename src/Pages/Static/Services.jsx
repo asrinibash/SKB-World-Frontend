@@ -1,7 +1,7 @@
-const AnimatedText = ({ text }) => {
+const AnimatedText = () => {
   return (
     <span className="inline-block overflow-hidden">
-      <span className="inline-block animate-text-reveal">{text}</span>
+      <span className="inline-block animate-text-reveal">{}</span>
     </span>
   );
 };
@@ -14,7 +14,8 @@ const Services = () => {
           <span className="text-accent">Our</span> Services
         </h1>
         <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
-          Empowering businesses with cutting-edge software solutions tailored to meet your unique challenges and drive growth.
+          Empowering businesses with cutting-edge software solutions tailored to
+          meet your unique challenges and drive growth.
         </p>
       </div>
 
@@ -24,7 +25,8 @@ const Services = () => {
             <AnimatedText text="Custom Software Development" />
           </h2>
           <p className="text-lg text-muted-foreground">
-            We create bespoke software solutions that address your specific business needs, streamline operations, and enhance productivity.
+            We create bespoke software solutions that address your specific
+            business needs, streamline operations, and enhance productivity.
           </p>
           <ul className="list-disc list-inside text-muted-foreground space-y-2">
             <li>Tailored applications for unique business processes</li>
@@ -55,7 +57,8 @@ const Services = () => {
             <AnimatedText text="Web Development" />
           </h2>
           <p className="text-lg text-muted-foreground">
-            We build responsive, high-performance web applications that deliver exceptional user experiences and drive engagement.
+            We build responsive, high-performance web applications that deliver
+            exceptional user experiences and drive engagement.
           </p>
           <ul className="list-disc list-inside text-muted-foreground space-y-2">
             <li>React.js for dynamic, interactive UIs</li>
@@ -72,7 +75,9 @@ const Services = () => {
             <AnimatedText text="Mobile App Development" />
           </h2>
           <p className="text-lg text-muted-foreground">
-            We develop intuitive, feature-rich mobile applications for iOS and Android platforms, ensuring a seamless user experience across devices.
+            We develop intuitive, feature-rich mobile applications for iOS and
+            Android platforms, ensuring a seamless user experience across
+            devices.
           </p>
           <ul className="list-disc list-inside text-muted-foreground space-y-2">
             <li>Native iOS and Android development</li>
@@ -103,7 +108,9 @@ const Services = () => {
             <AnimatedText text="Cloud Solutions" />
           </h2>
           <p className="text-lg text-muted-foreground">
-            We leverage cloud technologies to build scalable, secure, and cost-effective solutions that empower your business to innovate and grow.
+            We leverage cloud technologies to build scalable, secure, and
+            cost-effective solutions that empower your business to innovate and
+            grow.
           </p>
           <ul className="list-disc list-inside text-muted-foreground space-y-2">
             <li>Cloud-native application development</li>
@@ -113,7 +120,6 @@ const Services = () => {
           </ul>
         </div>
       </div>
-
     </section>
   );
 };

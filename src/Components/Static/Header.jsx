@@ -17,6 +17,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "./Ui/DropdownMenu";
+import SearchFilter from "../../Pages/Static/SearchFilter";
+// import SearchFilter from "../../Pages/Static/SearchFilter";
 
 function Header() {
   const { darkMode, toggleDarkMode } = useContext(ThemeContext);
@@ -96,15 +98,17 @@ function Header() {
         </Link>
 
         <nav className="hidden md:flex flex-grow justify-center pr-24 space-x-6">
-          {["Home", "About", "Courses", "Services", "Contact"].map((item) => (
-            <Link
-              key={item}
-              to={item === "Home" ? "/" : `/${item.toLowerCase()}`}
-              className={navLinkClasses}
-            >
-              {item}
-            </Link>
-          ))}
+          {["Home", "About", "categoryList", "Services", "Contact"].map(
+            (item) => (
+              <Link
+                key={item}
+                to={item === "Home" ? "/" : `/${item.toLowerCase()}`}
+                className={navLinkClasses}
+              >
+                {item}
+              </Link>
+            )
+          )}
         </nav>
 
         <div className="flex items-center space-x-4">
@@ -164,6 +168,9 @@ function Header() {
               Choose Plan
             </button>
           </Link>
+          <div>
+            <SearchFilter />
+          </div>
           <button
             onClick={toggleDarkMode}
             className="p-2.5 rounded-full inline-flex items-center justify-center border border-input bg-background text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
