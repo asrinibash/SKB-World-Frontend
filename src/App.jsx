@@ -56,7 +56,7 @@ function App() {
               <Route index element={<Home />} />
               <Route path="about" element={<About />} />
               {/* <Route path="courses" element={<Courses />} /> */}
-              <Route path="categoryList" element={<CategoryList />} />
+              <Route path="Courses" element={<CategoryList />} />
               <Route path="coursesList" element={<CoursesList />} />
               <Route path="/buyCourse/:id" element={<BuyCourse />} />
               <Route path="/buyCourse" element={<BuyCourse />} />

@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { server } from "../../main.jsx";
@@ -7,11 +7,15 @@ import SearchFilter from "./SearchFilter"; // Import the SearchFilter component
 
 export default function BuyCourse() {
   const { id } = useParams();
+  const location = useLocation();
   const [courses, setCourses] = useState([]);
   const [course, setCourse] = useState(null);
   const [filteredCourses, setFilteredCourses] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const searchParams = new URLSearchParams(location.search);
+  const searchQuery = searchParams.get("search");
 
   const handleContainerClick = (fileUrl) => {
     if (fileUrl) {
@@ -40,6 +44,15 @@ export default function BuyCourse() {
 
     fetchCourseData();
   }, [id]);
+
+  useEffect(() => {
+    if (searchQuery) {
+      const filtered = courses.filter((course) =>
+        course.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setFilteredCourses(filtered);
+    }
+  }, [searchQuery, courses]);
 
   // Function to handle search filtering
   const handleSearch = (searchTerm) => {
