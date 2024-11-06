@@ -73,50 +73,52 @@ const Profile = () => {
   };
 
   return (
-    <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
-      {adminData ? (
-        <Card className="dark:bg-green-950 dark:text-white">
-          <CardContent>
-            <Typography variant="h5" component="div">
-              {adminData.name}'s Profile
-            </Typography>
-            <Table>
-              <TableBody>
-                <TableRow>
-                  <TableCell align="left">Name</TableCell>
-                  <TableCell align="right">{adminData.name}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell align="left">Email</TableCell>
-                  <TableCell align="right">{adminData.email}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell align="left">CreatedAt</TableCell>
-                  <TableCell align="right">
-                    {new Date(adminData.createdAt).toLocaleString()}
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
+    <>
+      <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
+        {adminData ? (
+          <Card className="dark:bg-green-950 dark:text-white">
+            <CardContent>
+              <Typography variant="h5" component="div">
+                {adminData.name}'s Profile
+              </Typography>
+              <Table>
+                <TableBody>
+                  <TableRow>
+                    <TableCell align="left">Name</TableCell>
+                    <TableCell align="right">{adminData.name}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell align="left">Email</TableCell>
+                    <TableCell align="right">{adminData.email}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell align="left">CreatedAt</TableCell>
+                    <TableCell align="right">
+                      {new Date(adminData.createdAt).toLocaleString()}
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
 
-            <Button
-              onClick={() => setIsFormOpen(true)}
-              className="flex items-center bg-green-500 dark:bg-yellow-500 dark:text-white text-white px-4 py-2 rounded-lg border border-yellow-700 hover:bg-yellow-600 transition duration-200 ease-in-out"
-            >
-              <EditIcon className="mr-2" /> Update Profile
-            </Button>
-            <UpdateProfileForm
-              open={isFormOpen}
-              onClose={() => setIsFormOpen(false)}
-              adminData={adminData}
-              onUpdate={handleUpdate} // Pass the update function
-            />
-          </CardContent>
-        </Card>
-      ) : (
-        <p>Loading...</p>
-      )}
-    </div>
+              <Button
+                onClick={() => setIsFormOpen(true)}
+                className="flex items-center bg-green-500 dark:bg-yellow-500 dark:text-white text-white px-4 py-2 rounded-lg border border-yellow-700 hover:bg-yellow-600 transition duration-200 ease-in-out"
+              >
+                <EditIcon className="mr-2" /> Update Profile
+              </Button>
+              <UpdateProfileForm
+                open={isFormOpen}
+                onClose={() => setIsFormOpen(false)}
+                adminData={adminData}
+                onUpdate={handleUpdate} // Pass the update function
+              />
+            </CardContent>
+          </Card>
+        ) : (
+          <p>Loading...</p>
+        )}
+      </div>
+    </>
   );
 };
 

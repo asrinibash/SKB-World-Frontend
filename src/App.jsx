@@ -32,6 +32,10 @@ import Subscriptions from "./Components/Static/Subscription";
 import CoursesList from "./Pages/Static/CoursesList";
 import CategoryList from "./Pages/Static/CategoryList";
 import BuyCourse from "./Pages/Static/BuyCourse";
+import Report from "./Pages/Static/Report";
+import ManageReports from "./Pages/Admin/ManageReport";
+import ContactPage from "./Pages/Static/ContactUs";
+import ManageContact from "./Pages/Admin/ManageContact";
 
 function App() {
   const { darkMode } = useContext(ThemeContext);
@@ -55,6 +59,7 @@ function App() {
             <Route element={<StaticPagesLayout />}>
               <Route index element={<Home />} />
               <Route path="about" element={<About />} />
+              <Route path="report" element={<Report />} />
               {/* <Route path="courses" element={<Courses />} /> */}
               <Route path="Courses" element={<CategoryList />} />
               <Route path="coursesList" element={<CoursesList />} />
@@ -63,6 +68,7 @@ function App() {
 
               <Route path="services" element={<Services />} />
               <Route path="contact" element={<Contact />} />
+              <Route path="contactUs" element={<ContactPage />} />
               <Route path="cookie-policy" element={<CookiePolicy />} />
               <Route path="terms-of-service" element={<TermsOfService />} />
               <Route path="privacy-policy" element={<PrivacyPolicy />} />
@@ -82,6 +88,8 @@ function App() {
                   <Route path="Group" element={<ManageGroups />} />
                   <Route path="profile" element={<Profile />} />
                   <Route path="Order" element={<ManageOrder />} />
+                  <Route path="Report" element={<ManageReports />} />
+                  <Route path="Contact" element={<ManageContact />} />
                 </Route>
               </Route>
             </Route>

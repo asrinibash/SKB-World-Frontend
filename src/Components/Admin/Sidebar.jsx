@@ -15,6 +15,8 @@ import {
   Layers3,
   Notebook,
   Group,
+  Contact,
+  MessageSquareWarning,
 } from "lucide-react";
 import { AlignStartVertical } from "lucide-react";
 
@@ -26,6 +28,8 @@ export default function Sidebar() {
     { icon: Notebook, label: "Courses", to: "Courses" },
     { icon: Group, label: "Group", to: "Group" },
     { icon: ShoppingCart, label: "Order", to: "order" },
+    { icon: MessageSquareWarning, label: "Report", to: "Report" },
+    { icon: Contact, label: "Contact", to: "Contact" },
   ];
 
   return (

@@ -78,7 +78,7 @@ function Header() {
 
         {/* Main Navigation - Hidden on Small Screens */}
         <nav className="hidden md:flex flex-grow justify-center pr-24 space-x-6">
-          {["Home", "About", "Courses", "Services", "Contact"].map((item) => (
+          {["Home", "About", "Courses", "Services", "ContactUs"].map((item) => (
             <Link
               key={item}
               to={item === "Home" ? "/" : `/${item.toLowerCase()}`}

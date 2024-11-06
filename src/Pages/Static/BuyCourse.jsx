@@ -2,11 +2,18 @@ import { useParams, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { server } from "../../main.jsx";
-import { FaFilePdf } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import {
+  FaFilePdf,
+  FaQuoteLeft,
+  FaFacebook,
+  FaWhatsapp,
+  FaRupeeSign,
+} from "react-icons/fa";
+import { HiReply } from "react-icons/hi";
 import SearchFilter from "./SearchFilter";
 import { format } from "date-fns";
 import { GoReport } from "react-icons/go";
-import { FaQuoteLeft, FaFacebook, FaWhatsapp } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 export default function BuyCourse() {
@@ -18,7 +25,7 @@ export default function BuyCourse() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [categories, setCategories] = useState([]);
-
+  const navigate = useNavigate();
   const searchParams = new URLSearchParams(location.search);
   const searchQuery = searchParams.get("search");
 
@@ -28,6 +35,9 @@ export default function BuyCourse() {
     }
   };
 
+  const handleRedirect = () => {
+    navigate("/subscriptions");
+  };
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -85,17 +95,16 @@ export default function BuyCourse() {
   };
 
   const renderCourse = (courseData) => {
-    if (!courseData) return null; // Ensure courseData is defined
+    if (!courseData) return null;
 
     return (
       <div>
-        {" "}
-        <div className="container mx-auto px-4 py-8 border rounded-md shadow-lg mb-8 bg-slate-200">
-          <span className="font-bold">{courseData?.name}</span>
+        <div className="container mx-auto px-4 py-6 border rounded-md shadow-lg mb-8 bg-slate-200">
+          <span className="font-bold text-xl">{courseData?.name}</span>
         </div>
-        <div className="container mx-auto px-4 py-8 border rounded-md shadow-lg mb-8 ">
+        <div className="container mx-auto px-4 py-6 border rounded-md shadow-lg mb-8">
           <div className="mb-4">
-            <span className="font-bold mb-2">{courseData?.name}</span>
+            <span className="font-bold text-lg">{courseData?.name}</span>
             <br />
             <span className="text-gray-500 text-xs">
               by <b className="text-red-900">admin </b>
@@ -110,9 +119,9 @@ export default function BuyCourse() {
             </span>
           </div>
 
-          <div className="grid grid-cols-8 gap-4 bg-slate-200">
-            <div className="col-span-5 p-4 border-3 ">
-              <div className="text-xl font-bold mb-4  text-blue-800">
+          <div className="grid grid-cols-1 md:grid-cols-8 gap-4 bg-slate-200">
+            <div className="col-span-1 md:col-span-5 p-4 border rounded-lg">
+              <div className="text-xl font-bold mb-4 text-blue-800">
                 {courseData.name}
               </div>
               <h2 className="text-sm font-bold mb-4">ATTACHMENTS</h2>
@@ -120,16 +129,16 @@ export default function BuyCourse() {
                 courseData.file.map((fileUrl, index) => (
                   <div
                     key={index}
-                    className="mb-4 border w-96 rounded-lg p-4 text-center cursor-pointer "
+                    className="mb-4 border w-full md:w-96 rounded-lg p-4 text-center cursor-pointer"
                     onClick={() => handleContainerClick(fileUrl)}
                     style={{ backgroundColor: "#FFA500", color: "white" }}
                   >
-                    <div className="flex items-center justify-between w-full ">
+                    <div className="flex items-center justify-between w-full">
                       <div className="flex flex-col items-start">
                         <span className="text-black text-left text-sm font-bold">
                           {courseData.name}
                         </span>
-                        <span className="text-sm text-white font-bold ">
+                        <span className="text-sm text-white font-bold">
                           {courseData.fileSizes && courseData.fileSizes[index]
                             ? `(${Math.round(
                                 courseData.fileSizes[index] / 1024
@@ -145,8 +154,24 @@ export default function BuyCourse() {
               ) : (
                 <p>No file available.</p>
               )}
+
+              <button
+                onClick={handleRedirect}
+                className="bg-red-200 p-2 md:p-3 flex items-center text-sm md:text-base"
+              >
+                <span className="font-bold whitespace-nowrap">
+                  Download Cost
+                </span>
+                <b className="ml-3">
+                  <FaRupeeSign />
+                </b>
+                <span className="font-semibold">{courseData.finalPrice}</span>
+                <span className="line-through ml-2">
+                  {courseData.originalPrice}
+                </span>
+              </button>
             </div>
-            <div className="col-span-1 p-4 flex flex-col items-center">
+            <div className="col-span-1 md:col-span-1 p-4 flex flex-col items-center">
               <div className="flex flex-col items-center">
                 <div className="flex justify-between w-full m-1 mb-24">
                   <Link
@@ -157,7 +182,7 @@ export default function BuyCourse() {
                     <GoReport className="text-orange-600" size={15} />
                   </Link>
                   <Link
-                    to="/quote"
+                    to="/contactUs"
                     title="Quote this quote"
                     className="flex items-center"
                   >
@@ -183,12 +208,11 @@ export default function BuyCourse() {
               </div>
             </div>
 
-            <div className="col-span-2 p-4 ">
+            <div className="col-span-1 md:col-span-2 p-4">
               <div>
                 <span className="font-bold text-red-700">Admin</span>
                 <br />
                 <span className="text-xs">site admin</span>
-                <br />
                 <br />
                 <span className="text-sm">
                   Posts:{" "}
@@ -205,7 +229,7 @@ export default function BuyCourse() {
                         new Date(courseData.createdAt),
                         "EEE MMM dd, yyyy h:mm a"
                       )
-                    : "Date not available"}{" "}
+                    : "Date not available"}
                 </span>
               </div>
             </div>
@@ -213,9 +237,10 @@ export default function BuyCourse() {
           <Link
             to="/quote"
             title="Quote this quote"
-            className="flex items-center"
+            className="flex items-center mt-1 pl-2 border border-gray-300 rounded-md hover:bg-gray-100 w-full sm:w-2/12 md:w-3/12 lg:w-2/12"
           >
-            Post Reply
+            <span className="font-bold text-red-800 mr-2">Post Reply</span>
+            <HiReply className="text-red-800 transform" />
           </Link>
         </div>
       </div>

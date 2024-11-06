@@ -42,6 +42,9 @@ const AddCourse = ({ onClose, onCourseAdded }) => {
     price: Yup.number()
       .required("Price is required")
       .positive("Must be positive"),
+    originalPrice: Yup.number()
+      .required("Original Price is required")
+      .positive("Must be positive"),
     categoryName: Yup.string().required("Category is required"),
     tags: Yup.string().required("Tags are required"),
     files: Yup.array()
@@ -52,13 +55,12 @@ const AddCourse = ({ onClose, onCourseAdded }) => {
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     const token = localStorage.getItem("adminAuthToken");
 
-    // Check if the course name already exists
-
     // Create FormData for the new course
     const formData = new FormData();
     formData.append("name", values.name);
     formData.append("description", values.description);
-    formData.append("price", values.price);
+    formData.append("finalPrice", values.price);
+    formData.append("originalPrice", values.originalPrice); // Send originalPrice
     formData.append("categoryName", values.categoryName);
     formData.append(
       "tags",
@@ -73,7 +75,7 @@ const AddCourse = ({ onClose, onCourseAdded }) => {
     }
 
     try {
-      await axios.post(`${server}/course/create`, formData, {
+      const response = await axios.post(`${server}/course/create`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
@@ -85,7 +87,15 @@ const AddCourse = ({ onClose, onCourseAdded }) => {
       if (onCourseAdded) onCourseAdded(); // Check if onCourseAdded exists
       resetForm(); // Reset the form
     } catch (error) {
-      toast.error("Course Name already added.");
+      if (error.response && error.response.data) {
+        const errorMessage =
+          error.response.data.message || "An error occurred.";
+        {
+          toast.error(errorMessage);
+        }
+      } else {
+        toast.error("An unknown error occurred. Please try again.");
+      }
     }
     setSubmitting(false); // Move setSubmitting(false) outside the try-catch
   };
@@ -113,6 +123,7 @@ const AddCourse = ({ onClose, onCourseAdded }) => {
               name: "",
               description: "",
               price: "",
+              originalPrice: "",
               categoryName: "",
               tags: "",
               files: [], // Initialize as empty array
@@ -161,6 +172,22 @@ const AddCourse = ({ onClose, onCourseAdded }) => {
                   />
                   <ErrorMessage
                     name="price"
+                    component="div"
+                    className="text-red-500 text-sm mt-1"
+                  />
+                </div>
+
+                <div className="mb-4">
+                  <label className="block text-sm font-medium">
+                    Original Price:
+                  </label>
+                  <Field
+                    type="number"
+                    name="originalPrice"
+                    className="border rounded-md w-full p-2 dark:bg-black"
+                  />
+                  <ErrorMessage
+                    name="originalPrice"
                     component="div"
                     className="text-red-500 text-sm mt-1"
                   />
@@ -240,26 +267,27 @@ const AddCourse = ({ onClose, onCourseAdded }) => {
                   <Button
                     type="button"
                     onClick={addFileInput}
-                    className="flex items-center bg-blue-500 text-white px-4 py-2 rounded-lg border border-blue-700 hover:bg-blue-600 transition duration-200 ease-in-out"
+                    className="flex items-center bg-blue-500 text-white px-4 py-2 rounded-lg border border-blue-700 hover:bg-blue-600 transition duration-200 ease-in-out mt-2"
                   >
-                    <Plus className="mr-2" /> Add Another File
+                    <Plus className="mr-2" />
+                    Add another file
                   </Button>
                 </div>
 
-                <div className="flex justify-end space-x-2">
+                <div className="flex justify-between items-center mt-4">
                   <Button
                     type="submit"
                     disabled={isSubmitting}
-                    className="flex items-center bg-green-500 text-white px-4 py-2 rounded-lg border border-green-700 hover:bg-green-600 transition duration-200 ease-in-out"
+                    className="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600"
                   >
-                    <EditIcon className="mr-2" /> Submit
+                    Add Course
                   </Button>
                   <Button
                     type="button"
                     onClick={onClose}
-                    className="flex items-center bg-gray-300 text-black px-4 py-2 rounded-lg border border-gray-400 hover:bg-gray-400 transition duration-200 ease-in-out"
+                    className="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600"
                   >
-                    <Trash2 className="mr-2" /> Cancel
+                    Close
                   </Button>
                 </div>
               </Form>

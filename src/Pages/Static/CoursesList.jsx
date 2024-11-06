@@ -131,10 +131,13 @@ export default function CoursesList() {
               onClick={() => handleViewClick(course.id)}
             >
               <div
-                className="col-span-2 md:col-span-4 p-2 md:p-4 text-gray-500 cursor-pointer hover:text-blue-600"
+                className="col-span-2 md:col-span-4 p-2 md:p-4 text-gray-500 cursor-pointer "
                 onClick={() => handleBuyNow(course.id)}
               >
-                <span className="font-bold text-sm"> {course.name}</span>
+                <span className="font-bold text-sm hover:text-blue-600">
+                  {" "}
+                  {course.name}
+                </span>
                 <br />
                 <span className="text-gray-500 text-xs">
                   by <b className="text-red-900">admin </b>

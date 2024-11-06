@@ -1,6 +1,5 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { server } from "../../../main";
 import { Button } from "@radix-ui/themes";
@@ -43,21 +42,12 @@ const AddCourseGroup = ({ groupId, onClose, onCourseAdded }) => {
 
   useEffect(() => {
     if (selectedCategory) {
-      const fetchCourses = async () => {
-        try {
-          const response = await axios.get(
-            `${server}/course/getByCategory/${selectedCategory}`
-          );
-          setCourses(response.data);
-        } catch (err) {
-          console.error("Error fetching courses:", err);
-          setError("Failed to load courses.");
-        }
-      };
-
-      fetchCourses();
+      const category = categories.find((c) => c.name === selectedCategory);
+      if (category) {
+        setCourses(category.courses); // Set courses directly from selected category
+      }
     }
-  }, [selectedCategory]);
+  }, [selectedCategory, categories]);
 
   const handleAddCourse = async () => {
     if (!selectedCategory || !selectedCourse) return;

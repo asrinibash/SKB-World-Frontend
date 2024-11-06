@@ -10,16 +10,7 @@ import { server } from "../../../main";
 import { EditIcon, Plus, Trash2 } from "lucide-react";
 
 const EditFile = ({ course, onClose, onUpdate }) => {
-  const [fileInputs, setFileInputs] = useState([{ id: Date.now() }]); // Initial file input
-
-  const addFileInput = () => {
-    setFileInputs([...fileInputs, { id: Date.now() }]); // Add a new file input
-  };
-
-  const removeFileInput = (index) => {
-    setFileInputs(fileInputs.filter((_, i) => i !== index)); // Remove specific file input
-  };
-
+  // This function handles file input changes dynamically
   const handleSubmit = async (values) => {
     const token = localStorage.getItem("adminAuthToken");
     const formData = new FormData();
@@ -49,18 +40,18 @@ const EditFile = ({ course, onClose, onUpdate }) => {
 
   return (
     <Formik
-      initialValues={{ files: Array(fileInputs.length).fill(null) }}
+      initialValues={{ files: [] }} // Start with an empty files array
       validationSchema={Yup.object().shape({
         files: Yup.array().of(Yup.mixed().required("File is required")),
       })}
       onSubmit={handleSubmit}
     >
-      {({ setFieldValue }) => (
+      {({ setFieldValue, values }) => (
         <Form>
           <h2>Edit Files for {course.file}</h2>
           <div className="mb-4">
             <label className="block text-sm font-medium">Files:</label>
-            {fileInputs.map((_, index) => (
+            {values.files.map((_, index) => (
               <div key={index} className="flex items-center mb-2">
                 <Field name={`files[${index}]`}>
                   {({ field }) => (
@@ -77,10 +68,14 @@ const EditFile = ({ course, onClose, onUpdate }) => {
                     />
                   )}
                 </Field>
-                {fileInputs.length > 1 && ( // Only show remove button if there is more than one input
+                {values.files.length > 1 && ( // Only show remove button if there is more than one input
                   <Button
                     type="button"
-                    onClick={() => removeFileInput(index)} // Remove the specific file input
+                    onClick={() => {
+                      const updatedFiles = [...values.files];
+                      updatedFiles.splice(index, 1);
+                      setFieldValue("files", updatedFiles); // Remove the file at the specific index
+                    }}
                     className="ml-2 text-red-500"
                   >
                     Remove
@@ -95,7 +90,9 @@ const EditFile = ({ course, onClose, onUpdate }) => {
             ))}
             <Button
               type="button"
-              onClick={addFileInput}
+              onClick={() => {
+                setFieldValue("files", [...values.files, null]); // Add a new empty file input
+              }}
               className="flex items-center bg-blue-500 text-white px-4 py-2 rounded-lg border border-blue-700 hover:bg-blue-600 transition duration-200 ease-in-out"
             >
               <Plus className="mr-2" /> Add Another File
