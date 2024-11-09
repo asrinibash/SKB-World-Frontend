@@ -22,13 +22,26 @@ import AddGroup from "./group/addGroup";
 import AddUserGroup from "./group/addUserGroup";
 import ViewUserGroup from "./group/ViewUserGroup"; // Import ViewUserGroup
 import { Button } from "@radix-ui/themes";
+import { AiFillFileAdd } from "react-icons/ai";
+import AddCourse from "./group/addCourse";
+import ViewCourseGroup from "./group/viewCourseGroup";
 
 const ManageGroups = () => {
   const [groups, setGroups] = useState([]);
   const [editingGroup, setEditingGroup] = useState(null);
   const [addingGroup, setAddingGroup] = useState(false);
   const [addingUserToGroup, setAddingUserToGroup] = useState(null);
-  const [viewingGroupUsers, setViewingGroupUsers] = useState(null); // New state for viewing group users
+  const [viewingGroupUsers, setViewingGroupUsers] = useState(null);
+  const [viewingGroupCourses, setViewingGroupCourses] = useState(null); // Separate state for viewing courses
+  const [addingCourseToGroup, setAddingCourseToGroup] = useState(null);
+
+  const handleAddCourse = (groupId) => {
+    setAddingCourseToGroup(groupId);
+  };
+
+  const closeAddCourseForm = () => {
+    setAddingCourseToGroup(null);
+  };
 
   useEffect(() => {
     fetchGroups();
@@ -53,7 +66,6 @@ const ManageGroups = () => {
   };
 
   const handleDeleteGroup = (groupId) => {
-    // Show confirmation dialog first
     const confirmationBox = document.createElement("div");
     confirmationBox.innerHTML = `
       <div class="bg-white p-6 rounded-lg shadow-lg text-center fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
@@ -65,49 +77,46 @@ const ManageGroups = () => {
         </div>
       </div>
     `;
-
-    // Append the confirmation box to the body
     document.body.appendChild(confirmationBox);
 
-    // Handle OK button click
     document.getElementById("okButton").onclick = async () => {
-      const token = localStorage.getItem("adminAuthToken"); // Retrieve token
+      const token = localStorage.getItem("adminAuthToken");
       if (!token) {
         console.error("Authorization token is missing. Please log in again.");
-        document.body.removeChild(confirmationBox); // Remove the confirmation box
+        document.body.removeChild(confirmationBox);
         return;
       }
 
       setTimeout(async () => {
         try {
-          // Show alert before deletion
           alert(
             "If the group is empty, it will be deleted. Otherwise, all group members will be removed before deletion."
           );
-
-          // Perform delete request with token in headers
           await axios.delete(`${server}/group/${groupId}`, {
             headers: {
-              Authorization: `Bearer ${token}`, // Add token to headers
+              Authorization: `Bearer ${token}`,
             },
           });
           console.log(`Group with ID ${groupId} deleted successfully.`);
-          fetchGroups(); // Refresh the group list after deletion
+          fetchGroups();
         } catch (error) {
           console.error(`Error deleting group with ID ${groupId}:`, error);
         }
-        document.body.removeChild(confirmationBox); // Remove the confirmation box after the action
-      }, 1000); // Delay the delete request by 1 second
+        document.body.removeChild(confirmationBox);
+      }, 1000);
     };
 
-    // Handle Cancel button click
     document.getElementById("cancelButton").onclick = () => {
-      document.body.removeChild(confirmationBox); // Just remove the confirmation box on cancel
+      document.body.removeChild(confirmationBox);
     };
   };
 
   const handleViewUsers = (groupId) => {
     setViewingGroupUsers(groupId); // Set group ID for viewing users
+  };
+
+  const handleViewCourses = (groupId) => {
+    setViewingGroupCourses(groupId); // Set group ID for viewing courses
   };
 
   const handleAddMember = (groupId) => {
@@ -128,6 +137,10 @@ const ManageGroups = () => {
 
   const closeViewUsers = () => {
     setViewingGroupUsers(null); // Close user view modal
+  };
+
+  const closeViewCourses = () => {
+    setViewingGroupCourses(null); // Close course view modal
   };
 
   const refreshGroups = () => {
@@ -183,6 +196,12 @@ const ManageGroups = () => {
                       <UserPlus />
                     </Button>
                     <Button
+                      onClick={() => handleAddCourse(group.id)}
+                      className="p-1"
+                    >
+                      <AiFillFileAdd />
+                    </Button>
+                    <Button
                       onClick={() => handleDeleteGroup(group.id)}
                       className="p-1"
                     >
@@ -194,6 +213,12 @@ const ManageGroups = () => {
                     >
                       <Eye />
                     </Button>
+                    <Button
+                      onClick={() => handleViewCourses(group.id)}
+                      className="p-1"
+                    >
+                      <Eye />
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
@@ -201,6 +226,7 @@ const ManageGroups = () => {
           </Table>
         </CardContent>
       </Card>
+
       {editingGroup && (
         <EditGroup
           group={editingGroup}
@@ -220,6 +246,19 @@ const ManageGroups = () => {
       )}
       {viewingGroupUsers && (
         <ViewUserGroup groupId={viewingGroupUsers} onClose={closeViewUsers} />
+      )}
+      {viewingGroupCourses && (
+        <ViewCourseGroup
+          groupId={viewingGroupCourses}
+          onClose={closeViewCourses}
+        />
+      )}
+      {addingCourseToGroup && (
+        <AddCourse
+          groupId={addingCourseToGroup}
+          onClose={closeAddCourseForm}
+          onCourseAdded={refreshGroups}
+        />
       )}
     </div>
   );

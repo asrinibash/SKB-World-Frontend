@@ -16,8 +16,11 @@ const EditCourse = ({ course, onClose, onUpdate }) => {
   const validationSchema = Yup.object({
     name: Yup.string().required("Name is required"),
     description: Yup.string().required("Description is required"),
-    price: Yup.number()
-      .required("Price is required")
+    finalPrice: Yup.number()
+      .required("Final Price is required")
+      .positive("Must be positive"),
+    originalPrice: Yup.number()
+      .required("Original Price is required")
       .positive("Must be positive"),
   });
 
@@ -32,7 +35,8 @@ const EditCourse = ({ course, onClose, onUpdate }) => {
             initialValues={{
               name: course?.name || "",
               description: course?.description || "",
-              price: course?.price || "",
+              finalPrice: course?.finalPrice || "",
+              originalPrice: course?.originalPrice || "",
             }}
             validationSchema={validationSchema}
             onSubmit={async (values, { setSubmitting }) => {
@@ -83,14 +87,31 @@ const EditCourse = ({ course, onClose, onUpdate }) => {
                   />
                 </div>
                 <div className="mb-4">
-                  <label className="block text-sm font-medium">Price:</label>
+                  <label className="block text-sm font-medium">
+                    Final Price:
+                  </label>
                   <Field
                     type="number"
-                    name="price"
+                    name="finalPrice"
                     className="border rounded-md w-full p-2 dark:bg-black"
                   />
                   <ErrorMessage
-                    name="price"
+                    name="finalPrice"
+                    component="div"
+                    className="text-red-500 text-sm mt-1"
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium">
+                    Original Price:
+                  </label>
+                  <Field
+                    type="number"
+                    name="originalPrice"
+                    className="border rounded-md w-full p-2 dark:bg-black"
+                  />
+                  <ErrorMessage
+                    name="originalPrice"
                     component="div"
                     className="text-red-500 text-sm mt-1"
                   />

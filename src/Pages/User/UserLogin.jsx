@@ -15,7 +15,7 @@ const UserLogin = () => {
 
     try {
       const response = await loginUser(email, password);
-      console.log(response);
+      console.log(response); // Log the response (user data)
       if (response) {
         toast.success("Login Successful!", {
           position: "bottom-right",
@@ -105,7 +105,7 @@ const UserLogin = () => {
           No account?{" "}
           <button
             className="text-accent hover:underline focus:outline-none"
-            onClick={() => navigate("/signup")} // Adjust the path to your signup page
+            onClick={() => navigate("/signup")}
           >
             Sign up
           </button>

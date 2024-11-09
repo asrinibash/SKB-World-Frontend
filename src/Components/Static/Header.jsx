@@ -18,7 +18,6 @@ import {
   DropdownMenuSeparator,
 } from "./Ui/DropdownMenu";
 import SearchFilter from "../../Pages/Static/SearchFilter";
-// import SearchFilter from "../../Pages/Static/SearchFilter";
 
 function Header() {
   const { darkMode, toggleDarkMode } = useContext(ThemeContext);
@@ -42,22 +41,11 @@ function Header() {
   useEffect(() => {
     const fetchUserData = async () => {
       const token = localStorage.getItem("userAuthState");
-
-      if (!token) {
-        console.error("Token not found in localStorage");
-        return;
-      }
-
+      if (!token) return;
       try {
         const decodedToken = jwtDecode(token);
-        console.log("Decoded token:", decodedToken);
-
         const userId = decodedToken.userId;
-
-        if (!userId) {
-          console.error("User ID is undefined");
-          return;
-        }
+        if (!userId) return;
 
         const response = await axios.get(`${server}/user/${userId}`, {
           headers: {
@@ -72,15 +60,10 @@ function Header() {
       }
     };
 
-    if (authState.isAuthenticated) {
-      fetchUserData();
-    }
+    if (authState.isAuthenticated) fetchUserData();
   }, [authState.isAuthenticated]);
 
-  const handleProfileClick = () => {
-    navigate("/user/profile");
-  };
-
+  const handleProfileClick = () => navigate("/user/profile");
   const handleLogoutClick = () => {
     logout();
     navigate("/");
@@ -90,44 +73,41 @@ function Header() {
     <header className="sticky top-0 z-50 bg-background">
       <div className="container mx-auto flex items-center justify-between py-4 px-4 md:px-6">
         <Link to="/" className="flex-shrink-0">
-          <img
-            src={skbcompany}
-            alt="Company Logo"
-            className="w-full h-full max-w-60 md:max-w-60"
-          />
+          <img src={skbcompany} alt="Company Logo" className="w-32 md:w-40" />
         </Link>
 
+        {/* Main Navigation - Hidden on Small Screens */}
         <nav className="hidden md:flex flex-grow justify-center pr-24 space-x-6">
-          {["Home", "About", "categoryList", "Services", "Contact"].map(
-            (item) => (
-              <Link
-                key={item}
-                to={item === "Home" ? "/" : `/${item.toLowerCase()}`}
-                className={navLinkClasses}
-              >
-                {item}
-              </Link>
-            )
-          )}
+          {["Home", "About", "Courses", "Services", "ContactUs"].map((item) => (
+            <Link
+              key={item}
+              to={item === "Home" ? "/" : `/${item.toLowerCase()}`}
+              className={navLinkClasses}
+            >
+              {item}
+            </Link>
+          ))}
         </nav>
 
+        {/* Search Filter and Icons */}
         <div className="flex items-center space-x-4">
+          <div className="hidden md:block">
+            <SearchFilter />
+          </div>
           {authState.isAuthenticated ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <div className="relative ">
-                  <button className="p-2.5 rounded-full inline-flex items-center justify-center border border-input bg-background text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
-                    <FiUser />
-                  </button>
-                </div>
+                <button className="p-2.5 rounded-full border bg-background text-sm font-medium hover:bg-accent focus:outline-none">
+                  <FiUser />
+                </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
                 <DropdownMenuLabel className="font-normal">
                   <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">
+                    <p className="text-sm font-medium">
                       {userData?.name || "User"}
                     </p>
-                    <p className="text-xs leading-none text-muted-foreground">
+                    <p className="text-xs text-muted-foreground">
                       {userData?.email || "user@example.com"}
                     </p>
                   </div>
@@ -149,8 +129,8 @@ function Header() {
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                  className="text-red-600"
                   onClick={handleLogoutClick}
+                  className="text-red-600"
                 >
                   Log out
                 </DropdownMenuItem>
@@ -158,38 +138,38 @@ function Header() {
             </DropdownMenu>
           ) : (
             <Link to="/user/login">
-              <button className="inline-flex items-center justify-center rounded-full border border-input bg-accent text-accent-foreground px-4 py-2 text-sm font-medium shadow-sm transition-colors hover:bg-accent/80 hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
+              <button className="rounded-full border bg-accent px-4 py-2 text-sm font-medium shadow-sm hover:bg-accent/80">
                 Login
               </button>
             </Link>
           )}
+
           <Link to="/subscriptions">
-            <button className="inline-flex items-center justify-center rounded-full border border-input bg-accent text-accent-foreground px-4 py-2 text-sm font-medium shadow-sm transition-colors hover:bg-accent/80 hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
+            <button className="rounded-full border bg-accent px-4 py-2 text-sm font-medium shadow-sm hover:bg-accent/80">
               Choose Plan
             </button>
           </Link>
-          <div>
-            <SearchFilter />
-          </div>
           <button
             onClick={toggleDarkMode}
-            className="p-2.5 rounded-full inline-flex items-center justify-center border border-input bg-background text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+            className="p-2.5 rounded-full border bg-background"
           >
             {darkMode ? <FiSun /> : <FiMoon />}
           </button>
 
+          {/* Mobile Menu Icon */}
           <button
             onClick={toggleMobileMenu}
-            className="md:hidden p-2.5 rounded-full inline-flex items-center justify-center border border-input bg-background text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+            className="md:hidden p-2.5 rounded-full border bg-background"
           >
             {mobileMenuOpen ? <FiX /> : <FiMenu />}
           </button>
         </div>
       </div>
 
+      {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-background border-t border-input shadow-lg">
-          <nav className="container mx-auto flex flex-col px-4 py-2">
+        <div className="md:hidden bg-background border-t shadow-lg">
+          <nav className="container mx-auto flex flex-col px-4 py-2 space-y-2">
             {["Home", "About", "Courses", "Contact"].map((item) => (
               <Link
                 key={item}
@@ -235,7 +215,7 @@ function Header() {
                     handleLogoutClick();
                     toggleMobileMenu();
                   }}
-                  className={`${mobileNavLinkClasses} text-left text-red-600`}
+                  className={`${mobileNavLinkClasses} text-red-600`}
                 >
                   Logout
                 </button>

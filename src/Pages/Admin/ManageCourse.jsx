@@ -140,6 +140,7 @@ const ManageCourses = () => {
                 <TableHead>Name</TableHead>
                 <TableHead>Description</TableHead>
                 <TableHead>Price</TableHead>
+                <TableHead>FinalPrice</TableHead>
                 <TableHead>Tags</TableHead>
                 <TableHead>Downloads</TableHead>
                 <TableHead>File</TableHead>
@@ -152,7 +153,8 @@ const ManageCourses = () => {
                 <TableRow key={course.id}>
                   <TableCell>{course.name}</TableCell>
                   <TableCell>{course.description}</TableCell>
-                  <TableCell>{course.price}</TableCell>
+                  <TableCell>{course.originalPrice}</TableCell>
+                  <TableCell>{course.finalPrice}</TableCell>
                   <TableCell>{course.tags.join(", ")}</TableCell>
                   <TableCell>{course.downloads}</TableCell>
                   <TableCell>{course.file.length}</TableCell>

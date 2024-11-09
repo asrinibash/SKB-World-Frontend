@@ -1,9 +1,10 @@
-import PropTypes from "prop-types"; // Import PropTypes
+import PropTypes from "prop-types";
 import axios from "axios";
-import { Button } from "@radix-ui/themes";
 import { server } from "../../../main";
 import { Formik, Form, Field, FieldArray, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { MdDeleteForever } from "react-icons/md";
+import { IoMdAddCircle } from "react-icons/io";
 
 const EditTags = ({ course, onClose, onUpdate }) => {
   const validationSchema = Yup.object({
@@ -16,18 +17,11 @@ const EditTags = ({ course, onClose, onUpdate }) => {
     try {
       await axios.patch(
         `${server}/course/${course.id}/tags`,
-        {
-          tags: values.tags,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        { tags: values.tags },
+        { headers: { Authorization: `Bearer ${token}` } }
       );
-
-      onUpdate(); // Refresh courses after update
-      onClose(); // Close the edit form
+      onUpdate();
+      onClose();
     } catch (error) {
       console.error("Error updating tags:", error);
     } finally {
@@ -36,69 +30,70 @@ const EditTags = ({ course, onClose, onUpdate }) => {
   };
 
   return (
-    <div className="edit-tags-form p-4">
-      <h2>Edit Tags for {course.name}</h2>
+    <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 max-w-md mx-auto animate-float-advanced">
+      <h2 className="text-xl font-semibold mb-4 text-center text-gray-900 dark:text-white">
+        Edit Tags for {course.name}
+      </h2>
+
       <Formik
-        initialValues={{ tags: course?.tags || [""] }} // Ensure initial value is set correctly
+        initialValues={{ tags: course?.tags || [""] }}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
         {({ isSubmitting }) => (
-          <Form>
+          <Form className="space-y-4">
             <FieldArray name="tags">
               {({ push, remove, form }) => (
-                <>
-                  {form.values.tags.map(
-                    (
-                      tag,
-                      index // Use form.values.tags instead of tags
-                    ) => (
-                      <div key={index} className="mb-4">
-                        <Field
-                          name={`tags.${index}`}
-                          placeholder="Enter tag"
-                          className="border rounded-md w-full p-2"
-                        />
-                        <ErrorMessage
-                          name={`tags.${index}`}
-                          component="div"
-                          className="text-red-500 text-sm mt-1"
-                        />
-                        <Button
-                          type="button"
-                          onClick={() => remove(index)}
-                          className="bg-red-500 text-white"
-                        >
-                          Remove
-                        </Button>
-                      </div>
-                    )
-                  )}
-                  <Button
+                <div className="space-y-2">
+                  {form.values.tags.map((tag, index) => (
+                    <div key={index} className="flex items-center space-x-2">
+                      <Field
+                        name={`tags.${index}`}
+                        placeholder="Enter tag"
+                        className="flex-grow border dark:border-gray-700 rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300 dark:bg-gray-700 dark:text-white"
+                      />
+                      <ErrorMessage
+                        name={`tags.${index}`}
+                        component="div"
+                        className="text-red-500 text-xs"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => remove(index)}
+                        className="text-red-600 hover:text-red-800"
+                        aria-label="Remove tag"
+                      >
+                        <MdDeleteForever size={24} />
+                      </button>
+                    </div>
+                  ))}
+                  <button
                     type="button"
                     onClick={() => push("")}
-                    className="bg-blue-500 text-white"
+                    className="flex items-center text-blue-600 hover:text-blue-800 mt-2 space-x-1"
                   >
-                    Add Tag
-                  </Button>
-                </>
+                    <IoMdAddCircle size={20} />
+                    <span>Add Tag</span>
+                  </button>
+                </div>
               )}
             </FieldArray>
-            <div className="flex justify-end space-x-2">
-              <Button
-                type="submit"
-                disabled={isSubmitting}
-                className="bg-green-500 text-white px-4 py-2 rounded-lg"
-              >
-                Save Tags
-              </Button>
-              <Button
+
+            <div className="flex justify-end space-x-4 pt-4">
+              <button
                 type="button"
                 onClick={onClose}
-                className="bg-red-500 text-white px-4 py-2 rounded-lg"
+                className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
               >
                 Cancel
-              </Button>
+              </button>
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+              >
+                Save Tags
+              </button>
             </div>
           </Form>
         )}
