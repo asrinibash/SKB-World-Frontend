@@ -137,11 +137,7 @@ export default function UserProfile() {
 
               <div className=" flex items-end justify-end">
                 <Button
-<<<<<<< Updated upstream
                   onClick={() => navigate("/user/update-profile")}
-=======
-                  onClick={() => Navigate("/user/update-profile")}
->>>>>>> Stashed changes
                   className="p-2.5 rounded-full inline-flex items-center justify-center border border-input bg-background text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                 >
                   Update Profile
