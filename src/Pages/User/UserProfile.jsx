@@ -151,19 +151,6 @@ export default function UserProfile() {
             </CardContent>
           </Card>
 
-<<<<<<< HEAD
-              <div className=" flex items-end justify-end">
-                <Button
-                  onClick={() => navigate("/user/update-profile")}
-                  className="p-2.5 rounded-full inline-flex items-center justify-center border border-input bg-background text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-                >
-                  Update Profile
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-=======
           {/* Your Component Code */}
           <Tabs defaultValue="purchased-courses">
             <TabsList>
@@ -176,7 +163,6 @@ export default function UserProfile() {
               <TabsTrigger value="orders">Orders</TabsTrigger>
               <TabsTrigger value="report-status">Report Status</TabsTrigger>
             </TabsList>
->>>>>>> 7b8bfbca5b3c3ec462537d4bea3c9706244eafcd
 
             <TabsContent value="purchased-courses">
               <Card className="animate-fade-in">
