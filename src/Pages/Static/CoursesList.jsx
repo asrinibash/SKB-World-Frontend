@@ -6,8 +6,7 @@ import { Button } from "../../Components/Static/Ui/Button";
 import axios from "axios";
 import { server } from "../../main.jsx";
 import { format } from "date-fns";
-
-import DEFAULT_COURSE_IMAGE from "../../assets/skbcompany2.png";
+import skbImage from "../../assets/skbcompany2.png";
 
 const COURSES_PER_PAGE = 10;
 
@@ -97,7 +96,19 @@ export default function CoursesList() {
     }
   };
 
-  if (isLoading) return <div>Loading Courses...</div>;
+  if (isLoading)
+    return (
+      <div className="flex justify-center items-center mt-4 mb-4 p-10 sm:p-20 md:p-48">
+        <div className="relative flex justify-center items-center h-32 w-32">
+          <div className="absolute animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-purple-500"></div>
+          <img
+            src={skbImage}
+            alt="Avatar thinking"
+            className="rounded-full h-28 w-28"
+          />
+        </div>
+      </div>
+    );
   if (error) return <div>{error}</div>;
 
   return (
@@ -107,8 +118,8 @@ export default function CoursesList() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="bg-white shadow-md rounded-lg overflow-hidden">
-        <div className="bg-primary grid grid-cols-2 md:grid-cols-8 bg-gray-200 dark:bg-gray-700 text-white dark:text-gray-300 font-semibold text-xs sm:text-sm md:text-base lg:text-lg">
+      <div className=" shadow-md rounded-lg overflow-hidden">
+        <div className="bg-primary grid grid-cols-2 md:grid-cols-8 font-semibold text-xs sm:text-sm md:text-base lg:text-lg">
           <div className="col-span-2 md:col-span-4 p-1 sm:p-1 md:p-1 text-left text-sm font-bold">
             Topics
           </div>
@@ -127,11 +138,11 @@ export default function CoursesList() {
           filteredCourses.map((course) => (
             <div
               key={course.id}
-              className="grid grid-cols-2 md:grid-cols-8 border-t border-gray-200 text-gray-800 text-xs md:text-sm lg:text-base"
+              className="grid grid-cols-2 md:grid-cols-8 border-t border-gray-200  text-xs md:text-sm lg:text-base"
               onClick={() => handleViewClick(course.id)}
             >
               <div
-                className="col-span-2 md:col-span-4 p-2 md:p-4 text-gray-500 cursor-pointer "
+                className="col-span-2 md:col-span-4 p-2 md:p-4 cursor-pointer "
                 onClick={() => handleBuyNow(course.id)}
               >
                 <span className="font-bold text-sm hover:text-blue-600">
@@ -142,7 +153,7 @@ export default function CoursesList() {
                 <span className="text-gray-500 text-xs">
                   by <b className="text-red-900">admin </b>
                 </span>
-                <span className="text-xs">
+                <span className="text-xs text-gray-500">
                   {course.createdAt
                     ? format(
                         new Date(course.createdAt),
@@ -151,10 +162,10 @@ export default function CoursesList() {
                     : "Date not available"}
                 </span>
               </div>
-              <div className="hidden md:block col-span-1 p-2 md:p-4 text-gray-500 text-sm">
+              <div className="hidden md:block col-span-1 p-2 md:p-4  text-sm">
                 0
               </div>
-              <div className="hidden md:block col-span-1 p-2 md:p-4 text-gray-500 text-sm">
+              <div className="hidden md:block col-span-1 p-2 md:p-4  text-sm">
                 {course.view}
               </div>
               <div className="col-span-2 md:col-span-2 p-2 md:p-4 text-gray-500 text-sm">

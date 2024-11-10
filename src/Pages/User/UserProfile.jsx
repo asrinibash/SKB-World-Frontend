@@ -27,7 +27,7 @@ import {
   TableBody,
   TableCell,
 } from "../../Components/Admin/Ui/Table";
-
+import skbImage from "../../assets/skbcompany2.png";
 import { Button } from "../../Components/Admin/Ui/Button";
 import {
   Avatar,
@@ -89,8 +89,15 @@ export default function UserProfile() {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen justify-center items-center text-2xl font-bold">
-        Loading...
+      <div className="flex justify-center items-center mt-4 mb-4 p-10 sm:p-20 md:p-48">
+        <div className="relative flex justify-center items-center h-32 w-32">
+          <div className="absolute animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-purple-500"></div>
+          <img
+            src={skbImage}
+            alt="Avatar thinking"
+            className="rounded-full h-28 w-28"
+          />
+        </div>
       </div>
     );
   }
@@ -162,6 +169,7 @@ export default function UserProfile() {
               </TabsTrigger>
               <TabsTrigger value="orders">Orders</TabsTrigger>
               <TabsTrigger value="report-status">Report Status</TabsTrigger>
+              <TabsTrigger value="group">Group</TabsTrigger>
             </TabsList>
 
             <TabsContent value="purchased-courses">
@@ -284,6 +292,45 @@ export default function UserProfile() {
                         <TableHead>Report Title</TableHead>
                         <TableHead>Type</TableHead>
                         <TableHead>Status</TableHead>
+                        <TableHead>Date Created</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {(user.Report || []).map((report) => (
+                        <TableRow key={report.id} className="hover:bg-gray-100">
+                          <TableCell>{report.title}</TableCell>
+                          <TableCell>{report.reportType}</TableCell>
+                          <TableCell>{report.status}</TableCell>
+                          <TableCell>
+                            <span className="text-xs">
+                              {report.createdAt
+                                ? format(
+                                    new Date(report.updatedAt),
+                                    "EEE MMM dd, yyyy h:mm a"
+                                  )
+                                : "Date not available"}
+                            </span>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </CardContent>
+              </Card>
+            </TabsContent>
+            <TabsContent value="report-status">
+              <Card className="animate-fade-in">
+                <CardHeader>
+                  <CardTitle>Group</CardTitle>
+                  <CardDescription>Your Group Course..</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="">
+                        <TableHead>Sl</TableHead>
+                        <TableHead>Group</TableHead>
+                        <TableHead>Course </TableHead>
                         <TableHead>Date Created</TableHead>
                       </TableRow>
                     </TableHeader>

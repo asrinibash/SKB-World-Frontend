@@ -30,11 +30,11 @@ export default function SearchFilter({ onSearch }) {
         onKeyDown={handleKeyDown} // Add key down event handler
         placeholder="Search courses"
         aria-label="Search courses"
-        className="p-1 border border-gray-300 dark:border-gray-600 rounded-sm w-48 text-sm focus:border-blue-500 focus:outline-none transition-colors dark:bg-gray-800 dark:text-white"
+        className="p-1 border border-gray-300 dark:border-gray-600 rounded-sm w-48 text-sm focus:border-blue-500 focus:outline-none transition-colors"
       />
       <button
         onClick={handleSearch}
-        className="ml-1 px-2 py-1 bg-green-600 text-white text-sm rounded-sm hover:bg-green-500 transition-colors dark:bg-green-500 dark:hover:bg-green-400"
+        className="ml-1 px-2 py-1 bg-green-600   text-sm rounded-sm hover:bg-green-500 transition-colors dark:bg-green-500 dark:hover:bg-green-400"
       >
         Search
       </button>

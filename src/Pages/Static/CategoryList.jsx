@@ -174,7 +174,19 @@ export default function CategoryList() {
     return words.length > 4 ? words.slice(0, 4).join(" ") + "..." : name;
   };
 
-  if (isLoading) return <div>Loading Categories...</div>;
+  if (isLoading)
+    return (
+      <div className="flex justify-center items-center mt-4 mb-4 p-10 sm:p-20 md:p-48">
+        <div className="relative flex justify-center items-center h-32 w-32">
+          <div className="absolute animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-purple-500"></div>
+          <img
+            src={skbImage}
+            alt="Avatar thinking"
+            className="rounded-full h-28 w-28"
+          />
+        </div>
+      </div>
+    );
   if (error) return <div>{error}</div>;
 
   return (
@@ -197,28 +209,19 @@ export default function CategoryList() {
 
             return (
               <div key={category.id} className="w-full  rounded-lg">
-                <table className="w-full  shadow-md  dark:bg-gray-800 border border-rounde border-gray-300 text-white">
-                  <thead className="bg-primary">
-                    <tr className="text-left  dark:bg-gray-700">
-                      <th className="py-2 px-4 dark:text-gray-300 text-sm font-bold mb-2 ">
+                <table className="w-full  shadow-md   border border-rounde  ">
+                  <thead className="">
+                    <tr className="text-left  ">
+                      <th className="py-2 px-4  text-sm font-bold mb-2 ">
                         {category.name}
                       </th>
-                      <th className="py-2 px-4 dark:text-gray-300 text-sm">
-                        Topics
-                      </th>
-                      <th className="py-2 px-4 dark:text-gray-300 text-sm">
-                        Posts
-                      </th>
-                      <th className="py-2 px-4 dark:text-gray-300 text-sm">
-                        Last Post
-                      </th>
+                      <th className="py-2 px-4  text-sm">Topics</th>
+                      <th className="py-2 px-4  text-sm">Posts</th>
+                      <th className="py-2 px-4  text-sm">Last Post</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr
-                      className="hover:bg-gray-100 dark:hover:bg-gray-700"
-                      onClick={() => handleCategoryClick(category.id)}
-                    >
+                    <tr onClick={() => handleCategoryClick(category.id)}>
                       <td className="p-4 flex items-center text-sm">
                         <img
                           src={skbImage} // Replace with your static image URL
@@ -227,7 +230,7 @@ export default function CategoryList() {
                         />
                         <div>
                           <a href="">
-                            <span className="font-semibold text-black ">
+                            <span className="font-semibold  ">
                               {category.name}
                             </span>
                             <br />
@@ -238,14 +241,14 @@ export default function CategoryList() {
                         </div>
                       </td>
 
-                      <td className="p-4 text-sm text-gray-700 dark:text-gray-400">
+                      <td className="p-4 text-sm ">
                         {categoryCourses.length}{" "}
                         {/* Number of topics/courses */}
                       </td>
-                      <td className="p-4 text-sm text-gray-700 dark:text-gray-400">
+                      <td className="p-4 text-sm">
                         {categoryCourses.length} {/* Number of posts */}
                       </td>
-                      <td className="p-4 text-sm text-gray-700 dark:text-gray-400">
+                      <td className="p-4 text-sm ">
                         {categoryCourses.length > 0 ? (
                           <>
                             <span className="font-semibold">

@@ -86,7 +86,7 @@ const AddCourseGroup = ({ groupId, onClose, onCourseAdded }) => {
             {/* Category dropdown menu */}
             <DropdownMenu>
               <DropdownMenuTrigger>
-                <Button className="flex items-center justify-between border border-gray-300 px-4 py-2 w-60 rounded-md text-gray-700 bg-white hover:bg-gray-100">
+                <Button className="flex items-center justify-between border  px-4 py-2 w-60 rounded-md ">
                   <span>Select Category</span>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -102,12 +102,12 @@ const AddCourseGroup = ({ groupId, onClose, onCourseAdded }) => {
                   </svg>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="bg-white border border-gray-300 shadow-lg rounded-md mt-2 w-60">
+              <DropdownMenuContent className=" shadow-lg rounded-md mt-2 w-60">
                 {categories.map((category) => (
                   <DropdownMenuItem
                     key={category.id}
                     onSelect={() => setSelectedCategory(category.name)}
-                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-gray-700"
+                    className="px-4 py-2  cursor-pointer "
                   >
                     {category.name}
                   </DropdownMenuItem>
@@ -126,7 +126,7 @@ const AddCourseGroup = ({ groupId, onClose, onCourseAdded }) => {
             {/* Course dropdown menu */}
             <DropdownMenu>
               <DropdownMenuTrigger>
-                <Button className="flex items-center justify-between border border-gray-300 px-4 py-2 w-60 rounded-md text-gray-700 bg-white hover:bg-gray-100">
+                <Button className="flex items-center justify-between border  px-4 py-2 w-60 rounded-md ">
                   <span>Select Course</span>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -142,12 +142,12 @@ const AddCourseGroup = ({ groupId, onClose, onCourseAdded }) => {
                   </svg>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="bg-white border border-gray-300 shadow-lg rounded-md mt-2 w-60">
+              <DropdownMenuContent className=" shadow-lg rounded-md mt-2 w-60">
                 {courses.map((course) => (
                   <DropdownMenuItem
                     key={course.id}
                     onSelect={() => setSelectedCourse(course.name)}
-                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-gray-700"
+                    className="px-4 py-2 cursor-pointer "
                   >
                     {course.name}
                   </DropdownMenuItem>
@@ -157,9 +157,11 @@ const AddCourseGroup = ({ groupId, onClose, onCourseAdded }) => {
 
             {/* Show selected course */}
             {selectedCourse && (
-              <p className="mt-2 text-gray-600">
+              <p className="shadow-lg rounded-md mt-2 w-60">
                 Selected Course:{" "}
-                <span className="font-medium">{selectedCourse}</span>
+                <span className="px-4 py-2 cursor-pointer ">
+                  {selectedCourse}
+                </span>
               </p>
             )}
 

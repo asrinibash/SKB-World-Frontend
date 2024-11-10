@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useParams, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -15,8 +16,10 @@ import SearchFilter from "./SearchFilter";
 import { format } from "date-fns";
 import { GoReport } from "react-icons/go";
 import { Link } from "react-router-dom";
-
-export default function BuyCourse() {
+import { jwtDecode } from "jwt-decode";
+import PropTypes from "prop-types";
+import skbImage from "../../assets/skbcompany2.png";
+export default function BuyCourse({ courseId }) {
   const { id } = useParams();
   const location = useLocation();
   const [courses, setCourses] = useState([]);
@@ -28,10 +31,87 @@ export default function BuyCourse() {
   const navigate = useNavigate();
   const searchParams = new URLSearchParams(location.search);
   const searchQuery = searchParams.get("search");
+  const [showCommentBox, setShowCommentBox] = useState(false);
+  const [comment, setComment] = useState("");
+
+  // Fetch the user id from the local storage and decode it using jwt-decode
+  useEffect(() => {
+    const token = localStorage.getItem("userAuthState");
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      console.log("User ID from JWT token:", decodedToken.userId); // Print user ID
+    }
+  }, []);
 
   const handleContainerClick = (fileUrl) => {
     if (fileUrl) {
       window.open(fileUrl, "_blank");
+    }
+  };
+
+  const handlePostReplyClick = (e) => {
+    e.preventDefault(); // Prevents page navigation
+    setShowCommentBox(!showCommentBox); // Toggle the comment box visibility
+
+    // Check if `course` is defined and get its ID
+    const currentCourseId = course?.id || courseId;
+
+    if (!currentCourseId) {
+      console.error("Course ID is missing.");
+      return;
+    }
+
+    // Optionally, log userId and currentCourseId
+    const token = localStorage.getItem("userAuthState");
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      const userId = decodedToken.userId;
+      console.log("User ID:", userId);
+      console.log("Course ID:", currentCourseId);
+    }
+  };
+
+  const handleCommentChange = (e) => {
+    setComment(e.target.value); // Update comment state
+  };
+
+  // const handleSubmitComment = (e) => {
+  //   e.preventDefault();
+  //   // Handle comment submission logic here
+  //   console.log("Submitted comment:", comment);
+  //   setComment(""); // Reset the comment input after submission
+  // };
+
+  const handleSubmitComment = async (e) => {
+    e.preventDefault();
+
+    const token = localStorage.getItem("userAuthState");
+    if (!token) {
+      console.error("User not authenticated");
+      return;
+    }
+
+    const decodedToken = jwtDecode(token);
+    const userId = decodedToken.userId;
+
+    const currentCourseId = course?.id || courseId; // Get course ID from state or prop
+
+    const commentData = {
+      userId,
+      courseId: currentCourseId,
+      content: comment,
+    };
+
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/api/v1/comment",
+        commentData
+      );
+      console.log("Comment added:", response.data);
+      setComment(""); // Clear the comment input
+      setShowCommentBox(false); // Hide the comment box after submission
+    } catch (error) {
+      console.error("Error adding comment:", error);
     }
   };
 
@@ -57,6 +137,7 @@ export default function BuyCourse() {
       try {
         let response;
         if (id) {
+          console.log("Course ID:", id); // Print the course ID to the console
           response = await axios.get(`${server}/course/${id}`);
           setCourse(response.data);
         } else {
@@ -99,7 +180,7 @@ export default function BuyCourse() {
 
     return (
       <div>
-        <div className="container mx-auto px-4 py-6 border rounded-md shadow-lg mb-8 bg-slate-200">
+        <div className="container mx-auto px-4 py-6 border rounded-md shadow-lg mb-8 ">
           <span className="font-bold text-xl">{courseData?.name}</span>
         </div>
         <div className="container mx-auto px-4 py-6 border rounded-md shadow-lg mb-8">
@@ -119,7 +200,7 @@ export default function BuyCourse() {
             </span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-8 gap-4 bg-slate-200">
+          <div className="grid grid-cols-1 md:grid-cols-8 gap-4 ">
             <div className="col-span-1 md:col-span-5 p-4 border rounded-lg">
               <div className="text-xl font-bold mb-4 text-blue-800">
                 {courseData.name}
@@ -157,7 +238,7 @@ export default function BuyCourse() {
 
               <button
                 onClick={handleRedirect}
-                className="bg-red-200 p-2 md:p-3 flex items-center text-sm md:text-base"
+                className=" p-2 md:p-3 flex items-center text-sm md:text-base"
               >
                 <span className="font-bold whitespace-nowrap">
                   Download Cost
@@ -234,20 +315,58 @@ export default function BuyCourse() {
               </div>
             </div>
           </div>
-          <Link
-            to="/quote"
-            title="Quote this quote"
-            className="flex items-center mt-1 pl-2 border border-gray-300 rounded-md hover:bg-gray-100 w-full sm:w-2/12 md:w-3/12 lg:w-2/12"
-          >
-            <span className="font-bold text-red-800 mr-2">Post Reply</span>
-            <HiReply className="text-red-800 transform" />
-          </Link>
+          <div>
+            {/* Button to toggle the comment box */}
+            <button
+              onClick={handlePostReplyClick}
+              className="flex items-center m-4 ml-0 pl-2 border  rounded-md  w-full sm:w-2/12 md:w-3/12 lg:w-2/12"
+            >
+              <span className="font-bold  mr-2">Post Reply</span>
+              <HiReply className=" transform" />
+            </button>
+
+            <div>
+              {courseData.comments.map((comment) => (
+                <div key={comment.id}>{comment.content}</div>
+              ))}
+            </div>
+
+            {/* Conditional rendering for the comment box */}
+            {showCommentBox && (
+              <div className="mt-4">
+                <form onSubmit={handleSubmitComment} className="flex flex-col">
+                  <textarea
+                    value={comment}
+                    onChange={handleCommentChange}
+                    placeholder="Write your comment..."
+                    className="border  rounded-md p-2 mb-2"
+                    rows="4"
+                  />
+                  <button type="submit" className="bg-primary rounded-md p-2">
+                    Post Comment
+                  </button>
+                </form>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     );
   };
 
-  if (isLoading) return <div>Loading course details...</div>;
+  if (isLoading)
+    return (
+      <div className="flex justify-center items-center mt-4 mb-4 p-10 sm:p-20 md:p-48">
+        <div className="relative flex justify-center items-center h-32 w-32">
+          <div className="absolute animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-purple-500"></div>
+          <img
+            src={skbImage}
+            alt="Avatar thinking"
+            className="rounded-full h-28 w-28"
+          />
+        </div>
+      </div>
+    );
   if (error) return <div>{error}</div>;
 
   return (
@@ -270,3 +389,8 @@ export default function BuyCourse() {
     </>
   );
 }
+
+// PropTypes validation for courseId
+BuyCourse.propTypes = {
+  courseId: PropTypes.string.isRequired, // Validate courseId as a required string
+};

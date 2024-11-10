@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import skbImage from "../../assets/skbcompany2.png";
 import {
   Card,
   CardHeader,
@@ -69,8 +70,15 @@ export default function AdminDashboard() {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen justify-center items-center text-2xl font-bold">
-        Loading...
+      <div className="flex justify-center items-center mt-4 mb-4 p-10 sm:p-20 md:p-48">
+        <div className="relative flex justify-center items-center h-32 w-32">
+          <div className="absolute animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-purple-500"></div>
+          <img
+            src={skbImage}
+            alt="Avatar thinking"
+            className="rounded-full h-28 w-28"
+          />
+        </div>
       </div>
     );
   }

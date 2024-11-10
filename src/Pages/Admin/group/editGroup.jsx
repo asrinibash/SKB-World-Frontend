@@ -55,7 +55,7 @@ const EditGroup = ({ group, onClose, onUpdate }) => {
                   <Field
                     type="text"
                     name="name"
-                    className="border rounded-md w-full p-2 dark:bg-black"
+                    className="border rounded-md w-full p-2 text-black"
                   />
                   <ErrorMessage
                     name="name"
@@ -70,7 +70,7 @@ const EditGroup = ({ group, onClose, onUpdate }) => {
                   <Field
                     type="text"
                     name="description"
-                    className="border rounded-md w-full p-2 dark:bg-black"
+                    className="border rounded-md w-full p-2 text-black "
                   />
                   <ErrorMessage
                     name="description"
