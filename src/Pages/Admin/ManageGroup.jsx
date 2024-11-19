@@ -5,6 +5,7 @@ import {
   CardDescription,
   CardContent,
 } from "../../Components/Admin/Ui/Card";
+import skbImage from "../../assets/skbcompany2.png";
 import {
   Table,
   TableHeader,
@@ -20,11 +21,13 @@ import { Trash2, EditIcon, UserPlus, Eye } from "lucide-react";
 import EditGroup from "./group/editGroup";
 import AddGroup from "./group/addGroup";
 import AddUserGroup from "./group/addUserGroup";
-import ViewUserGroup from "./group/ViewUserGroup"; // Import ViewUserGroup
+import ViewUserGroup from "./group/ViewUserGroup";
 import { Button } from "@radix-ui/themes";
 import { AiFillFileAdd } from "react-icons/ai";
 import AddCourse from "./group/addCourse";
 import ViewCourseGroup from "./group/viewCourseGroup";
+
+const ITEMS_PER_PAGE = 10; // Number of items per page
 
 const ManageGroups = () => {
   const [groups, setGroups] = useState([]);
@@ -32,8 +35,11 @@ const ManageGroups = () => {
   const [addingGroup, setAddingGroup] = useState(false);
   const [addingUserToGroup, setAddingUserToGroup] = useState(null);
   const [viewingGroupUsers, setViewingGroupUsers] = useState(null);
-  const [viewingGroupCourses, setViewingGroupCourses] = useState(null); // Separate state for viewing courses
+  const [viewingGroupCourses, setViewingGroupCourses] = useState(null);
   const [addingCourseToGroup, setAddingCourseToGroup] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [currentPage, setCurrentPage] = useState(1); // Pagination state
 
   const handleAddCourse = (groupId) => {
     setAddingCourseToGroup(groupId);
@@ -49,6 +55,8 @@ const ManageGroups = () => {
 
   const fetchGroups = async () => {
     const token = localStorage.getItem("authToken");
+    setLoading(true);
+    setError("");
     try {
       const response = await axios.get(`${server}/group/getAll`, {
         headers: {
@@ -58,6 +66,9 @@ const ManageGroups = () => {
       setGroups(response.data);
     } catch (error) {
       console.error("Error fetching groups:", error);
+      setError("Failed to load groups.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -89,15 +100,11 @@ const ManageGroups = () => {
 
       setTimeout(async () => {
         try {
-          alert(
-            "If the group is empty, it will be deleted. Otherwise, all group members will be removed before deletion."
-          );
           await axios.delete(`${server}/group/${groupId}`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           });
-          console.log(`Group with ID ${groupId} deleted successfully.`);
           fetchGroups();
         } catch (error) {
           console.error(`Error deleting group with ID ${groupId}:`, error);
@@ -112,11 +119,11 @@ const ManageGroups = () => {
   };
 
   const handleViewUsers = (groupId) => {
-    setViewingGroupUsers(groupId); // Set group ID for viewing users
+    setViewingGroupUsers(groupId);
   };
 
   const handleViewCourses = (groupId) => {
-    setViewingGroupCourses(groupId); // Set group ID for viewing courses
+    setViewingGroupCourses(groupId);
   };
 
   const handleAddMember = (groupId) => {
@@ -136,15 +143,25 @@ const ManageGroups = () => {
   };
 
   const closeViewUsers = () => {
-    setViewingGroupUsers(null); // Close user view modal
+    setViewingGroupUsers(null);
   };
 
   const closeViewCourses = () => {
-    setViewingGroupCourses(null); // Close course view modal
+    setViewingGroupCourses(null);
   };
 
   const refreshGroups = () => {
     fetchGroups();
+  };
+
+  // Pagination calculations
+  const indexOfLastItem = currentPage * ITEMS_PER_PAGE;
+  const indexOfFirstItem = indexOfLastItem - ITEMS_PER_PAGE;
+  const currentGroups = groups.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(groups.length / ITEMS_PER_PAGE);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
   };
 
   return (
@@ -152,9 +169,7 @@ const ManageGroups = () => {
       <Card>
         <CardHeader className="pb-3">
           <CardTitle>Manage Groups</CardTitle>
-          <CardDescription className="max-w-lg text-balance leading-relaxed">
-            View and manage the list of groups.
-          </CardDescription>
+          <CardDescription>View and manage the list of groups.</CardDescription>
         </CardHeader>
       </Card>
       <Button
@@ -165,65 +180,109 @@ const ManageGroups = () => {
       </Button>
       <Card>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Description</TableHead>
-                <TableHead>CreatedAt</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {groups.map((group) => (
-                <TableRow key={group.id}>
-                  <TableCell>{group.name}</TableCell>
-                  <TableCell>{group.description}</TableCell>
-                  <TableCell>
-                    {new Date(group.createdAt).toLocaleString()}
-                  </TableCell>
-                  <TableCell className="flex space-x-2">
-                    <Button
-                      onClick={() => handleEditGroup(group)}
-                      className="p-1"
-                    >
-                      <EditIcon />
-                    </Button>
-                    <Button
-                      onClick={() => handleAddMember(group.id)}
-                      className="p-1"
-                    >
-                      <UserPlus />
-                    </Button>
-                    <Button
-                      onClick={() => handleAddCourse(group.id)}
-                      className="p-1"
-                    >
-                      <AiFillFileAdd />
-                    </Button>
-                    <Button
-                      onClick={() => handleDeleteGroup(group.id)}
-                      className="p-1"
-                    >
-                      <Trash2 />
-                    </Button>
-                    <Button
-                      onClick={() => handleViewUsers(group.id)}
-                      className="p-1"
-                    >
-                      <Eye />
-                    </Button>
-                    <Button
-                      onClick={() => handleViewCourses(group.id)}
-                      className="p-1"
-                    >
-                      <Eye />
-                    </Button>
-                  </TableCell>
+          {loading ? (
+            <div className="flex justify-center items-center mt-4 mb-4 p-10 sm:p-20 md:p-20">
+              <div className="relative flex justify-center items-center h-14 w-14">
+                <div className="absolute animate-spin rounded-full h-14 w-14 border-t-4 border-b-4 border-purple-500"></div>
+                <img
+                  src={skbImage}
+                  alt="Avatar thinking"
+                  className="rounded-full h-10 w-10 z-8"
+                />
+              </div>
+            </div>
+          ) : error ? (
+            <p className="text-red-500">{error}</p>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Sl. No.</TableHead>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Description</TableHead>
+                  <TableHead>CreatedAt</TableHead>
+                  <TableHead>Actions</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {currentGroups.map((group, index) => (
+                  <TableRow key={group.id}>
+                    <TableCell>{indexOfFirstItem + index + 1}</TableCell>
+                    <TableCell>{group.name}</TableCell>
+                    <TableCell>{group.description}</TableCell>
+                    <TableCell>
+                      {new Date(group.createdAt).toLocaleString()}
+                    </TableCell>
+                    <TableCell className="flex space-x-2">
+                      <Button
+                        onClick={() => handleEditGroup(group)}
+                        className="p-1"
+                      >
+                        <EditIcon />
+                      </Button>
+                      <Button
+                        onClick={() => handleAddMember(group.id)}
+                        className="p-1"
+                      >
+                        <UserPlus />
+                      </Button>
+                      <Button
+                        onClick={() => handleAddCourse(group.id)}
+                        className="p-1"
+                      >
+                        <AiFillFileAdd />
+                      </Button>
+                      <Button
+                        onClick={() => handleDeleteGroup(group.id)}
+                        className="p-1"
+                      >
+                        <Trash2 />
+                      </Button>
+                      <Button
+                        onClick={() => handleViewUsers(group.id)}
+                        className="p-1"
+                      >
+                        <Eye />
+                      </Button>
+                      <Button
+                        onClick={() => handleViewCourses(group.id)}
+                        className="p-1"
+                      >
+                        <Eye />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+
+          {/* Pagination Controls */}
+          <div className="flex justify-center mt-4 space-x-2">
+            <Button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+            >
+              &lt; Prev
+            </Button>
+            {Array.from({ length: totalPages }, (_, i) => (
+              <Button
+                key={i}
+                onClick={() => handlePageChange(i + 1)}
+                className={
+                  currentPage === i + 1 ? "bg-primary text-white p-2" : ""
+                }
+              >
+                {i + 1}
+              </Button>
+            ))}
+            <Button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+            >
+              Next &gt;
+            </Button>
+          </div>
         </CardContent>
       </Card>
 
@@ -231,33 +290,25 @@ const ManageGroups = () => {
         <EditGroup
           group={editingGroup}
           onClose={closeEditForm}
-          onUpdate={refreshGroups}
+          onSave={refreshGroups}
         />
       )}
       {addingGroup && (
-        <AddGroup onClose={closeAddForm} onGroupAdded={refreshGroups} />
+        <AddGroup onClose={closeAddForm} onSave={refreshGroups} />
       )}
       {addingUserToGroup && (
-        <AddUserGroup
-          groupId={addingUserToGroup}
-          onClose={closeAddUserForm}
-          onUserAdded={refreshGroups}
-        />
+        <AddUserGroup groupId={addingUserToGroup} onClose={closeAddUserForm} />
       )}
       {viewingGroupUsers && (
         <ViewUserGroup groupId={viewingGroupUsers} onClose={closeViewUsers} />
+      )}
+      {addingCourseToGroup && (
+        <AddCourse groupId={addingCourseToGroup} onClose={closeAddCourseForm} />
       )}
       {viewingGroupCourses && (
         <ViewCourseGroup
           groupId={viewingGroupCourses}
           onClose={closeViewCourses}
-        />
-      )}
-      {addingCourseToGroup && (
-        <AddCourse
-          groupId={addingCourseToGroup}
-          onClose={closeAddCourseForm}
-          onCourseAdded={refreshGroups}
         />
       )}
     </div>

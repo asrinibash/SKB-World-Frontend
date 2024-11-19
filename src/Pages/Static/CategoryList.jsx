@@ -131,6 +131,7 @@ import axios from "axios";
 import skbImage from "../../assets/skbcompany2.png";
 import { server } from "../../main.jsx";
 // import { format } from "date-fns";
+import { FaArrowUp } from "react-icons/fa"; // Import an up arrow icon
 
 export default function CategoryList() {
   const navigate = useNavigate();
@@ -138,6 +139,29 @@ export default function CategoryList() {
   const [courses, setCourses] = useState([]); // Define courses state
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  const [showBackToTop, setShowBackToTop] = useState(false);
+
+  // Function to handle scrolling back to the top
+  const handleBackToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
+  // Event listener to toggle the visibility of the Back to Top button
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 300) {
+        setShowBackToTop(true);
+      } else {
+        setShowBackToTop(false);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -190,96 +214,114 @@ export default function CategoryList() {
   if (error) return <div>{error}</div>;
 
   return (
-    <div className="bg-secondary rounded-lg p-6 shadow-md ">
-      <ul className="space-y-2">
-        <li>
-          <button
-            className="w-full text-left p-2 rounded hover:bg-accent/10 text-2xl font-bold mb-4 text-primary"
-            // onClick={() => handleCategoryClick("all")}
-          >
-            All Categories
-          </button>
-        </li>
-        {/* Removed the overflow-x-auto class */}
-        <div className="space-y-1 ">
-          {categories.map((category) => {
-            const categoryCourses = courses.filter(
-              (course) => course.categoryId === category.id
-            ); // Filter courses by category
+    <>
+      <div className="bg-secondary rounded-lg p-6 shadow-md ">
+        <ul className="space-y-2">
+          <li>
+            <button
+              className="w-full text-left p-2 rounded hover:bg-accent/10 text-2xl font-bold mb-4 text-primary"
+              // onClick={() => handleCategoryClick("all")}
+            >
+              All Categories
+            </button>
+          </li>
+          {/* Removed the overflow-x-auto class */}
+          <div className="space-y-1 ">
+            {categories.map((category) => {
+              const categoryCourses = courses.filter(
+                (course) => course.categoryId === category.id
+              ); // Filter courses by category
 
-            return (
-              <div key={category.id} className="w-full  rounded-lg">
-                <table className="w-full  shadow-md   border border-rounde  ">
-                  <thead className="">
-                    <tr className="text-left  ">
-                      <th className="py-2 px-4  text-sm font-bold mb-2 ">
-                        {category.name}
-                      </th>
-                      <th className="py-2 px-4  text-sm">Topics</th>
-                      <th className="py-2 px-4  text-sm">Posts</th>
-                      <th className="py-2 px-4  text-sm">Last Post</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr onClick={() => handleCategoryClick(category.id)}>
-                      <td className="p-4 flex items-center text-sm">
-                        <img
-                          src={skbImage} // Replace with your static image URL
-                          alt="Category" // Alternative text for the image
-                          className="w-16 h-16 rounded-full mr-4" // Adjust size as needed
-                        />
-                        <div>
-                          <a href="">
-                            <span className="font-semibold  ">
-                              {category.name}
-                            </span>
-                            <br />
-                            <span className="text-gray-500">
-                              {category.description}
-                            </span>
-                          </a>
-                        </div>
-                      </td>
+              return (
+                <div key={category.id} className="w-full  rounded-lg">
+                  <table className="w-full  shadow-md   border border-rounde  ">
+                    <thead className="">
+                      <tr className="text-left  ">
+                        <th className="py-2 px-4  text-sm font-bold mb-2 ">
+                          {category.name}
+                        </th>
+                        <th className="py-2 px-4  text-sm">Topics</th>
+                        <th className="py-2 px-4  text-sm">Posts</th>
+                        <th className="py-2 px-4  text-sm">Last Post</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr onClick={() => handleCategoryClick(category.id)}>
+                        <td className="p-4 flex items-center text-sm">
+                          <img
+                            src={skbImage} // Replace with your static image URL
+                            alt="Category" // Alternative text for the image
+                            className="w-16 h-16 rounded-full mr-4" // Adjust size as needed
+                          />
+                          <div>
+                            <a href="">
+                              <span className="font-semibold  ">
+                                {category.name}
+                              </span>
+                              <br />
+                              <span className="text-gray-500">
+                                {category.description}
+                              </span>
+                            </a>
+                          </div>
+                        </td>
 
-                      <td className="p-4 text-sm ">
-                        {categoryCourses.length}{" "}
-                        {/* Number of topics/courses */}
-                      </td>
-                      <td className="p-4 text-sm">
-                        {categoryCourses.length} {/* Number of posts */}
-                      </td>
-                      <td className="p-4 text-sm ">
-                        {categoryCourses.length > 0 ? (
-                          <>
-                            <span className="font-semibold">
-                              {truncateName(
-                                categoryCourses[categoryCourses.length - 1].name
+                        <td className="p-4 text-sm ">
+                          {categoryCourses.length}{" "}
+                          {/* Number of topics/courses */}
+                        </td>
+                        <td className="p-4 text-sm">
+                          {categoryCourses.length} {/* Number of posts */}
+                        </td>
+                        <td className="p-4 text-sm ">
+                          {categoryCourses.length > 0 ? (
+                            <>
+                              <span className="font-semibold">
+                                {truncateName(
+                                  categoryCourses[categoryCourses.length - 1]
+                                    .name
+                                )}
+                              </span>
+                              <br />
+                              <span className="text-gray-500"> by admin</span>
+                              <br />
+                              {format(
+                                new Date(
+                                  categoryCourses[
+                                    categoryCourses.length - 1
+                                  ].createdAt
+                                ),
+                                "EEE MMM dd, yyyy h:mm a" // Custom format string
                               )}
-                            </span>
-                            <br />
-                            <span className="text-gray-500"> by admin</span>
-                            <br />
-                            {format(
-                              new Date(
-                                categoryCourses[
-                                  categoryCourses.length - 1
-                                ].createdAt
-                              ),
-                              "EEE MMM dd, yyyy h:mm a" // Custom format string
-                            )}
-                          </>
-                        ) : (
-                          "-"
-                        )}
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            );
-          })}
-        </div>
-      </ul>
-    </div>
+                            </>
+                          ) : (
+                            "-"
+                          )}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              );
+            })}
+          </div>
+        </ul>
+      </div>
+
+      <div>
+        {/* Main content goes here */}
+
+        {/* Back to Top button */}
+        {showBackToTop && (
+          <button
+            onClick={handleBackToTop}
+            className="fixed bottom-10 right-10 p-3 bg-primary text-white rounded-full shadow-lg hover:bg-secondary hover:text-primary"
+            aria-label="Back to top"
+          >
+            <FaArrowUp size={20} />
+          </button>
+        )}
+      </div>
+    </>
   );
 }

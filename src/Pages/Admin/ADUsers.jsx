@@ -5,6 +5,7 @@ import {
   CardDescription,
   CardContent,
 } from "../../Components/Admin/Ui/Card";
+import skbImage from "../../assets/skbcompany2.png";
 import {
   Table,
   TableHeader,
@@ -26,17 +27,26 @@ const ADUsers = () => {
   const [users, setUsers] = useState([]);
   const [editingUser, setEditingUser] = useState(null);
   const [addingUser, setAddingUser] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [currentPage, setCurrentPage] = useState(1); // State for the current page
+  const usersPerPage = 10; // Number of users per page
 
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, [currentPage]);
 
   const fetchUsers = async () => {
+    setLoading(true);
+    setError("");
     try {
       const response = await axios.get(`${server}/user/getAll`);
       setUsers(response.data);
     } catch (error) {
+      setError("Error fetching users. Please try again.");
       console.error("Error fetching users:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -45,7 +55,6 @@ const ADUsers = () => {
   };
 
   const handleDeleteUser = (userId) => {
-    // Show confirmation dialog first
     const confirmationBox = document.createElement("div");
     confirmationBox.innerHTML = `
       <div class="bg-white p-6 rounded-lg shadow-lg text-center fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
@@ -57,31 +66,24 @@ const ADUsers = () => {
         </div>
       </div>
     `;
-
-    // Append the confirmation box to the body
     document.body.appendChild(confirmationBox);
 
-    // Handle OK button click
     document.getElementById("okButton").onclick = async () => {
       setTimeout(async () => {
         try {
           toast.success(`User with ID ${userId} deleted successfully.`);
-
           await axios.delete(`${server}/user/${userId}`);
-          fetchUsers(); // Fetch updated user list
-
-          console.log(`User with ID ${userId} deleted successfully.`);
+          fetchUsers();
         } catch (error) {
           toast.error(`Error deleting user with ID ${userId}:`, error);
           console.error(`Error deleting user with ID ${userId}:`, error);
         }
-        document.body.removeChild(confirmationBox); // Remove the confirmation box after action
-      }, 1000); // Delay deletion by 1 second (1000ms)
+        document.body.removeChild(confirmationBox);
+      }, 1000);
     };
 
-    // Handle Cancel button click
     document.getElementById("cancelButton").onclick = () => {
-      document.body.removeChild(confirmationBox); // Just remove the confirmation box on cancel
+      document.body.removeChild(confirmationBox);
     };
   };
 
@@ -90,8 +92,7 @@ const ADUsers = () => {
       await axios.put(`${server}/user/${userId}/status`, {
         userStatus: newStatus,
       });
-      fetchUsers(); // Refresh user list after status update
-      console.log(`User with ID ${userId} status updated to ${newStatus}.`);
+      fetchUsers();
     } catch (error) {
       console.error(`Error updating status for user ID ${userId}:`, error);
     }
@@ -108,6 +109,13 @@ const ADUsers = () => {
   const refreshUsers = () => {
     fetchUsers();
   };
+
+  // Logic to handle pagination
+  const indexOfLastUser = currentPage * usersPerPage;
+  const indexOfFirstUser = indexOfLastUser - usersPerPage;
+  const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
+
+  const totalPages = Math.ceil(users.length / usersPerPage);
 
   return (
     <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
@@ -127,61 +135,112 @@ const ADUsers = () => {
       </Button>
       <Card>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>CreatedAt</TableHead>
-                <TableHead>User Status</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {users.map((user) => (
-                <TableRow key={user.id}>
-                  <TableCell>{user.name}</TableCell>
-                  <TableCell>{user.email}</TableCell>
-                  <TableCell>
-                    {new Date(user.createdAt).toLocaleString()}
-                  </TableCell>
-                  <TableCell>
-                    <select
-                      className="dark:bg-green-900 "
-                      value={user.userStatus}
-                      onChange={(e) =>
-                        handleStatusChange(user.id, e.target.value)
-                      }
-                    >
-                      <option value="ACTIVE">Active</option>
-                      <option value="PENDING" className="bg-yellow-500">
-                        Pending
-                      </option>
-                      <option value="BLOCKED" className="bg-red-900">
-                        Blocked
-                      </option>
-                    </select>
-                  </TableCell>
-                  <TableCell className="flex space-x-2">
-                    <Button
-                      onClick={() => handleEditUser(user)}
-                      className="p-1"
-                    >
-                      <EditIcon />
-                    </Button>
-                    <Button
-                      onClick={() => handleDeleteUser(user.id)}
-                      className="p-1"
-                    >
-                      <Trash2 />
-                    </Button>
-                  </TableCell>
+          {loading ? (
+            <div className="flex justify-center items-center mt-4 mb-4 p-10 sm:p-20 md:p-20">
+              <div className="relative flex justify-center items-center h-14 w-14">
+                <div className="absolute animate-spin rounded-full h-14 w-14 border-t-4 border-b-4 border-purple-500"></div>
+                <img
+                  src={skbImage}
+                  alt="Avatar thinking"
+                  className="rounded-full h-10 w-10 z-8"
+                />
+              </div>
+            </div>
+          ) : error ? (
+            <p className="text-red-500">{error}</p>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>SL No</TableHead>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Email</TableHead>
+                  <TableHead>Joining Date</TableHead>
+                  <TableHead>Accout Status</TableHead>
+                  <TableHead>Subscriber</TableHead>
+                  <TableHead>Actions</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {currentUsers.map((user, index) => (
+                  <TableRow key={user.id}>
+                    <TableCell>{indexOfFirstUser + index + 1}</TableCell>
+                    <TableCell>{user.name}</TableCell>
+                    <TableCell>{user.email}</TableCell>
+                    <TableCell>
+                      {new Date(user.createdAt).toLocaleString()}
+                    </TableCell>
+                    <TableCell>
+                      <select
+                        className="dark:bg-green-900"
+                        value={user.userStatus}
+                        onChange={(e) =>
+                          handleStatusChange(user.id, e.target.value)
+                        }
+                      >
+                        <option value="ACTIVE">Active</option>
+                        <option value="PENDING" className="bg-yellow-500">
+                          Pending
+                        </option>
+                        <option value="BLOCKED" className="bg-red-900">
+                          Blocked
+                        </option>
+                      </select>
+                    </TableCell>
+                    <TableCell>
+                      {user.isSubscribed ? "Subscribed" : "Not Subscribed"}
+                    </TableCell>
+                    <TableCell className="flex space-x-2">
+                      <Button
+                        onClick={() => handleEditUser(user)}
+                        className="p-1"
+                      >
+                        <EditIcon />
+                      </Button>
+                      <Button
+                        onClick={() => handleDeleteUser(user.id)}
+                        className="p-1"
+                      >
+                        <Trash2 />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
         </CardContent>
       </Card>
+
+      {/* Pagination */}
+      <div className="flex justify-center space-x-2 mt-4">
+        <Button
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+        >
+          &lt; Prev
+        </Button>
+        {Array.from({ length: totalPages }, (_, index) => (
+          <Button
+            key={index}
+            onClick={() => setCurrentPage(index + 1)}
+            className={
+              currentPage === index + 1 ? "bg-primary text-white p-2" : ""
+            }
+          >
+            {index + 1}
+          </Button>
+        ))}
+        <Button
+          onClick={() =>
+            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+          }
+          disabled={currentPage === totalPages}
+        >
+          Next &gt;
+        </Button>
+      </div>
+
       {editingUser && (
         <EditUser
           user={editingUser}

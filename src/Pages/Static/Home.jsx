@@ -1,6 +1,8 @@
 /* eslint-disable react/prop-types */
+import { useEffect, useState } from "react";
 import skbcompany from "../../assets/skbcompany2.png";
 import About from "../../Components/Static/Home/About";
+import { FaArrowUp } from "react-icons/fa"; // Import an up arrow icon
 
 const AnimatedText = ({ text }) => {
   return (
@@ -11,8 +13,43 @@ const AnimatedText = ({ text }) => {
 };
 
 const Home = () => {
+  const [showBackToTop, setShowBackToTop] = useState(false);
+  // Function to handle scrolling back to the top
+  const handleBackToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
+  // Event listener to toggle the visibility of the Back to Top button
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 300) {
+        setShowBackToTop(true);
+      } else {
+        setShowBackToTop(false);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
   return (
     <>
+      <div>
+        {/* Main content goes here */}
+
+        {/* Back to Top button */}
+        {showBackToTop && (
+          <button
+            onClick={handleBackToTop}
+            className="fixed bottom-10 right-10 p-3 bg-primary text-white rounded-full shadow-lg hover:bg-secondary hover:text-primary"
+            aria-label="Back to top"
+          >
+            <FaArrowUp size={20} />
+          </button>
+        )}
+      </div>
       <section className="w-full min-h-screen bg-background text-foreground grid grid-cols-1 md:grid-cols-2 gap-8 p-6 md:p-12 lg:p-12">
         {/* Left Side Content */}
         <div className="flex flex-col justify-center items-center md:items-start text-center md:text-left space-y-6">

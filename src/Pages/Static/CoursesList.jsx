@@ -1,99 +1,201 @@
-/* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
-import { Button } from "../../Components/Static/Ui/Button";
-import axios from "axios";
-import { server } from "../../main.jsx";
+// import { useEffect, useState } from "react";
+// import { useNavigate } from "react-router-dom";
+// import { format } from "date-fns";
+// import axios from "axios";
+// import { server } from "../../main.jsx";
+
+// export default function CategoryList() {
+//   const navigate = useNavigate();
+//   const [categories, setCategories] = useState([]);
+//   const [error, setError] = useState(null);
+//   const [isLoading, setIsLoading] = useState(true);
+
+//   useEffect(() => {
+//     const fetchCategories = async () => {
+//       try {
+//         const response = await axios.get(`${server}/category/getAll`);
+//         setCategories(response.data);
+//       } catch (err) {
+//         setError("Failed to load categories.");
+//       } finally {
+//         setIsLoading(false);
+//       }
+//     };
+//     fetchCategories();
+//   }, []);
+
+//   useEffect(() => {
+//     const fetchCourses = async () => {
+//       try {
+//         const response = await axios.get(`${server}/course/getAll`);
+//         console.log(response.data); // Log courses data to the console
+//       } catch (err) {
+//         console.error("Failed to load courses.");
+//       }
+//     };
+//     fetchCourses();
+//   }, []);
+
+//   const handleCategoryClick = (categoryId) => {
+//     navigate(`/coursesList?category=${categoryId}`);
+//   };
+
+//   if (isLoading) return <div>Loading Categories...</div>;
+//   if (error) return <div>{error}</div>;
+
+//   return (
+//     <div className="bg-secondary rounded-lg p-6 shadow-md">
+//       <h2 className="text-2xl font-bold mb-4 text-primary">Categories</h2>
+//       <ul className="space-y-2">
+//         <li>
+//           <button
+//             className="w-full text-left p-2 rounded hover:bg-accent/10"
+//             onClick={() => handleCategoryClick("all")}
+//           >
+//             All Categories
+//           </button>
+//         </li>
+//         {/* {categories.map((category) => (
+//           <li key={category.id}>
+//             <button
+//               className="w-full text-left p-4 rounded-lg shadow-md hover:bg-accent/10"
+//               onClick={() => handleCategoryClick(category.id)}
+//             >
+//               <div className="flex justify-between items-center">
+//                 <span className="font-bold text-lg dark:text-gray-300">
+//                   {category.name}
+//                 </span>
+//                 <span className="text-sm text-gray-500 dark:text-gray-400">
+//                   {format(new Date(category.createdAt), "dd MMM yyyy")}
+//                 </span>
+//               </div>
+//               <p className="text-sm mt-2 text-gray-700 dark:text-gray-400">
+//                 {category.description}
+//               </p>
+//               <hr className="my-2 border-gray-300 dark:border-gray-600" />
+//             </button>
+//           </li>
+//         ))} */}
+//         <div className="overflow-x-auto space-y-6">
+//           {categories.map((category) => (
+//             <div key={category.id} className="w-full">
+//               <table className="w-full bg-white shadow-md rounded-lg dark:bg-gray-800">
+//                 <thead>
+//                   <tr className="text-left bg-gray-100 dark:bg-gray-700">
+//                     <th className="p-4 w-1/2 text-lg font-bold dark:text-gray-300">
+//                       {category.name}
+//                     </th>
+//                     <th className="p-4 w-1/8 text-lg font-bold dark:text-gray-300">
+//                       Topics
+//                     </th>
+//                     <th className="p-4 w-1/8 text-lg font-bold dark:text-gray-300">
+//                       Posts
+//                     </th>
+//                     <th className="p-4 w-1/4 text-lg font-bold dark:text-gray-300">
+//                       Last Post
+//                     </th>
+//                   </tr>
+//                 </thead>
+//                 <tbody>
+//                   <tr
+//                     className="hover:bg-gray-100 dark:hover:bg-gray-700"
+//                     onClick={() => handleCategoryClick(category.id)}
+//                   >
+//                     <td className="p-4 font-semibold dark:text-gray-300">
+//                       {category.name}
+//                     </td>
+//                     <td className="p-4 text-sm text-gray-700 dark:text-gray-400">
+//                       -
+//                     </td>
+//                     <td className="p-4 text-sm text-gray-700 dark:text-gray-400">
+//                       -
+//                     </td>
+//                     <td className="p-4 text-sm text-gray-700 dark:text-gray-400">
+//                       {format(new Date(category.createdAt), "dd MMM yyyy")}
+//                     </td>
+//                   </tr>
+//                 </tbody>
+//               </table>
+//             </div>
+//           ))}
+//         </div>
+//       </ul>
+//     </div>
+//   );
+// }
+
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
+import axios from "axios";
 import skbImage from "../../assets/skbcompany2.png";
+import { server } from "../../main.jsx";
+// import { format } from "date-fns";
+import { FaArrowUp } from "react-icons/fa"; // Import an up arrow icon
 
-const COURSES_PER_PAGE = 10;
-
-export default function CoursesList() {
-  const [courses, setCourses] = useState([]);
-  const [searchParams] = useSearchParams();
-  const category = searchParams.get("category") || "all";
-  const [searchQuery, setSearchQuery] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [totalCourses, setTotalCourses] = useState(0);
-
+export default function CategoryList() {
   const navigate = useNavigate();
+  const [categories, setCategories] = useState([]);
+  const [courses, setCourses] = useState([]); // Define courses state
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const [showBackToTop, setShowBackToTop] = useState(false);
+
+  // Function to handle scrolling back to the top
+  const handleBackToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
+  // Event listener to toggle the visibility of the Back to Top button
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 300) {
+        setShowBackToTop(true);
+      } else {
+        setShowBackToTop(false);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
-    const fetchCourses = async () => {
-      setIsLoading(true);
+    const fetchCategories = async () => {
       try {
-        const response = await axios.get(
-          category === "all"
-            ? `${server}/course/getAll`
-            : `${server}/category/${category}`
-        );
-
-        const fetchedCourses = response.data.courses || [];
-        const fetchedTotalCourses = fetchedCourses.length;
-
-        setCourses(fetchedCourses);
-        setTotalCourses(fetchedTotalCourses);
-        setTotalPages(
-          fetchedTotalCourses > 0
-            ? Math.ceil(fetchedTotalCourses / COURSES_PER_PAGE)
-            : 1
-        );
+        const response = await axios.get(`${server}/category/getAll`);
+        setCategories(response.data);
       } catch (err) {
-        setError("Failed to load courses.");
+        setError("Failed to load categories.");
       } finally {
         setIsLoading(false);
       }
     };
+    fetchCategories();
+  }, []);
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await axios.get(`${server}/course/getAll`);
+        setCourses(response.data); // Set courses data
+      } catch (err) {
+        console.error("Failed to load courses.");
+      }
+    };
     fetchCourses();
-  }, [category]);
+  }, []);
 
-  const paginatedCourses = courses.slice(
-    (currentPage - 1) * COURSES_PER_PAGE,
-    currentPage * COURSES_PER_PAGE
-  );
-
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
+  const handleCategoryClick = (categoryId) => {
+    navigate(`/coursesList?category=${categoryId}`);
   };
 
-  const handlePrevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
-  const filteredCourses = paginatedCourses.filter((course) =>
-    course.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  const handleBuyNow = (courseId) => {
-    navigate(`/buyCourse/${courseId}`);
-  };
-
-  const handleViewClick = async (courseId) => {
-    try {
-      setCourses((prevCourses) =>
-        prevCourses.map((course) =>
-          course.id === courseId
-            ? {
-                ...course,
-                views: course.views + 1,
-              }
-            : course
-        )
-      );
-
-      await axios.post(`${server}/course/view/${courseId}`);
-    } catch (error) {
-      console.error("Failed to update view count:", error);
-    }
+  const truncateName = (name) => {
+    const words = name.split(" ");
+    return words.length > 4 ? words.slice(0, 4).join(" ") + "..." : name;
   };
 
   if (isLoading)
@@ -112,94 +214,114 @@ export default function CoursesList() {
   if (error) return <div>{error}</div>;
 
   return (
-    <motion.div
-      className="container mx-auto px-4 py-8"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      <div className=" shadow-md rounded-lg overflow-hidden">
-        <div className="bg-primary grid grid-cols-2 md:grid-cols-8 font-semibold text-xs sm:text-sm md:text-base lg:text-lg">
-          <div className="col-span-2 md:col-span-4 p-1 sm:p-1 md:p-1 text-left text-sm font-bold">
-            Topics
-          </div>
-          <div className="hidden md:block col-span-1 p-1 sm:p-1 md:p-1 text-left text-sm font-bold">
-            Replies
-          </div>
-          <div className="hidden md:block col-span-1 p-1 sm:p-1 md:p-1 text-left text-sm font-bold">
-            Views
-          </div>
-          <div className="col-span-2 md:col-span-2 p-1 sm:p-1 md:p-1 text-left text-sm font-bold">
-            Last Post
-          </div>
-        </div>
-
-        {filteredCourses.length > 0 ? (
-          filteredCourses.map((course) => (
-            <div
-              key={course.id}
-              className="grid grid-cols-2 md:grid-cols-8 border-t border-gray-200  text-xs md:text-sm lg:text-base"
-              onClick={() => handleViewClick(course.id)}
+    <>
+      <div className="bg-secondary rounded-lg p-6 shadow-md ">
+        <ul className="space-y-2">
+          <li>
+            <button
+              className="w-full text-left p-2 rounded hover:bg-accent/10 text-2xl font-bold mb-4 text-primary"
+              // onClick={() => handleCategoryClick("all")}
             >
-              <div
-                className="col-span-2 md:col-span-4 p-2 md:p-4 cursor-pointer "
-                onClick={() => handleBuyNow(course.id)}
-              >
-                <span className="font-bold text-sm hover:text-blue-600">
-                  {" "}
-                  {course.name}
-                </span>
-                <br />
-                <span className="text-gray-500 text-xs">
-                  by <b className="text-red-900">admin </b>
-                </span>
-                <span className="text-xs text-gray-500">
-                  {course.createdAt
-                    ? format(
-                        new Date(course.createdAt),
-                        "EEE MMM dd, yyyy h:mm a"
-                      )
-                    : "Date not available"}
-                </span>
-              </div>
-              <div className="hidden md:block col-span-1 p-2 md:p-4  text-sm">
-                0
-              </div>
-              <div className="hidden md:block col-span-1 p-2 md:p-4  text-sm">
-                {course.view}
-              </div>
-              <div className="col-span-2 md:col-span-2 p-2 md:p-4 text-gray-500 text-sm">
-                <span className="text-gray-500 text-sm">
-                  by <b className="text-red-900">admin</b>
-                </span>
-                <br />
-                <span className="text-sm">
-                  {course.createdAt
-                    ? format(
-                        new Date(course.createdAt),
-                        "EEE MMM dd, yyyy h:mm a"
-                      )
-                    : "Date not available"}
-                </span>
-              </div>
-            </div>
-          ))
-        ) : (
-          <div className="text-center p-4">No courses found</div>
+              All Categories
+            </button>
+          </li>
+          {/* Removed the overflow-x-auto class */}
+          <div className="space-y-1 ">
+            {categories.map((category) => {
+              const categoryCourses = courses.filter(
+                (course) => course.categoryId === category.id
+              ); // Filter courses by category
+
+              return (
+                <div key={category.id} className="w-full  rounded-lg">
+                  <table className="w-full  shadow-md   border border-rounde  ">
+                    <thead className="">
+                      <tr className="text-left  ">
+                        <th className="py-2 px-4  text-sm font-bold mb-2 ">
+                          {category.name}
+                        </th>
+                        <th className="py-2 px-4  text-sm">Topics</th>
+                        <th className="py-2 px-4  text-sm">Posts</th>
+                        <th className="py-2 px-4  text-sm">Last Post</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr onClick={() => handleCategoryClick(category.id)}>
+                        <td className="p-4 flex items-center text-sm">
+                          <img
+                            src={skbImage} // Replace with your static image URL
+                            alt="Category" // Alternative text for the image
+                            className="w-16 h-16 rounded-full mr-4" // Adjust size as needed
+                          />
+                          <div>
+                            <a href="">
+                              <span className="font-semibold  ">
+                                {category.name}
+                              </span>
+                              <br />
+                              <span className="text-gray-500">
+                                {category.description}
+                              </span>
+                            </a>
+                          </div>
+                        </td>
+
+                        <td className="p-4 text-sm ">
+                          {categoryCourses.length}{" "}
+                          {/* Number of topics/courses */}
+                        </td>
+                        <td className="p-4 text-sm">
+                          {categoryCourses.length} {/* Number of posts */}
+                        </td>
+                        <td className="p-4 text-sm ">
+                          {categoryCourses.length > 0 ? (
+                            <>
+                              <span className="font-semibold">
+                                {truncateName(
+                                  categoryCourses[categoryCourses.length - 1]
+                                    .name
+                                )}
+                              </span>
+                              <br />
+                              <span className="text-gray-500"> by admin</span>
+                              <br />
+                              {format(
+                                new Date(
+                                  categoryCourses[
+                                    categoryCourses.length - 1
+                                  ].createdAt
+                                ),
+                                "EEE MMM dd, yyyy h:mm a" // Custom format string
+                              )}
+                            </>
+                          ) : (
+                            "-"
+                          )}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              );
+            })}
+          </div>
+        </ul>
+      </div>
+
+      <div>
+        {/* Main content goes here */}
+
+        {/* Back to Top button */}
+        {showBackToTop && (
+          <button
+            onClick={handleBackToTop}
+            className="fixed bottom-10 right-10 p-3 bg-primary text-white rounded-full shadow-lg hover:bg-secondary hover:text-primary"
+            aria-label="Back to top"
+          >
+            <FaArrowUp size={20} />
+          </button>
         )}
       </div>
-
-      <div className="flex justify-between items-center mt-6">
-        <Button onClick={handlePrevPage} disabled={currentPage === 1}>
-          Previous
-        </Button>
-        <span className="text-xs md:text-sm lg:text-base">
-          Page {currentPage} of {totalPages}
-        </span>
-        <Button onClick={handleNextPage} disabled={currentPage === totalPages}>
-          Next
-        </Button>
-      </div>
-    </motion.div>
+    </>
   );
 }

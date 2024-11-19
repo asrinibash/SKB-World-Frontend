@@ -5,6 +5,7 @@ import {
   CardDescription,
   CardContent,
 } from "../../Components/Admin/Ui/Card";
+import skbImage from "../../assets/skbcompany2.png";
 import {
   Table,
   TableHeader,
@@ -75,7 +76,16 @@ const ManageContact = () => {
       <Card>
         <CardContent>
           {loading ? (
-            <p>Loading contacts...</p> // Show loading message when data is being fetched
+            <div className="flex justify-center items-center mt-4 mb-4 p-10 sm:p-20 md:p-20">
+            <div className="relative flex justify-center items-center h-14 w-14">
+              <div className="absolute animate-spin rounded-full h-14 w-14 border-t-4 border-b-4 border-purple-500"></div>
+              <img
+                src={skbImage}
+                alt="Avatar thinking"
+                className="rounded-full h-10 w-10 z-8" // image inside spinner, smaller than the spinner
+              />
+            </div>
+          </div>
           ) : error ? (
             <p className="text-red-500">{error}</p> // Display error message
           ) : (
